@@ -1,0 +1,1 @@
+PASS continuous stereo 48 kHz OpenAL playback without game frames: 7680→16800 samples, no errors or underruns.

@@ -1,0 +1,13 @@
+reward calibration block 1/12: headUpdates=13560, missExamples=46, exploration=0, stationaryFrames=270
+reward calibration block 2/12: headUpdates=13920, missExamples=56, exploration=0, stationaryFrames=540
+reward calibration block 3/12: headUpdates=14280, missExamples=56, exploration=5, stationaryFrames=540
+reward calibration block 4/12: headUpdates=14640, missExamples=56, exploration=5, stationaryFrames=810
+reward calibration block 5/12: headUpdates=15000, missExamples=56, exploration=11, stationaryFrames=921
+reward calibration block 6/12: headUpdates=15360, missExamples=56, exploration=14, stationaryFrames=921
+reward calibration block 7/12: headUpdates=15720, missExamples=56, exploration=14, stationaryFrames=1191
+reward calibration block 8/12: headUpdates=16080, missExamples=66, exploration=14, stationaryFrames=1461
+reward calibration block 9/12: headUpdates=16440, missExamples=66, exploration=19, stationaryFrames=1461
+reward calibration block 10/12: headUpdates=16800, missExamples=66, exploration=19, stationaryFrames=1731
+reward calibration block 11/12: headUpdates=17160, missExamples=66, exploration=24, stationaryFrames=1737
+reward calibration block 12/12: headUpdates=17520, missExamples=66, exploration=27, stationaryFrames=1744
+{"Before":{"neutral_or_revisit":{"Count":149,"IdealPleasure":0,"PredictedPleasure":0.006594389,"IdealPain":0,"PredictedPain":0.0043156664,"PleasureMse":0.00020597933,"PainMse":9.487405E-05},"stationary":{"Count":79,"IdealPleasure":0,"PredictedPleasure":0.0061286683,"IdealPain":0.02872363,"PredictedPain":0.007728815,"PleasureMse":0.0001748037,"PainMse":0.0008477109},"miss":{"Count":9,"IdealPleasure":0,"PredictedPleasure":0.026106631,"IdealPain":0.6698765,"PredictedPain":0.04605787,"PleasureMse":0.00070837815,"PainMse":0.3895936},"exploration":{"Count":12,"IdealPleasure":0.3,"PredictedPleasure":0.0042313864,"IdealPain":0,"PredictedPain":0.0023897265,"PleasureMse":0.08756529,"PainMse":1.7073273E-05}},"After":{"neutral_or_revisit":{"Count":149,"IdealPleasure":0,"PredictedPleasure":0.04093297,"IdealPain":0,"PredictedPain":0.030988669,"PleasureMse":0.0031756696,"PainMse":0.006202202},"stationary":{"Count":79,"IdealPleasure":0,"PredictedPleasure":0.012227189,"IdealPain":0.02872363,"PredictedPain":0.084142946,"PleasureMse":0.00024874258,"PainMse":0.014470491},"miss":{"Count":9,"IdealPleasure":0,"PredictedPleasure":0.016348714,"IdealPain":0.6698765,"PredictedPain":0.29890132,"PleasureMse":0.00030034577,"PainMse":0.13840863},"exploration":{"Count":12,"IdealPleasure":0.3,"PredictedPleasure":0.07438721,"IdealPain":0,"PredictedPain":0.006617195,"PleasureMse":0.052280508,"PainMse":0.00021838263}}}

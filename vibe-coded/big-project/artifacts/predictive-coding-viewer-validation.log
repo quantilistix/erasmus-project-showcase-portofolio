@@ -1,0 +1,12 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/artifacts/predictive-maze
+PLAY: paired-error inference; main plasticity active, reward weights frozen.
+Intel(R) Arc(tm) Graphics (MTL) / predictive coding; 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One local weight update/frame.
+Main eta = base eta * (1 + total pleasure - total pain). Totals use normalized applied signals plus primitive sensations from the preceding feedback (ideal in train, inferred in play). Propagation gain stays 1.
+Drive inputs = total pleasure + total pain * held U(0,1); noise refreshes every 12 frames. Negative reward factors reverse local plasticity.
+Total error = SUM(E^2), statistics only. No actor/value objective, replay, backpropagation, biases or least-squares reward shortcut.
+Maze stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=660 total_error_sum_e2=2833154.393463 reward_error_sum_e2=6160872.450129 teaching_error_sum_e2=0.000000 total_pleasure=0.00000 total_pain=1.00295 reward_factor=-0.00295 eta_effective=-0.00000003 main_ticks=5280 reward_ticks=5280 local_updates=660/600
+SENSE primitive_pain=0.0030 learned_pain=1.0000 pleasure=0.0000 HP=99.00 ammo=8/24 controls=None
+90 learning frames in 7.36s; mean 34.52 ms/frame (~29.0 compute fps), recent p95 41.01 ms

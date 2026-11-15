@@ -1,0 +1,6 @@
+PASS layered topology with additional odd-to-odd connections.
+PASS finite-difference gradients: cycles, self edges, skips and output feedback.
+PASS fixed plasticity scaling, frozen connections and checkpoint round trip.
+PASS Vulkan forward/loss/updates/plasticity/upload parity on Intel(R) Arc(tm) Graphics (MTL) (IntegratedGpu).
+PASS single-pass layered execution, pleasure gain, activation readback, frozen biases and binary checkpoints.
+PASS FFT, deterministic games, raw vision/audio contracts. 7700 assertions passed.

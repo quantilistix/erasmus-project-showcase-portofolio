@@ -1,0 +1,205 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One AVBD primal step (AVBD Algorithm 1, lines 10-20) for each node of the current color.
+// A cluster of threads shares each node: they split its springs and contacts between them and
+// sum their forces and Hessians in shared memory (VBD §3.9 block-level parallelism), which
+// hides memory latency far better than a thread walking every spring alone.
+//
+// Springs never join two nodes of one color, so the result is written in place. Only a contact
+// between same-colored nodes of two soft bodies can read a neighbour mid-update, which makes
+// that pair Jacobi-like for the iteration and saves a copy pass per color.
+//
+// Everything is relative to the node's position, so it is computed in float.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+// A whole workgroup per node: under a dense mesh a node has hundreds of contacts. Lightly
+// loaded nodes leave most threads idle, which costs a large soft body ~25% over 8 per node.
+const uint CLUSTER = 64u;
+
+// Per thread: force xyz, then the Hessian's upper triangle xx, xy, xz, yy, yz, zz.
+shared float partials[64 * 9];
+
+void addSymmetric(inout float h[6], mat3 m)
+{
+    h[0] += m[0][0];
+    h[1] += m[1][0];
+    h[2] += m[2][0];
+    h[3] += m[1][1];
+    h[4] += m[2][1];
+    h[5] += m[2][2];
+}
+
+void main()
+{
+    uint thread = gl_LocalInvocationID.x;
+    uint lane = thread % CLUSTER;
+    uint slot = gl_GlobalInvocationID.x / CLUSTER;
+
+    bool solving = slot < rangeCount;
+    uint i = solving ? colorNodes[rangeOffset + slot] : 0u;
+    solving = solving && !isPinned(nodes[i]);
+
+    vec3 force = vec3(0.0);
+    float h[6] = float[6](0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    if (solving)
+    {
+        float invH = float(1.0 / gravityAndStep.w);
+        dvec3 x = nodes[i].position.xyz;
+        vec3 displacement = vec3(x - nodes[i].previous.xyz);
+
+        if (lane == 0u)
+        {
+            float inertiaWeight = float(nodes[i].position.w) * invH * invH;
+            force = -inertiaWeight * vec3(x - nodes[i].inertial.xyz);
+            h[0] = inertiaWeight;
+            h[3] = inertiaWeight;
+            h[5] = inertiaWeight;
+        }
+
+        for (uint s = nodeSpringOffsets[i] + lane; s < nodeSpringOffsets[i + 1u]; s += CLUSTER)
+        {
+            uint springIndex = nodeSpringIndices[s];
+            vec4 state = springStates[springIndex];
+            if (state.z != 0.0)
+                continue;
+
+            Spring spring = springs[springIndex];
+            uint other = spring.node1 == i ? spring.node2 : spring.node1;
+
+            dvec3 neighbour = nodes[other].position.xyz;
+            vec3 d = vec3(x - neighbour);
+            float len = length(d);
+            if (len < 1e-12)
+                continue;
+
+            vec3 dir = d / len;
+            float k = state.x;
+            // Soft springs ramp their stiffness up to the real one (AVBD Eq. 16) and carry no
+            // dual variable; hard springs are augmented Lagrangian constraints (AVBD Eq. 9).
+            float tension = k * (len - spring.restLength) + state.y;
+            mat3 along = outerProduct(dir, dir);
+
+            // The geometric term is negative under compression; dropping it then keeps the
+            // block Hessian positive definite (AVBD §3.5).
+            mat3 springHessian = k * along + max(0.0, tension / len) * (mat3(1.0) - along);
+            mat3 dampingHessian = (spring.damping * invH) * springHessian;
+
+            // VBD Eq. 11 damps the node's own displacement, which with many springs per node
+            // acts as drag on free motion. Damping the displacement relative to the neighbour
+            // only resists stretching.
+            vec3 relativeDisplacement = displacement - vec3(neighbour - nodes[other].previous.xyz);
+
+            force -= tension * dir;
+            force -= dampingHessian * relativeDisplacement;
+            addSymmetric(h, springHessian + dampingHessian);
+        }
+
+        for (uint ref = blockContactBegin(i) + lane; ref < blockContactEnd(i); ref += CLUSTER)
+        {
+            Contact c = contacts[blockContactRefs[ref]];
+            vec3 rows = contactConstraint(c);
+
+            vec3 rowForce;
+            float normalStiffness;
+            float frictionStiffness;
+            contactForces(c, rows, rowForce, normalStiffness, frictionStiffness);
+
+            float w = nodeContactWeight(c, i);
+            vec3 n = c.normal.xyz;
+            vec3 t;
+            vec3 b;
+            contactBasis(n, t, b);
+
+            force -= w * (rowForce.x * t + rowForce.y * b + rowForce.z * n);
+            addSymmetric(h, (w * w) * (normalStiffness * outerProduct(n, n) + frictionStiffness * (outerProduct(t, t) + outerProduct(b, b))));
+        }
+    }
+
+    uint base = thread * 9u;
+    partials[base] = force.x;
+    partials[base + 1u] = force.y;
+    partials[base + 2u] = force.z;
+    for (uint k = 0u; k < 6u; k++)
+        partials[base + 3u + k] = h[k];
+
+    barrier();
+
+    for (uint stride = CLUSTER / 2u; stride > 0u; stride >>= 1u)
+    {
+        if (lane < stride)
+        {
+            for (uint k = 0u; k < 9u; k++)
+                partials[base + k] += partials[base + stride * 9u + k];
+        }
+
+        barrier();
+    }
+
+    // The Newton step, on the cluster's first thread, which then shares it.
+    if (solving && lane == 0u)
+    {
+        float sum[9];
+        for (uint k = 0u; k < 9u; k++)
+            sum[k] = partials[base + k];
+
+        vec3 total = vec3(sum[0], sum[1], sum[2]);
+        mat3 hessian = mat3
+        (
+            sum[3], sum[4], sum[5],
+            sum[4], sum[6], sum[7],
+            sum[5], sum[7], sum[8]
+        );
+
+        vec3 step = inverse(hessian) * total;
+        partials[base] = step.x;
+        partials[base + 1u] = step.y;
+        partials[base + 2u] = step.z;
+    }
+
+    barrier();
+
+    // A contact clear of the surface by more than the margin and not pushing is left out of the
+    // Hessian, so the step is cut where the first of those would close (as rigid_solve.glsl's
+    // stepBound does): the next iteration sees it touching.
+    uint first = (thread - lane) * 9u;
+    vec3 step = vec3(partials[first], partials[first + 1u], partials[first + 2u]);
+    float bound = 1.0;
+    if (solving)
+    {
+        for (uint ref = blockContactBegin(i) + lane; ref < blockContactEnd(i); ref += CLUSTER)
+        {
+            Contact c = contacts[blockContactRefs[ref]];
+            vec3 rows = contactConstraint(c);
+            if (rows.z <= float(collision.x) || c.penalty.x * rows.z + c.lambda.z < 0.0)
+                continue;
+
+            float closing = -nodeContactWeight(c, i) * dot(c.normal.xyz, step);
+            if (closing > rows.z)
+                bound = min(bound, rows.z / closing);
+        }
+    }
+
+    barrier();
+    partials[base + 3u] = bound;
+    barrier();
+
+    for (uint stride = CLUSTER / 2u; stride > 0u; stride >>= 1u)
+    {
+        if (lane < stride)
+            partials[base + 3u] = min(partials[base + 3u], partials[base + stride * 9u + 3u]);
+
+        barrier();
+    }
+
+    if (!solving || lane != 0u)
+        return;
+
+    nodes[i].position.xyz += dvec3(partials[base + 3u] * step);
+}

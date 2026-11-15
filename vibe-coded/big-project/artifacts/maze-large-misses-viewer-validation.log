@@ -1,0 +1,5 @@
+PLAY: frozen reward translator, realtime policy learning; primitive sensations remain active
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 17 enemies; exit route 96 tiles. Missed-shot teacher penalty 0.15 per projectile.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+60 learning frames in 1.54s; mean 14.84 ms/frame (~67.4 compute fps), recent p95 17.48 ms

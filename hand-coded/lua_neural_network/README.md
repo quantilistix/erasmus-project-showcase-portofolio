@@ -1,0 +1,1 @@
+This is a predictive coding neural network that play ping pong, writen in Lua and Love2D, translated from the MMBasic version (which was also writen by me). It doesn't learn, idk why.

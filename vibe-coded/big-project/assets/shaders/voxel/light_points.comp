@@ -1,0 +1,42 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "light_grid.glsl"
+#include "point_shadow.glsl"
+layout(local_size_x=64) in;
+layout(std430,set=0,binding=3) writeonly buffer PointDepth { float pointDepth[]; };
+layout(push_constant) uniform Parameters { vec4 sky; uint iteration; uint blocks; uint sun; uint count; vec4 solarDirection; vec4 solarColor; vec4 focus; uvec4 schedule; };
+void main()
+{
+    // Each dispatch traces the run of changed sources starting at its iteration.
+    uint index=gl_GlobalInvocationID.x, point=iteration+gl_WorkGroupID.y;
+    if(index>=PointShadowSamples || point>=grid[4]) return;
+    uint sourceOffset=grid[5]+point*4u;
+    if(grid[sourceOffset+3u]!=0u) return;
+    ivec3 source=ivec3(grid[sourceOffset],grid[sourceOffset+1u],grid[sourceOffset+2u]);
+    uint face=index/(PointShadowSize*PointShadowSize), pixel=index%(PointShadowSize*PointShadowSize);
+    vec2 uv=2.0*(vec2(float(pixel%PointShadowSize),float(pixel/PointShadowSize))+.5)/float(PointShadowSize)-1.0;
+    vec3 ray=pointShadowRay(face,uv);
+    // DDA over half cells preserves slabs and stairs. Parameter t is cube-face depth.
+    vec3 start=vec3(source)+.5;
+    ivec3 halfCell=ivec3(floor(start*2.0)), step=ivec3(sign(ray));
+    vec3 delta=.5/abs(ray);
+    vec3 edge=(vec3(halfCell)+max(vec3(step),vec3(0)))*.5;
+    vec3 next=(edge-start)/ray;
+    float depth=256.0;
+    // A ray crosses a chunk in about 32 half-cell steps: look its slot up once per chunk.
+    ivec3 chunk=ivec3(0x7fffffff);
+    uint slot=0u;
+    for(int visit=0;visit<1536;visit++)
+    {
+        int axis=next.x<next.y ? (next.x<next.z ? 0 : 2) : (next.y<next.z ? 1 : 2);
+        float t=next[axis]; if(t>=256.0) break;
+        halfCell[axis]+=step[axis]; next[axis]+=delta[axis];
+        ivec3 cell=halfCell>>1;
+        if(all(equal(cell,source))) continue;
+        if(any(notEqual(cell>>4,chunk))) { chunk=cell>>4; slot=gridSlot(chunk); }
+        uint material=(slot==0u ? 0u : gridMaterial(slot-1u,gridIndex(cell)))|objectMaterial(cell);
+        ivec3 bit=halfCell&1;
+        if((material & (1u<<uint(bit.x+2*bit.y+4*bit.z)))!=0u) { depth=t; break; }
+    }
+    pointDepth[point*PointShadowSamples+index]=depth;
+}

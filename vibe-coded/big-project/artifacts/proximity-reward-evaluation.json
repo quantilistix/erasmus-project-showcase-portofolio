@@ -1,0 +1,11 @@
+{
+  "Frames": 2000,
+  "PleasureMAE": 0.22191636658087371,
+  "PleasureMSE": 0.08341648507433762,
+  "OldPleasureMSE": 0.3638964381703937,
+  "PleasureCorrelation": 0.22651556495417682,
+  "NearPredictedPleasure": 0.6624731530520049,
+  "NearFrames": 770,
+  "FarPredictedPleasure": 0.4384680986404419,
+  "FarFrames": 15
+}

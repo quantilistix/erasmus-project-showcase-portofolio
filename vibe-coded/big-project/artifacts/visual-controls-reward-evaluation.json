@@ -1,0 +1,15 @@
+{
+  "Frames": 2000,
+  "GameSeed": 44001,
+  "Policy": "30-frame left/right sweeps, 10% neutral",
+  "Gain": 1,
+  "RewardInputs": 995,
+  "PleasureMAE": 0.2551050783097744,
+  "PleasureMSE": 0.11466965685036958,
+  "BaselinePleasureMSE": 0.12245543798568215,
+  "PleasureCorrelation": 0.19165578657081278,
+  "NearPredictedPleasure": 0.6433970175957654,
+  "NearFrames": 693,
+  "FarPredictedPleasure": 0.5954473340617759,
+  "FarFrames": 224
+}

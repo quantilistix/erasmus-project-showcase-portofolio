@@ -1,0 +1,1 @@
+This is the infamous cookie clicker game cloned in Lua and Love2D. Unfinished project.

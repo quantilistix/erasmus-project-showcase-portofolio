@@ -1,0 +1,24 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze
+Two historical checkpoints exist. Resuming the IDE checkpoint; the separate copy at /home/vlad/Programming/artificial_brain/artifacts/maze is not loaded. Use --checkpoint to select it explicitly.
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 14,052 nonnegative rate neurons, 4,133,376 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 7 enemies; exit route 117 tiles. Missed-shot teacher penalty 0.65 per projectile; exploration +24.00 per new cell and +8.00 per new region; stationary pain after 45 physics ticks. Stereo PCM/FFT enabled. Vision: 384 RGB first-person rays over 120 degrees, with distance shading.
+Error diagnostics print every 60 updates and on damage, death or initial wall contact. No-pain value loss removes only the sampled penalty from its target; it is not a new inference without pain inputs.
+Visual-variety teaching bonus: up to 1.00 × game speed per frame, derived from current world RGB only. Play uses the frozen reward head, not this ideal bonus.
+Main vitals: health/100, total rounds/104 (loaded + reserve), loaded rounds/8. Existing checkpoint ports reused.
+Maze stage 1/5: corridors 3 tiles, rooms 9–13 tiles; advances every 5 completions. Visual readout weight 0.000, supervised samples 0. Train once to calibrate an old checkpoint’s visual branch.
+Passive health drain: 2.0 per simulated second; health pickups restore up to 40. Active in both modes.
+Persistent neural state: 2 synchronous connection hops per frame; current view only. Training buffers are separate.
+Eight independent buttons press above 0.50; no wait control. Move/turn/fire can be held together.
+Checkpoint /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+ERROR frame=487657 sample=current loss=0.332482 td_error=-0.753086 button_rmse=0.159247 vision_rmse=0.224574 value_loss=0.283569 value_loss_without_pain_target=0.002293 sample_pain_cost=0.685360 visual_variety=0.1873 color_diversity=0.0000 predicted_visual_reward=0.09365 event_pleasure=0.00000 ideal_variety_bonus=0.09365
+PAIN primitive_signal=0.0359 applied_learned=0.6500 damage_cost=0.0000 wall_cost=0.0354 death_cost=0.0000 low_health_cost=0.000005 total_current_cost=0.685360 reward=-0.591708 HP=99.83 ammo_total=31 ammo_loaded=7
+ERROR frame=487670 sample=current loss=0.004280 td_error=-0.029194 button_rmse=0.007296 vision_rmse=0.178111 value_loss=0.000426 value_loss_without_pain_target=0.000019 sample_pain_cost=0.035367 visual_variety=0.1863 color_diversity=0.0000 predicted_visual_reward=0.09316 event_pleasure=0.00000 ideal_variety_bonus=0.09316
+PAIN primitive_signal=0.0365 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0354 death_cost=0.0000 low_health_cost=0.000012 total_current_cost=0.035367 reward=0.057793 HP=99.62 ammo_total=31 ammo_loaded=7
+ERROR frame=487688 sample=replay loss=1.637311 td_error=-1.736949 button_rmse=0.211789 vision_rmse=0.151632 value_loss=1.508495 value_loss_without_pain_target=1.508479 sample_pain_cost=0.000010 visual_variety=0.1841 color_diversity=0.0000 predicted_visual_reward=0.09205 event_pleasure=1.79015 ideal_variety_bonus=0.09205
+PAIN primitive_signal=0.0374 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0354 death_cost=0.0000 low_health_cost=0.000021 total_current_cost=0.035376 reward=1.629538 HP=99.32 ammo_total=31 ammo_loaded=7
+ERROR frame=487693 sample=current loss=0.183636 td_error=0.566187 button_rmse=0.128138 vision_rmse=0.106926 value_loss=0.160284 value_loss_without_pain_target=0.180940 sample_pain_cost=0.035378 visual_variety=0.1836 color_diversity=0.0000 predicted_visual_reward=0.09180 event_pleasure=0.62609 ideal_variety_bonus=0.09180
+PAIN primitive_signal=0.0377 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0354 death_cost=0.0000 low_health_cost=0.000023 total_current_cost=0.035378 reward=0.571817 HP=99.23 ammo_total=31 ammo_loaded=7
+ERROR frame=487728 sample=replay loss=0.409691 td_error=0.878577 button_rmse=0.176426 vision_rmse=0.063600 value_loss=0.385948 value_loss_without_pain_target=0.417655 sample_pain_cost=0.035377 visual_variety=0.1664 color_diversity=0.0000 predicted_visual_reward=0.08319 event_pleasure=0.21411 ideal_variety_bonus=0.08319
+PAIN primitive_signal=0.0394 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0354 death_cost=0.0000 low_health_cost=0.000041 total_current_cost=0.035396 reward=0.134477 HP=98.65 ammo_total=31 ammo_loaded=7
+90 learning frames in 5.19s; mean 29.86 ms/frame (~33.5 compute fps), recent p95 37.55 ms

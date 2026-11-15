@@ -1,0 +1,7 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+#define RIGID_GROUP 256
+#define RIGID_CLUSTER 256
+#include "rigid_solve.glsl"

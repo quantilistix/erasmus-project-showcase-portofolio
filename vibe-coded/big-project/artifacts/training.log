@@ -1,0 +1,39 @@
+Catch: llvmpipe (LLVM 20.1.2, 256 bits); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: -3.442; random: -2.036
+Catch episode   10/100 reward  -2.069 loss 0.07094 epsilon 0.90
+Catch episode   20/100 reward  -3.351 loss 0.00626 epsilon 0.79
+Catch episode   30/100 reward  -1.837 loss 0.02462 epsilon 0.67
+Catch episode   40/100 reward  -3.515 loss 0.00445 epsilon 0.56
+Catch episode   50/100 reward  -2.645 loss 0.02221 epsilon 0.45
+Catch episode   60/100 reward  -2.708 loss 0.00479 epsilon 0.34
+Catch episode   70/100 reward  -2.754 loss 0.00350 epsilon 0.22
+Catch episode   80/100 reward  -2.673 loss 0.01484 epsilon 0.11
+Catch episode   90/100 reward  -2.734 loss 0.03421 epsilon 0.10
+Catch episode  100/100 reward  -2.921 loss 0.01966 epsilon 0.10
+Saved artifacts/catch.json; 32.6s; held-out mean reward -1.400
+Dodge: llvmpipe (LLVM 20.1.2, 256 bits); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: 3.442; random: 2.036
+Dodge episode   10/100 reward   2.069 loss 0.06579 epsilon 0.90
+Dodge episode   20/100 reward   3.351 loss 0.00795 epsilon 0.79
+Dodge episode   30/100 reward   3.218 loss 0.02578 epsilon 0.67
+Dodge episode   40/100 reward   1.840 loss 0.00595 epsilon 0.56
+Dodge episode   50/100 reward   2.200 loss 0.01974 epsilon 0.45
+Dodge episode   60/100 reward   2.514 loss 0.00526 epsilon 0.34
+Dodge episode   70/100 reward   3.205 loss 0.00456 epsilon 0.22
+Dodge episode   80/100 reward   2.295 loss 0.01464 epsilon 0.11
+Dodge episode   90/100 reward   1.497 loss 0.04984 epsilon 0.10
+Dodge episode  100/100 reward   2.598 loss 0.02310 epsilon 0.10
+Saved artifacts/dodge.json; 31.9s; held-out mean reward 3.064
+Rally: llvmpipe (LLVM 20.1.2, 256 bits); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: -1.549; random: -0.658
+Rally episode   10/100 reward  -1.799 loss 0.02713 epsilon 0.90
+Rally episode   20/100 reward  -2.219 loss 0.02921 epsilon 0.79
+Rally episode   30/100 reward  -1.387 loss 0.02435 epsilon 0.67
+Rally episode   40/100 reward  -2.081 loss 0.02679 epsilon 0.56
+Rally episode   50/100 reward  -1.742 loss 0.03629 epsilon 0.45
+Rally episode   60/100 reward  -1.047 loss 0.04363 epsilon 0.34
+Rally episode   70/100 reward  -2.677 loss 0.02336 epsilon 0.22
+Rally episode   80/100 reward  -2.290 loss 0.00363 epsilon 0.11
+Rally episode   90/100 reward  -2.080 loss 0.00399 epsilon 0.10
+Rally episode  100/100 reward  -1.314 loss 0.01754 epsilon 0.10
+Saved artifacts/rally.json; 32.0s; held-out mean reward -1.750

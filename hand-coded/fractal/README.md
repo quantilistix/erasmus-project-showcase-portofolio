@@ -1,0 +1,1 @@
+This is a simple low resolution render of the Mandelbrot set writen in Lua and Love2D using a complex number library writen by me..

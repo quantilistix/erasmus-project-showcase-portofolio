@@ -1,0 +1,14 @@
+Checkpoint: /tmp/reward-crash-rebased
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+llvmpipe (LLVM 20.1.2, 256 bits) / predictive coding / device-local weights / subgroup reductions (software Vulkan on CPU); 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Vulkan selected a CPU renderer. Hardware acceleration requires an accessible GPU and its Vulkan driver; use --list-devices and --device INDEX to select a different device.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One PC local weight update/frame; reward motor decisions every 12 frames.
+Main PC plasticity uses positive base eta. Reward/pain train a local motor actor/critic with eligibility traces; the PC graph supplies representation and receives the actual button clamps.
+Motor feedback = .1 * instantaneous normalized calculated pleasure - calculated pain + primitive event reward/cost + 4 on completion + .02 per new cell. Sensation traces are not repaid.
+Training uses calculated teacher labels; play uses the frozen reward network. Primitive signals and discovery remain available in both modes.
+Drive inputs retain constant pleasure plus held pain noise. Manual/bot control clears policy credit; it teaches PC associations without off-policy reinforcement.
+Total error = SUM(E^2), statistics only. Motor learning is a small local readout; no replay or backpropagation through the predictive networks.
+Level 11; maze geometry stage 3/5; corridor width 2; health drain, primitive pain and ideal training rewards retained. Checkpoint /tmp/reward-crash-rebased.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+Error: GLFW could not initialize. Use a desktop session or run train/evaluate headlessly.

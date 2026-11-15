@@ -1,0 +1,33 @@
+#version 450
+layout(local_size_x=64) in;
+layout(std430,binding=0) readonly buffer Parameters { float p[]; };
+layout(std430,binding=1) readonly buffer Metadata { int m[]; };
+layout(std430,binding=2) readonly buffer Inputs { float x[]; };
+layout(std430,binding=5) buffer Activations { float a[]; };
+layout(std430,binding=7) buffer Outputs { float o[]; };
+layout(push_constant) uniform Config { int mode; int batch; float rate; float gain; int start; int count; } c;
+shared float partial[64];
+void main() {
+ int N=m[0],I=m[1],E=m[2];
+ int task=int(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x),lane=int(gl_LocalInvocationID.x);
+ if(task>=N-I)return;
+ // Current inputs are clamped; every other source comes from the previous propagation tick.
+ for(int source=task*64+lane;source<I;source+=(N-I)*64) {
+  a[c.count+2*source]=x[2*source];a[c.count+2*source+1]=x[2*source+1];
+ }
+ int node=I+task,offsets=5,incoming=offsets+N+1,sources=incoming+E,destinations=sources+E,outputMap=destinations+E;
+ float sum=0;
+ for(int k=m[offsets+node]+lane;k<m[offsets+node+1];k+=64) {
+  int edge=m[incoming+k],source=m[sources+edge];
+  float value=source<I ? x[2*source]-x[2*source+1] : a[c.start+2*source]-a[c.start+2*source+1];
+  sum+=p[edge]*value;
+ }
+ partial[lane]=sum;barrier();
+ for(int stride=32;stride>0;stride>>=1) { if(lane<stride)partial[lane]+=partial[lane+stride];barrier(); }
+ if(lane==0) {
+  float potential=c.gain*partial[0]+p[E+node-I];int j=m[outputMap+node],at=c.count+2*node;
+  a[at]=j>=0?max(potential,0.0):max(tanh(potential),0.0);
+  a[at+1]=j>=0?max(-potential,0.0):max(tanh(-potential),0.0);
+  if(j>=0) { o[2*j]=a[at];o[2*j+1]=a[at+1]; }
+ }
+}

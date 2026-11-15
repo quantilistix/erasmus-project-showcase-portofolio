@@ -1,0 +1,19 @@
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 8 enemies; exit route 119 tiles. Missed-shot teacher penalty 0.15 per projectile.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+frame 7800 TRAIN health=100 ammo=4/20 hits=9 misses=4 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.004 pain=0.002 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00095 rewardLoss=0.00023 mainUpdates=7800 rewardUpdates=7800; mean 15.90 ms/frame (~62.9 compute fps), recent p95 18.02 ms
+frame 8400 TRAIN health=100 ammo=7/12 hits=9 misses=9 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.016 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00166 rewardLoss=0.00046 mainUpdates=8400 rewardUpdates=8400; mean 15.68 ms/frame (~63.8 compute fps), recent p95 18.93 ms
+frame 9000 TRAIN health=100 ammo=7/5 hits=9 misses=16 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.037 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00089 rewardLoss=0.00062 mainUpdates=9000 rewardUpdates=9000; mean 15.37 ms/frame (~65.1 compute fps), recent p95 15.92 ms
+Saved frame 9150.
+frame 9600 TRAIN health=100 ammo=4/0 hits=9 misses=24 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.012 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00041 rewardLoss=0.00067 mainUpdates=9600 rewardUpdates=9600; mean 15.55 ms/frame (~64.3 compute fps), recent p95 18.12 ms
+frame 10200 TRAIN health=100 ammo=0/0 hits=9 misses=28 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.010 pain=0.011 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00124 rewardLoss=0.00046 mainUpdates=10200 rewardUpdates=10200; mean 15.54 ms/frame (~64.3 compute fps), recent p95 17.31 ms
+frame 10800 TRAIN health=100 ammo=0/0 hits=9 misses=28 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.034 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00067 rewardLoss=0.00137 mainUpdates=10800 rewardUpdates=10800; mean 15.65 ms/frame (~63.9 compute fps), recent p95 17.50 ms
+Saved frame 11040.
+frame 11400 TRAIN health=100 ammo=0/0 hits=9 misses=28 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.005 pain=0.006 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00012 rewardLoss=0.00016 mainUpdates=11400 rewardUpdates=11400; mean 15.67 ms/frame (~63.8 compute fps), recent p95 16.93 ms
+frame 12000 TRAIN health=100 ammo=0/0 hits=9 misses=28 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.021 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00229 rewardLoss=0.00038 mainUpdates=12000 rewardUpdates=12000; mean 15.68 ms/frame (~63.8 compute fps), recent p95 16.95 ms
+frame 12600 TRAIN health=100 ammo=3/18 hits=9 misses=39 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.000 pain=0.089 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00019 rewardLoss=0.00183 mainUpdates=12600 rewardUpdates=12600; mean 15.71 ms/frame (~63.7 compute fps), recent p95 17.20 ms
+Saved frame 12934.
+frame 13200 TRAIN health=100 ammo=6/8 hits=9 misses=46 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.014 pain=0.025 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00046 rewardLoss=0.00140 mainUpdates=13200 rewardUpdates=13200; mean 15.76 ms/frame (~63.5 compute fps), recent p95 18.06 ms
+Saved main.ngb, reward.json and maze.json in artifacts/maze.
+6000 learning frames in 96.00s; mean 15.76 ms/frame (~63.5 compute fps), recent p95 18.06 ms

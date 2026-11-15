@@ -1,0 +1,23 @@
+{
+  "Title": "The Share of the Living",
+  "Source": "/home/vlad/Programming/MYT/story/story.md",
+  "SourceSha256": "94754A49AB816857BB82413902F07A0274D7237F10AB88F17060FE5D6FA1E689",
+  "ScriptSha256": "053315B4EE952B3DE6C11F96DCC9D6E7617E657FA81C57B99A1E7490E9D5CBEE",
+  "Width": 640,
+  "Height": 360,
+  "Fps": 12,
+  "Frames": 168,
+  "Duration": 14,
+  "Audio": "48000 Hz stereo AAC; original procedural score and effects; no voices",
+  "Renderer": "MYT textured low-poly software renderer; smooth normals, shadow map, contact shading",
+  "ArtStyle": "Restrained late-1990s prerendered look; procedural anatomy and texture tiles",
+  "Scenes": [
+    {
+      "Title": "The people on the meter",
+      "Location": "Constan\u021Ba \u2022 July 2029",
+      "Set": "harbor",
+      "Start": 0,
+      "End": 14
+    }
+  ]
+}

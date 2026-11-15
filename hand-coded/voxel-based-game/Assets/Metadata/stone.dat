@@ -1,0 +1,13 @@
+txt name="Stone"
+txt tehnical_name="stone"
+bln breakable=true
+bln transparent=false
+flt durability=50
+arr tool={"pickaxe";}
+mod model="cube.ply"
+fun function="none"
+c00 crafting={}
+smt smelting={"cobblestone",30;}
+drp drops={"cobblestone",1-1,1-5;}
+arr textures={"stone.png";"stone.png";"stone.png";"stone.png";"stone.png";"stone.png";}
+syn{}

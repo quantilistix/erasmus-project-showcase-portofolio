@@ -1,0 +1,16 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze
+Two historical checkpoints exist. Resuming the IDE checkpoint; the separate copy at /home/vlad/Programming/artificial_brain/artifacts/maze is not loaded. Use --checkpoint to select it explicitly.
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 14,052 nonnegative rate neurons, 4,133,376 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 17 enemies; exit route 119 tiles. Missed-shot teacher penalty 0.65 per projectile; exploration +24.00 per new cell and +8.00 per new region; stationary pain after 45 physics ticks. Stereo PCM/FFT enabled. Vision: 384 RGB first-person rays over 120 degrees, with distance shading.
+Error diagnostics print every 60 updates and on damage, death or initial wall contact. No-pain value loss removes only the sampled penalty from its target; it is not a new inference without pain inputs.
+Visual-variety teaching bonus: up to 0.05 × game speed per frame, derived from current world RGB only. Play uses the frozen reward head, not this ideal bonus.
+Main vitals: health/100, total rounds/104 (loaded + reserve), loaded rounds/8. Existing checkpoint ports reused.
+Passive health drain: 2.0 per simulated second; health pickups restore up to 40. Active in both modes.
+Persistent neural state: 2 synchronous connection hops per frame; current view only. Training buffers are separate.
+Eight independent buttons press above 0.50; no wait control. Move/turn/fire can be held together.
+Checkpoint /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+ERROR frame=469787 sample=current loss=0.017221 td_error=-0.074583 button_rmse=0.018611 vision_rmse=0.043776 value_loss=0.002781 value_loss_without_pain_target=0.002779 sample_pain_cost=0.000030 visual_variety=0.1156 ideal_variety_bonus=0.00289
+PAIN primitive_signal=0.0030 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0000 death_cost=0.0000 low_health_cost=0.000030 total_current_cost=0.000030 reward=0.843692 HP=99.00 ammo_total=31 ammo_loaded=7
+frame 469800 TRAIN health=99 ammo=7/24 controls=StrafeLeft explored=1804 regions=139 stillFrames=52292 idealP=0.049 idealPain=0.000 hits=33 misses=2426 kills=5 ammoPickups=29 healthPickups=29 exits=4 P=0.078 pain=0.006 primitiveP=0.000 primitivePain=0.004 R=0.049 loss=0.19987 rewardLoss=0.00300 ticks=859256 mainUpdates=469800 rewardUpdates=469800; mean 28.93 ms/frame (~34.6 compute fps), recent p95 40.54 ms
+90 learning frames in 4.36s; mean 28.50 ms/frame (~35.1 compute fps), recent p95 39.37 ms

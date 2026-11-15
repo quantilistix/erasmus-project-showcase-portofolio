@@ -1,0 +1,13 @@
+txt name="Sand"
+txt tehnical_name="sand"
+bln breakable=true
+bln transparent=false
+flt durability=1.5
+arr tool={"shovel";}
+mod model="cube.ply"
+fun function="none"
+c00 crafting={}
+smt smelting={}
+drp drops={"sand",1-1,0-5;}
+arr textures={"sand.png";"sand.png";"sand.png";"sand.png";"sand.png";"sand.png";}
+syn{}

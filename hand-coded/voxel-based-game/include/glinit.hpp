@@ -1,0 +1,1 @@
+int GLinit(GLFWwindow *&window, GLFWmonitor *&monitor, GLFWvidmode *&mode, int *windowWidth, int *windowHeight, int *max_width, int *max_height);

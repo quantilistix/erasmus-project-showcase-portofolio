@@ -1,0 +1,11 @@
+Continuing saved realtime session: artifacts/realtime/catch
+Intel(R) Arc(tm) Graphics (MTL); 5,124 logical units / 10,248 nonnegative rate neurons; 3,155,968 edges; reward head 995→32→2 (128 hidden probes + 864 raw pixels + 3 executed controls).
+Game speed 0.50x; learning remains frame-by-frame at target 60 FPS. All neuron channels use nonnegative dual-rail encoding.
+Calibration: 6000 frames. Then freeze reward weights, biases and plasticity; continue main learning every active frame.
+Pain samples hold for 12 frames (5.00 Hz refresh at target pace); one 1.00 Hz sine clock input.
+Noise ONLY in 16 learned-pain and 16 primitive-pain input neurons. Raw senses and controls unchanged.
+Learned reward weight 0.250, pleasure gain 0.0625, learned pain scale 0.250; primitive catch weight 1.00, trace inputs 16 (deterministic).
+frame  46824 REALTIME reward FROZEN P=0.469 targetP=0.801 pain=0.058 primitivePain=0.000 primitiveReward=0.015 catchPulse=0 R=0.103 clock=0.794 gain=1.033 envReward=-0.550 score=0 mainLoss=0.02143 headLoss=0.00000 mainUpdates=10824 headUpdates=38000; mean 7.10 ms/frame (~140.9 compute fps), recent p95 12.59 ms
+frame  46884 REALTIME reward FROZEN P=0.357 targetP=0.224 pain=0.084 primitivePain=0.000 primitiveReward=0.002 catchPulse=0 R=0.068 clock=0.794 gain=1.023 envReward=0.450 score=1 mainLoss=0.00217 headLoss=0.00000 mainUpdates=10884 headUpdates=38000; mean 6.65 ms/frame (~150.3 compute fps), recent p95 12.33 ms
+Completed 180 learning frames in 1.20s. mean 6.65 ms/frame (~150.3 compute fps), recent p95 12.33 ms
+Frozen-head realtime (180 frames): mean 6.65 ms/frame (~150.3 compute fps), recent p95 12.33 ms

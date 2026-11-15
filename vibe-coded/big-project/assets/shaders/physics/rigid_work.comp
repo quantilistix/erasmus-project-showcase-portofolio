@@ -1,0 +1,62 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Compact bodies by solver color and contact count. Empty colors dispatch no work, and
+// simple voxel objects use smaller workgroups while dense meshes keep 256 threads.
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint COLORS = 8u;
+const uint DENSE_CONTACTS = 128u;
+
+shared uint prefix[64];
+shared uint total;
+
+void main()
+{
+    uint bin = gl_WorkGroupID.x;
+    uint lane = gl_LocalInvocationID.x;
+    if (bin >= 2u * COLORS + 1u)
+        return;
+    if (lane == 0u)
+        total = 0u;
+    barrier();
+    // Tiled prefix scans preserve ascending body order without one thread serially
+    // visiting every body in every bin. Each workgroup owns its output range.
+    for (uint base = 0u; base < counts.y; base += 64u)
+    {
+        uint r = base + lane;
+        bool include = false;
+        if (r < counts.y)
+        {
+            uint block = counts.x + r;
+            bool dense = blockContactEnd(block) - blockContactBegin(block) > DENSE_CONTACTS;
+            uint color = rigidColors[flags * counts.y + r];
+            include = (bin == 2u * COLORS && color == COLORS)
+                || (bin < 2u * COLORS && color == bin % COLORS && dense == (bin >= COLORS));
+        }
+        prefix[lane] = include ? 1u : 0u;
+        barrier();
+        for (uint stride = 1u; stride < 64u; stride *= 2u)
+        {
+            uint preceding = lane >= stride ? prefix[lane - stride] : 0u;
+            barrier();
+            prefix[lane] += preceding;
+            barrier();
+        }
+        if (include)
+            rigidWork[bin * counts.y + total + prefix[lane] - 1u] = r;
+        barrier();
+        if (lane == 0u)
+            total += prefix[63];
+        barrier();
+    }
+    if (lane == 0u)
+    {
+        uint groups = bin == 2u * COLORS ? min(total, 1u) : (bin < COLORS ? (total + 1u) / 2u : total);
+        rigidArguments[bin] = uvec4(groups, 1u, 1u, total);
+    }
+}

@@ -1,0 +1,6 @@
+# Outputs from the portable build tooling
+/dist/
+/hand-coded/voxel-based-game/build/
+**/__pycache__/
+**/bin/
+**/obj/

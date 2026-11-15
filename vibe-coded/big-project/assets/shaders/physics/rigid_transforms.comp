@@ -1,0 +1,29 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Render model matrix per rigid body. The solver tracks the center of mass, the mesh is
+// authored around its own origin: model = T(p) · R(q) · T(-centerOfMass).
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+
+void main()
+{
+    uint r = gl_GlobalInvocationID.x;
+    if (r >= rangeCount)
+        return;
+
+    Rigid body = rigids[r];
+    dmat3 rotation = quatToMat3(body.orientation);
+    dvec3 translation = body.position.xyz - rotation * body.centerOfMass.xyz;
+
+    rigidTransforms[r] = mat4
+    (
+        vec4(vec3(rotation[0]), 0.0),
+        vec4(vec3(rotation[1]), 0.0),
+        vec4(vec3(rotation[2]), 0.0),
+        vec4(vec3(translation), 1.0)
+    );
+}

@@ -1,0 +1,54 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One thread per block: nodes first, then rigid bodies. Records x^t, the inertial target y
+// and the initial guess for the iterations. A rigid body feels gravity times its own scale.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+
+void main()
+{
+    uint gid = gl_GlobalInvocationID.x;
+    uint nodeCount = counts.x;
+    double h = gravityAndStep.w;
+    dvec3 g = gravityAndStep.xyz;
+
+    if (gid < nodeCount)
+    {
+        Node node = nodes[gid];
+        dvec3 x = node.position.xyz;
+        dvec3 v = node.velocity.xyz;
+        nodes[gid].previous = dvec4(x, 0.0);
+
+        if (isPinned(node))
+        {
+            nodes[gid].inertial = dvec4(x, 0.0);
+            return;
+        }
+
+        nodes[gid].inertial = dvec4(x + h * v + h * h * g, 0.0);
+        nodes[gid].position.xyz = adaptiveInitialGuess(x, v, node.previousVelocity.xyz, h, g);
+        return;
+    }
+
+    uint r = gid - nodeCount;
+    if (r >= counts.y)
+        return;
+
+    Rigid body = rigids[r];
+    dvec3 p = body.position.xyz;
+    dvec3 v = body.linearVelocity.xyz;
+    dvec4 q = body.orientation;
+    dvec4 qInertial = quatIntegrate(q, h * body.angularVelocity.xyz);
+    dvec3 gBody = body.inertia0.w * g;
+
+    rigids[r].previousPosition = dvec4(p, 0.0);
+    rigids[r].previousOrientation = q;
+    rigids[r].inertialPosition = dvec4(p + h * v + h * h * gBody, 0.0);
+    rigids[r].inertialOrientation = qInertial;
+    rigids[r].position.xyz = adaptiveInitialGuess(p, v, body.previousLinearVelocity.xyz, h, gBody);
+    rigids[r].orientation = qInertial;
+}

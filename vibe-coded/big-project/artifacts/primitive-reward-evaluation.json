@@ -1,0 +1,19 @@
+{
+  "Frames": 2000,
+  "GameSeed": 44001,
+  "Policy": "30-frame left/right sweeps, 10% neutral",
+  "Gain": 1,
+  "RewardInputs": 995,
+  "PleasureMAE": 0.2730653065777151,
+  "PleasureMSE": 0.10965008329103886,
+  "BaselinePleasureMSE": 0.1271943028053171,
+  "PleasureCorrelation": 0.33596406774464715,
+  "NearPredictedPleasure": 0.6647532556134348,
+  "NearFrames": 403,
+  "FarPredictedPleasure": 0.5015029874630272,
+  "FarFrames": 607,
+  "CatchPredictedPleasure": 0.8897887581870669,
+  "CatchFrames": 21,
+  "MissPredictedPleasure": 0.2050451883865941,
+  "MissFrames": 62
+}

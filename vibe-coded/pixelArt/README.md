@@ -1,0 +1,1 @@
+This is a pixel art editor writen in JavaScript with HTML. It features layers, transparency and tile editing.

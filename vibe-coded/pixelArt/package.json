@@ -1,0 +1,16 @@
+{
+  "name": "pixelart",
+  "version": "1.0.0",
+  "description": "PixelForge pixel art editor with layers, tiled painting, palettes, and synchronized HSV/RGB color tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/editor.test.cjs && node tests/coordinates.test.cjs && node tests/render-boundaries.test.cjs && node tests/low-resolution.test.cjs && node tests/layers-import.test.cjs",
+    "start": "python3 -m http.server 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright": "^1.61.1"
+  }
+}

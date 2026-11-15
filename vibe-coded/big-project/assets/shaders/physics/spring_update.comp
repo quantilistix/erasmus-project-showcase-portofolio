@@ -1,0 +1,51 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Spring stiffness and multipliers, one thread per spring. At the start of a step they are
+// warm started from the last one (AVBD Eq. 19); after each iteration soft springs ramp their
+// stiffness toward the real one (AVBD Eq. 16) and hard springs take a dual step (AVBD Eq. 11-12).
+// A spring whose force exceeds its durability breaks for good.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+
+const uint MODE_DUAL = 1u;
+
+void main()
+{
+    uint s = gl_GlobalInvocationID.x;
+    if (s >= counts.z)
+        return;
+
+    vec4 state = springStates[s];
+    if (state.z != 0.0)
+        return;
+
+    Spring spring = springs[s];
+    bool hard = isinf(spring.stiffness);
+    float maxStiffness = hard ? float(limits.x) : spring.stiffness;
+
+    if ((flags & MODE_DUAL) == 0u)
+    {
+        state.x = min(max(float(avbd.z) * state.x, float(avbd.w)), maxStiffness);
+        state.y *= float(avbd.x * avbd.z);
+        springStates[s] = state;
+        return;
+    }
+
+    float len = length(vec3(nodes[spring.node1].position.xyz - nodes[spring.node2].position.xyz));
+    float error = len - spring.restLength;
+    float tension = state.x * error + state.y;
+
+    if (hard)
+        state.y = clamp(tension, -float(limits.y), float(limits.y));
+
+    state.x = min(maxStiffness, state.x + float(avbd.y) * abs(error));
+
+    if (abs(tension) > spring.durability)
+        state.z = 1.0;
+
+    springStates[s] = state;
+}

@@ -1,0 +1,30 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Swept world bounds of each dynamic body for this detection pass, one thread per body: the
+// running bounds triangle_bounds.comp gathered, plus the margin. The running bounds are reset
+// for the next pass.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_CONTINUOUS = 1u;
+
+void main()
+{
+    uint b = gl_GlobalInvocationID.x;
+    if (b >= bodyCounts.x)
+        return;
+
+    float margin = float(collision.x);
+    bodies[b].boundsMin = vec4(orderedValue(bodies[b].sweepMin.xyz) - margin, 0.0);
+    bodies[b].boundsMax = vec4(orderedValue(bodies[b].sweepMax.xyz) + margin, 0.0);
+    bodies[b].sweepMin = uvec4(KEY_POSITIVE_INFINITY);
+    bodies[b].sweepMax = uvec4(KEY_NEGATIVE_INFINITY);
+
+    if ((flags & MODE_CONTINUOUS) == 0u)
+        bodies[b].extra.w &= ~(BODY_RESET_LAST | BODY_TOUCHING);
+}

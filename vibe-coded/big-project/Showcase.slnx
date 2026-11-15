@@ -1,0 +1,14 @@
+<Solution>
+  <Project Path="src/ArcadeLab/ArcadeLab.csproj" />
+  <Project Path="src/BrainEditor/BrainEditor.csproj" />
+  <Project Path="src/BrainRuntime/BrainRuntime.csproj" />
+  <Project Path="src/MYT.IKit/MYT.IKit.csproj" />
+  <Project Path="src/MYT.Kit/MYT.Kit.csproj" />
+  <Project Path="src/NeuralGraph/NeuralGraph.csproj" />
+  <Project Path="src/PhysicsTests/PhysicsTests.csproj" />
+  <Project Path="src/Tester/Tester.csproj" />
+  <Project Path="src/VoxelGame/VoxelGame.csproj" />
+  <Project Path="src/VoxelLighting/VoxelLighting.csproj" />
+  <Project Path="src/VoxelTests/VoxelTests.csproj" />
+  <Project Path="tests/BrainEditor.Checks/BrainEditor.Checks.csproj" />
+</Solution>

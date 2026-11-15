@@ -1,0 +1,1 @@
+This is a program, writen in Lua and Love2D, that calculates the intersection between a rotated cube and the Z=0 plane as the cube passes through the invisible plane. The cube and the intersection are drawn with different colors.

@@ -1,0 +1,13 @@
+txt name="Oak leaves"
+txt tehnical_name="oak_leaves"
+bln breakable=true
+bln transparent=true
+flt durability=0.5
+arr tool={"hoe";}
+mod model="cube.ply"
+fun function="leaves"
+c00 crafting={}
+smt smelting={}
+drp drops={"oak_sapling",1-8,0-0;"oak_leaves",1-1,1-5;}
+arr textures={"oak_leaves.png";"oak_leaves.png";"oak_leaves.png";"oak_leaves.png";"oak_leaves.png";"oak_leaves.png";"oak_leaves.png";}
+syn{snowy=bln;life=flt}

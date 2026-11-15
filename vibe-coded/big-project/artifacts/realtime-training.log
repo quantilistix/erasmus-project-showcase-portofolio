@@ -1,0 +1,31 @@
+Creating 8 hidden layers × 512 neurons, with adjacent + odd-to-odd connections…
+Intel(R) Arc(tm) Graphics (MTL); 5,107 neurons; 3,147,264 edges; reward head 128→32→2.
+Calibration: 2000 frames. Then freeze reward weights, biases and plasticity; continue main learning every active frame.
+Noise ONLY in 16 learned-pain and 16 primitive-pain input neurons. Raw senses and controls unchanged.
+frame    120 CALIBRATING reward TRAINING P=0.194 pain=0.243 primitive=0.956 gain=1.049 mainLoss=0.35794 headLoss=0.09251 mainUpdates=120 headUpdates=120; mean 7.86 ms/frame (~127.2 compute fps), recent p95 14.49 ms
+frame    240 CALIBRATING reward TRAINING P=0.017 pain=0.774 primitive=0.956 gain=1.004 mainLoss=0.28948 headLoss=0.06860 mainUpdates=240 headUpdates=240; mean 6.93 ms/frame (~144.4 compute fps), recent p95 10.78 ms
+frame    360 CALIBRATING reward TRAINING P=0.116 pain=0.060 primitive=0.020 gain=1.029 mainLoss=0.75790 headLoss=0.09527 mainUpdates=360 headUpdates=360; mean 6.67 ms/frame (~149.8 compute fps), recent p95 9.49 ms
+frame    480 CALIBRATING reward TRAINING P=0.190 pain=0.776 primitive=1.000 gain=1.048 mainLoss=1.13840 headLoss=0.03881 mainUpdates=480 headUpdates=480; mean 6.49 ms/frame (~154.2 compute fps), recent p95 9.10 ms
+frame    600 CALIBRATING reward TRAINING P=0.406 pain=0.029 primitive=0.019 gain=1.101 mainLoss=0.48148 headLoss=0.05425 mainUpdates=600 headUpdates=600; mean 6.36 ms/frame (~157.2 compute fps), recent p95 6.49 ms
+frame    720 CALIBRATING reward TRAINING P=0.000 pain=0.880 primitive=1.000 gain=1.000 mainLoss=0.52922 headLoss=0.05991 mainUpdates=720 headUpdates=720; mean 6.31 ms/frame (~158.5 compute fps), recent p95 6.60 ms
+frame    840 CALIBRATING reward TRAINING P=0.039 pain=0.872 primitive=0.956 gain=1.010 mainLoss=0.32283 headLoss=0.03234 mainUpdates=840 headUpdates=840; mean 6.29 ms/frame (~159.1 compute fps), recent p95 6.73 ms
+frame    960 CALIBRATING reward TRAINING P=0.000 pain=0.930 primitive=1.000 gain=1.000 mainLoss=0.86629 headLoss=0.04125 mainUpdates=960 headUpdates=960; mean 6.27 ms/frame (~159.4 compute fps), recent p95 6.72 ms
+frame   1080 CALIBRATING reward TRAINING P=0.516 pain=0.000 primitive=0.020 gain=1.129 mainLoss=0.69362 headLoss=0.04013 mainUpdates=1080 headUpdates=1080; mean 6.26 ms/frame (~159.8 compute fps), recent p95 6.77 ms
+frame   1200 CALIBRATING reward TRAINING P=0.000 pain=0.843 primitive=1.000 gain=1.000 mainLoss=0.35530 headLoss=0.05327 mainUpdates=1200 headUpdates=1200; mean 6.24 ms/frame (~160.2 compute fps), recent p95 6.82 ms
+frame   1320 CALIBRATING reward TRAINING P=0.000 pain=0.144 primitive=0.020 gain=1.000 mainLoss=0.66716 headLoss=0.07773 mainUpdates=1320 headUpdates=1320; mean 6.22 ms/frame (~160.7 compute fps), recent p95 6.81 ms
+frame   1440 CALIBRATING reward TRAINING P=1.000 pain=0.000 primitive=0.020 gain=1.250 mainLoss=0.56848 headLoss=0.04326 mainUpdates=1440 headUpdates=1440; mean 6.21 ms/frame (~160.9 compute fps), recent p95 6.70 ms
+frame   1560 CALIBRATING reward TRAINING P=0.049 pain=1.000 primitive=1.000 gain=1.012 mainLoss=0.57641 headLoss=0.05300 mainUpdates=1560 headUpdates=1560; mean 6.21 ms/frame (~161.1 compute fps), recent p95 6.75 ms
+frame   1680 CALIBRATING reward TRAINING P=0.205 pain=0.884 primitive=0.956 gain=1.051 mainLoss=0.34495 headLoss=0.02964 mainUpdates=1680 headUpdates=1680; mean 6.22 ms/frame (~160.8 compute fps), recent p95 6.86 ms
+frame   1800 CALIBRATING reward TRAINING P=0.650 pain=0.000 primitive=0.020 gain=1.162 mainLoss=0.48222 headLoss=0.04773 mainUpdates=1800 headUpdates=1800; mean 6.22 ms/frame (~160.9 compute fps), recent p95 6.96 ms
+frame   1920 CALIBRATING reward TRAINING P=0.000 pain=0.676 primitive=1.000 gain=1.000 mainLoss=0.66172 headLoss=0.05001 mainUpdates=1920 headUpdates=1920; mean 6.21 ms/frame (~161.1 compute fps), recent p95 6.96 ms
+frame   2000 REALTIME reward FROZEN P=0.000 pain=0.000 primitive=0.272 gain=1.000 mainLoss=0.00771 headLoss=0.03800 mainUpdates=2000 headUpdates=2000; mean 6.20 ms/frame (~161.2 compute fps), recent p95 6.97 ms
+frame   2040 REALTIME reward FROZEN P=0.211 pain=1.000 primitive=1.000 gain=1.053 mainLoss=0.33289 headLoss=0.03800 mainUpdates=2040 headUpdates=2000; mean 6.19 ms/frame (~161.6 compute fps), recent p95 6.97 ms
+frame   2160 REALTIME reward FROZEN P=0.000 pain=1.000 primitive=1.000 gain=1.000 mainLoss=0.98214 headLoss=0.03800 mainUpdates=2160 headUpdates=2000; mean 6.16 ms/frame (~162.4 compute fps), recent p95 6.76 ms
+frame   2280 REALTIME reward FROZEN P=0.007 pain=0.802 primitive=1.000 gain=1.002 mainLoss=0.81204 headLoss=0.03800 mainUpdates=2280 headUpdates=2000; mean 6.12 ms/frame (~163.3 compute fps), recent p95 6.52 ms
+frame   2400 REALTIME reward FROZEN P=0.035 pain=1.000 primitive=1.000 gain=1.009 mainLoss=9.15629 headLoss=0.03800 mainUpdates=2400 headUpdates=2000; mean 6.09 ms/frame (~164.1 compute fps), recent p95 6.42 ms
+frame   2520 REALTIME reward FROZEN P=0.124 pain=1.000 primitive=1.000 gain=1.031 mainLoss=0.94795 headLoss=0.03800 mainUpdates=2520 headUpdates=2000; mean 6.07 ms/frame (~164.7 compute fps), recent p95 6.25 ms
+frame   2600 REALTIME reward FROZEN P=0.000 pain=0.204 primitive=0.272 gain=1.000 mainLoss=0.00631 headLoss=0.03800 mainUpdates=2600 headUpdates=2000; mean 6.05 ms/frame (~165.2 compute fps), recent p95 6.25 ms
+Completed 2600 learning frames in 15.74s. mean 6.05 ms/frame (~165.2 compute fps), recent p95 6.25 ms
+Calibration (2000 frames): mean 6.20 ms/frame (~161.2 compute fps), recent p95 6.97 ms
+Frozen-head realtime (600 frames): mean 5.54 ms/frame (~180.4 compute fps), recent p95 6.25 ms
+Saved main.ngb, reward.json and session.json to artifacts/realtime/catch

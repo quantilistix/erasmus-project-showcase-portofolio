@@ -1,0 +1,1 @@
+This is a ray casting program, writen in Lua and Love2D, where multiple rays interact with multiple walls. To move around, use the arrow keys. It doesn't have a working implementation of depth.

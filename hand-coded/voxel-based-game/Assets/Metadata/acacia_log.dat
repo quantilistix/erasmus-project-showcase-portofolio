@@ -1,0 +1,13 @@
+txt name="Acacia log"
+txt tehnical_name="acacia_log"
+bln breakable=true
+bln transparent=false
+flt durability=16
+arr tool={"axe";}
+mod model="cube.ply"
+fun function="none"
+c00 crafting={}
+smt smelting={}
+drp drops={"acacia_log",1-1,0-5;}
+arr textures={"acacia_log_top.png";"acacia_log_top.png";"acacia_log_side.png";"acacia_log_side.png";"acacia_log_side.png";"acacia_log_side.png";"acacia_log_side.png";}
+syn{}

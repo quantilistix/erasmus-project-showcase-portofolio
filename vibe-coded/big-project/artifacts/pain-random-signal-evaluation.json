@@ -1,0 +1,83 @@
+{
+  "Frames": 24,
+  "TrialsPerCase": 3,
+  "Backend": "CPU layered reference",
+  "Gain": 1,
+  "GameSeed": 55001,
+  "Objective": "Same fixed grounded Q/reward/next-image targets for clean and noisy inputs; no optimizer or checkpoint writes.",
+  "BaselineLoss": 0.11316814723066514,
+  "Cases": [
+    {
+      "Bank": "learned",
+      "Pain": 0.25,
+      "MeanLoss": 0.1320645747644117,
+      "MeanLossChange": 0.018896427533746537,
+      "FractionWithHigherLoss": 0.6388888888888888,
+      "MeanAbsoluteConnectedActivationChange": 0.04772201843486338
+    },
+    {
+      "Bank": "learned",
+      "Pain": 0.5,
+      "MeanLoss": 0.15917246380619382,
+      "MeanLossChange": 0.0460043165755287,
+      "FractionWithHigherLoss": 0.8194444444444444,
+      "MeanAbsoluteConnectedActivationChange": 0.06862703273176704
+    },
+    {
+      "Bank": "learned",
+      "Pain": 1,
+      "MeanLoss": 0.2049408939898185,
+      "MeanLossChange": 0.09177274675915327,
+      "FractionWithHigherLoss": 0.9166666666666666,
+      "MeanAbsoluteConnectedActivationChange": 0.09852630619252996
+    },
+    {
+      "Bank": "primitive",
+      "Pain": 0.25,
+      "MeanLoss": 0.19324493462842895,
+      "MeanLossChange": 0.08007678739776387,
+      "FractionWithHigherLoss": 0.9166666666666666,
+      "MeanAbsoluteConnectedActivationChange": 0.04959056001511581
+    },
+    {
+      "Bank": "primitive",
+      "Pain": 0.5,
+      "MeanLoss": 0.28331747786017075,
+      "MeanLossChange": 0.17014933062950577,
+      "FractionWithHigherLoss": 0.9583333333333334,
+      "MeanAbsoluteConnectedActivationChange": 0.07010492984686796
+    },
+    {
+      "Bank": "primitive",
+      "Pain": 1,
+      "MeanLoss": 0.5539864513966193,
+      "MeanLossChange": 0.44081830416595424,
+      "FractionWithHigherLoss": 0.9583333333333334,
+      "MeanAbsoluteConnectedActivationChange": 0.09988754498550634
+    },
+    {
+      "Bank": "both",
+      "Pain": 0.25,
+      "MeanLoss": 0.2281917050878598,
+      "MeanLossChange": 0.1150235578571946,
+      "FractionWithHigherLoss": 0.9444444444444444,
+      "MeanAbsoluteConnectedActivationChange": 0.06940077790279592
+    },
+    {
+      "Bank": "both",
+      "Pain": 0.5,
+      "MeanLoss": 0.36119483214444126,
+      "MeanLossChange": 0.2480266849137759,
+      "FractionWithHigherLoss": 0.9444444444444444,
+      "MeanAbsoluteConnectedActivationChange": 0.09881917455198301
+    },
+    {
+      "Bank": "both",
+      "Pain": 1,
+      "MeanLoss": 0.7513301348295399,
+      "MeanLossChange": 0.6381619875988748,
+      "FractionWithHigherLoss": 0.9583333333333334,
+      "MeanAbsoluteConnectedActivationChange": 0.13801316612559353
+    }
+  ]
+}

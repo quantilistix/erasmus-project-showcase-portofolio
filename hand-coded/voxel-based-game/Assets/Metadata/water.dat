@@ -1,0 +1,13 @@
+txt name="Water"
+txt tehnical_name="water"
+bln breakable=false
+bln transparent=true
+flt durability=0.5
+arr tool={"bucket";}
+mod model="water.ply"
+fun function="leaves"
+c00 crafting={}
+smt smelting={}
+drp drops={}
+arr textures={"water.png";"water.png";"water.png";"water.png";"water.png";"water.png";"water.png";}
+syn{}

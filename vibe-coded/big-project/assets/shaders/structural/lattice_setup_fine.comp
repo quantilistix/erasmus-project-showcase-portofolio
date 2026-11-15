@@ -1,0 +1,29 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0, one thread per node: the inverse of each cell's diagonal block, for smoothing.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+#include "lattice_blocks.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    ivec3 size = pass.size.xyz;
+    if (i >= nodeCount(size) || cells[i].w == 0.0)
+        return;
+
+    float diagonal[BLOCK];
+    fineDiagonal(i, nodeCoordinate(i, size), size, diagonal);
+
+    double wide[BLOCK];
+    double inverse[BLOCK];
+    for (int k = 0; k < BLOCK; k++)
+        wide[k] = diagonal[k];
+    invertBlock(wide, inverse);
+    for (int k = 0; k < BLOCK; k++)
+        inverses[uint(i) * uint(BLOCK) + uint(k)] = float(inverse[k]);
+}

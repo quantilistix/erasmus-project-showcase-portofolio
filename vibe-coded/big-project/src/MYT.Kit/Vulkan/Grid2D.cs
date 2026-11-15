@@ -1,0 +1,1 @@
+namespace MYT.Kit.Vulkan;

@@ -1,0 +1,18 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One thread per node of a level (size.w): residual = right − K·correction.
+// offsets.x, offsets.z = the level's first node and first block node.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    Level level = thisLevel();
+    if (i < nodeCount(level.size))
+        residualNode(level, i);
+}

@@ -1,0 +1,23 @@
+Checkpoint: /tmp/reward-pc-smoke
+PLAY: paired-error inference; main plasticity active, reward weights frozen.
+llvmpipe (LLVM 20.1.2, 256 bits) / predictive coding / device-local weights / subgroup reductions (software Vulkan on CPU); 3,120 normal neurons plus paired error populations, 49,664 shared w/-w connections. Eight nonnegative motor outputs.
+Vulkan selected a CPU renderer. Hardware acceleration requires an accessible GPU and its Vulkan driver; use --list-devices and --device INDEX to select a different device.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One PC local weight update/frame; reward motor decisions every 12 frames.
+Main PC plasticity uses positive base eta. Reward/pain train a local motor actor/critic with eligibility traces; the PC graph supplies representation and receives the actual button clamps.
+Motor feedback = .1 * instantaneous normalized calculated pleasure - calculated pain + primitive event reward/cost + 4 on completion + .02 per new cell. Sensation traces are not repaid.
+Training uses calculated teacher labels; play uses the frozen reward network. Primitive signals and discovery remain available in both modes.
+Drive inputs retain constant pleasure plus held pain noise. Manual/bot control clears policy credit; it teaches PC associations without off-policy reinforcement.
+Total error = SUM(E^2), statistics only. Motor learning is a small local readout; no replay or backpropagation through the predictive networks.
+Level 1; maze geometry stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /tmp/reward-pc-smoke.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=271 total_error_sum_e2=2370270.360708 reward_error_sum_e2=2488867.545188 teaching_error_sum_e2=0.000000 total_pleasure=0.75786 total_pain=0.00150 sensation_balance=0.75636 eta_effective=0.00001000 motor_td=0.01267 motor_updates=21 learning_reward=-0.05000 main_ticks=2168 reward_ticks=2168 local_updates=271/240
+SENSE primitive_pain=0.0515 applied_pain=0.0000 applied_pleasure=191.7832 inferred_pain=0.0000 inferred_pleasure=0.0000 HP=99.48 ammo=0/0 controls=Backward, TurnLeft, StrafeRight, Reload
+PC frame=298 total_error_sum_e2=2563515.383040 reward_error_sum_e2=2718788.588529 teaching_error_sum_e2=0.000000 total_pleasure=0.55478 total_pain=0.00285 sensation_balance=0.55193 eta_effective=0.00001000 motor_td=-0.00885 motor_updates=23 learning_reward=-0.04026 main_ticks=2384 reward_ticks=2384 local_updates=298/240
+SENSE primitive_pain=0.0431 applied_pain=0.0000 applied_pleasure=140.3935 inferred_pain=0.0000 inferred_pleasure=0.0000 HP=99.03 ammo=0/0 controls=Forward, Backward, TurnLeft, StrafeLeft
+PC frame=358 total_error_sum_e2=3041890.884834 reward_error_sum_e2=3610092.583571 teaching_error_sum_e2=0.000000 total_pleasure=0.34298 total_pain=0.00585 sensation_balance=0.33713 eta_effective=0.00001000 motor_td=-0.28384 motor_updates=28 learning_reward=-0.00006 main_ticks=2864 reward_ticks=2864 local_updates=358/240
+SENSE primitive_pain=0.0059 applied_pain=0.0000 applied_pleasure=86.7948 inferred_pain=0.0000 inferred_pleasure=0.0000 HP=98.03 ammo=0/0 controls=Forward, Backward, TurnRight, StrafeLeft, Fire
+PC frame=360 total_error_sum_e2=3058437.174661 reward_error_sum_e2=3670702.189157 teaching_error_sum_e2=0.000000 total_pleasure=0.33515 total_pain=0.00595 sensation_balance=0.32920 eta_effective=0.00001000 motor_td=-0.28384 motor_updates=28 learning_reward=0.00071 main_ticks=2880 reward_ticks=2880 local_updates=360/240
+SENSE primitive_pain=0.0060 applied_pain=0.0000 applied_pleasure=84.8124 inferred_pain=0.0000 inferred_pleasure=1.9711 HP=98.00 ammo=0/0 controls=Forward, Backward, TurnRight, StrafeLeft, Fire
+Level 1, geometry stage 1/5, completions 0, mean 28.20 ms/frame (~35.5 compute fps), recent p95 27.57 ms
+120 learning frames in 3.40s; mean 28.20 ms/frame (~35.5 compute fps), recent p95 27.57 ms

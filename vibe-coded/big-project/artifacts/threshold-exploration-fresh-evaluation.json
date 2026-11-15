@@ -1,0 +1,38 @@
+{
+  "neutral_or_revisit": {
+    "Count": 119,
+    "IdealPleasure": 0.00017772739,
+    "PredictedPleasure": 0.04764215,
+    "IdealPain": 0,
+    "PredictedPain": 0.012584348,
+    "PleasureMse": 0.0045980695,
+    "PainMse": 0.0012375931
+  },
+  "stationary": {
+    "Count": 103,
+    "IdealPleasure": 4.273332E-17,
+    "PredictedPleasure": 0.026812993,
+    "IdealPain": 0.03243258,
+    "PredictedPain": 0.04019523,
+    "PleasureMse": 0.0024796503,
+    "PainMse": 0.0031431653
+  },
+  "miss": {
+    "Count": 9,
+    "IdealPleasure": 0,
+    "PredictedPleasure": 0.034527175,
+    "IdealPain": 0.6754321,
+    "PredictedPain": 0.37862283,
+    "PleasureMse": 0.0017028247,
+    "PainMse": 0.089677416
+  },
+  "exploration": {
+    "Count": 38,
+    "IdealPleasure": 0.26835498,
+    "PredictedPleasure": 0.09562512,
+    "IdealPain": 0,
+    "PredictedPain": 0.0008895828,
+    "PleasureMse": 0.101473965,
+    "PainMse": 6.1170035E-06
+  }
+}

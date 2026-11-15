@@ -1,0 +1,26 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "common.glsl"
+layout(local_size_x=64) in;
+void main() {
+    uint i=invocation();
+    if(i>=p.counts.x*4096u) return;
+    if(occupied[i]!=0u) { state[i]=vec4(0); return; }
+    vec4 value=temporary[i];
+    float divergence=0.0;
+    for(int axis=0;axis<3;axis++) {
+        int prev=adjacent(i,axis*2);
+        float incoming=prev<0||occupied[prev]!=0u ? 0.0 : temporary[prev][axis+1];
+        divergence+=value[axis+1]-incoming;
+    }
+    value.x-=p.physics.x*p.physics.y*divergence;
+    // A lossy air field, with a sponge along the finite resident boundary.
+    float damping=exp(-3.0*p.physics.x);
+    ivec3 c=localCell(i);
+    for(int f=0;f<6;f++) {
+        int neighbor=f<4 ? tiles[i>>12].nearXY[f] : tiles[i>>12].nearZ[f-4];
+        int edge=(f&1)==0 ? c[f>>1] : 15-c[f>>1];
+        if(neighbor<0&&edge<4) damping*=exp(-float(4-edge)*30.0*p.physics.x);
+    }
+    state[i]=value*damping;
+}

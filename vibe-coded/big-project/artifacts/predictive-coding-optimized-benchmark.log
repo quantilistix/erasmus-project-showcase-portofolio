@@ -1,0 +1,13 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/artifacts/predictive-maze
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+Intel(R) Arc(tm) Graphics (MTL) / predictive coding; 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One local weight update/frame.
+Total error = SUM(E^2), statistics only. No actor/value objective, replay, backpropagation, biases or least-squares reward shortcut.
+Maze stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=560 total_error_sum_e2=2726337.745766 reward_error_sum_e2=4980811.075765 teaching_error_sum_e2=5031506.222059 main_ticks=4480 reward_ticks=4480 local_updates=560/560
+SENSE primitive_pain=0.1230 learned_pain=1.0000 pleasure=0.0000 HP=59.00 ammo=2/8 controls=Reload
+PC frame=600 total_error_sum_e2=2635549.083142 reward_error_sum_e2=7847689.005008 teaching_error_sum_e2=7919640.837454 main_ticks=4800 reward_ticks=4800 local_updates=600/600
+SENSE primitive_pain=0.1250 learned_pain=0.0000 pleasure=256.0000 HP=58.33 ammo=2/8 controls=None
+Stage 1/5, completions 0, mean 42.92 ms/frame (~23.3 compute fps), recent p95 47.46 ms
+100 learning frames in 4.31s; mean 42.92 ms/frame (~23.3 compute fps), recent p95 47.46 ms

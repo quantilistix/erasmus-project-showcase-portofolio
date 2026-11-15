@@ -1,0 +1,99 @@
+Catch: Intel(R) Arc(tm) Graphics (MTL); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: -1.200; random: -2.036
+Catch episode   10/300 reward  -1.996 loss 0.02517 epsilon 0.97
+Catch episode   20/300 reward  -3.009 loss 0.03828 epsilon 0.93
+Catch episode   30/300 reward  -2.009 loss 0.00422 epsilon 0.89
+Catch episode   40/300 reward  -2.210 loss 0.02637 epsilon 0.85
+Catch episode   50/300 reward  -2.616 loss 0.03569 epsilon 0.82
+Catch episode   60/300 reward  -2.319 loss 0.07789 epsilon 0.78
+Catch episode   70/300 reward  -2.497 loss 0.02880 epsilon 0.74
+Catch episode   80/300 reward  -3.163 loss 0.02987 epsilon 0.70
+Catch episode   90/300 reward  -2.846 loss 0.06980 epsilon 0.67
+Catch episode  100/300 reward  -1.988 loss 0.02202 epsilon 0.63
+Catch episode  110/300 reward  -2.152 loss 0.01632 epsilon 0.59
+Catch episode  120/300 reward  -2.394 loss 0.01754 epsilon 0.55
+Catch episode  130/300 reward  -2.476 loss 0.02582 epsilon 0.52
+Catch episode  140/300 reward  -1.571 loss 0.01674 epsilon 0.48
+Catch episode  150/300 reward  -1.602 loss 0.04736 epsilon 0.44
+Catch episode  160/300 reward  -1.911 loss 0.02073 epsilon 0.40
+Catch episode  170/300 reward  -2.646 loss 0.00360 epsilon 0.37
+Catch episode  180/300 reward  -1.613 loss 0.02395 epsilon 0.33
+Catch episode  190/300 reward  -1.869 loss 0.02498 epsilon 0.29
+Catch episode  200/300 reward  -1.844 loss 0.00336 epsilon 0.25
+Catch episode  210/300 reward  -2.438 loss 0.01715 epsilon 0.22
+Catch episode  220/300 reward  -3.278 loss 0.01276 epsilon 0.18
+Catch episode  230/300 reward  -2.401 loss 0.03595 epsilon 0.14
+Catch episode  240/300 reward  -3.363 loss 0.06427 epsilon 0.10
+Catch episode  250/300 reward  -1.914 loss 0.03107 epsilon 0.10
+Catch episode  260/300 reward  -2.154 loss 0.04218 epsilon 0.10
+Catch episode  270/300 reward  -2.915 loss 0.03730 epsilon 0.10
+Catch episode  280/300 reward  -3.660 loss 0.04843 epsilon 0.10
+Catch episode  290/300 reward  -3.043 loss 0.02154 epsilon 0.10
+Catch episode  300/300 reward  -3.487 loss 0.00306 epsilon 0.10
+Saved artifacts/catch.json; 33.2s; held-out mean reward -2.949
+Dodge: Intel(R) Arc(tm) Graphics (MTL); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: 3.442; random: 2.036
+Dodge episode   10/300 reward   2.655 loss 0.02067 epsilon 0.97
+Dodge episode   20/300 reward   3.083 loss 0.03097 epsilon 0.93
+Dodge episode   30/300 reward   3.151 loss 0.00672 epsilon 0.89
+Dodge episode   40/300 reward   1.677 loss 0.01508 epsilon 0.85
+Dodge episode   50/300 reward   2.858 loss 0.03014 epsilon 0.82
+Dodge episode   60/300 reward   2.341 loss 0.06599 epsilon 0.78
+Dodge episode   70/300 reward   2.776 loss 0.02264 epsilon 0.74
+Dodge episode   80/300 reward   1.976 loss 0.03259 epsilon 0.70
+Dodge episode   90/300 reward   1.481 loss 0.06747 epsilon 0.67
+Dodge episode  100/300 reward   1.967 loss 0.02484 epsilon 0.63
+Dodge episode  110/300 reward   2.572 loss 0.01105 epsilon 0.59
+Dodge episode  120/300 reward   3.200 loss 0.02175 epsilon 0.55
+Dodge episode  130/300 reward   3.277 loss 0.01717 epsilon 0.52
+Dodge episode  140/300 reward   2.391 loss 0.01727 epsilon 0.48
+Dodge episode  150/300 reward   2.886 loss 0.04969 epsilon 0.44
+Dodge episode  160/300 reward   3.042 loss 0.01566 epsilon 0.40
+Dodge episode  170/300 reward   3.730 loss 0.00448 epsilon 0.37
+Dodge episode  180/300 reward   3.596 loss 0.01622 epsilon 0.33
+Dodge episode  190/300 reward   3.541 loss 0.01548 epsilon 0.29
+Dodge episode  200/300 reward   2.244 loss 0.00398 epsilon 0.25
+Dodge episode  210/300 reward   2.000 loss 0.02140 epsilon 0.22
+Dodge episode  220/300 reward   3.587 loss 0.01019 epsilon 0.18
+Dodge episode  230/300 reward   3.262 loss 0.03079 epsilon 0.14
+Dodge episode  240/300 reward   3.493 loss 0.04210 epsilon 0.10
+Dodge episode  250/300 reward   3.093 loss 0.02066 epsilon 0.10
+Dodge episode  260/300 reward   2.776 loss 0.00664 epsilon 0.10
+Dodge episode  270/300 reward   2.846 loss 0.03273 epsilon 0.10
+Dodge episode  280/300 reward   3.163 loss 0.02563 epsilon 0.10
+Dodge episode  290/300 reward   2.713 loss 0.01703 epsilon 0.10
+Dodge episode  300/300 reward   2.552 loss 0.00374 epsilon 0.10
+Saved artifacts/dodge.json; 33.8s; held-out mean reward 1.298
+Rally: Intel(R) Arc(tm) Graphics (MTL); 1009 nodes, 44746 connections, 2 steps; raw frames + PCM + FFT.
+Before: -2.500; random: -0.658
+Rally episode   10/300 reward  -1.609 loss 0.00497 epsilon 0.97
+Rally episode   20/300 reward  -2.001 loss 0.02541 epsilon 0.93
+Rally episode   30/300 reward  -1.366 loss 0.00401 epsilon 0.89
+Rally episode   40/300 reward  -2.032 loss 0.00420 epsilon 0.85
+Rally episode   50/300 reward  -1.657 loss 0.00466 epsilon 0.82
+Rally episode   60/300 reward  -1.430 loss 0.02519 epsilon 0.78
+Rally episode   70/300 reward  -1.932 loss 0.03756 epsilon 0.74
+Rally episode   80/300 reward  -1.967 loss 0.02612 epsilon 0.70
+Rally episode   90/300 reward  -2.461 loss 0.00532 epsilon 0.67
+Rally episode  100/300 reward  -1.761 loss 0.00459 epsilon 0.63
+Rally episode  110/300 reward  -1.416 loss 0.00485 epsilon 0.59
+Rally episode  120/300 reward  -1.590 loss 0.00395 epsilon 0.55
+Rally episode  130/300 reward  -2.290 loss 0.06021 epsilon 0.52
+Rally episode  140/300 reward  -1.910 loss 0.04095 epsilon 0.48
+Rally episode  150/300 reward  -2.210 loss 0.02136 epsilon 0.44
+Rally episode  160/300 reward  -1.370 loss 0.00358 epsilon 0.40
+Rally episode  170/300 reward  -1.266 loss 0.02755 epsilon 0.37
+Rally episode  180/300 reward  -1.517 loss 0.01900 epsilon 0.33
+Rally episode  190/300 reward  -0.841 loss 0.01902 epsilon 0.29
+Rally episode  200/300 reward  -1.887 loss 0.02162 epsilon 0.25
+Rally episode  210/300 reward  -1.933 loss 0.00284 epsilon 0.22
+Rally episode  220/300 reward  -1.873 loss 0.03244 epsilon 0.18
+Rally episode  230/300 reward  -1.482 loss 0.00303 epsilon 0.14
+Rally episode  240/300 reward  -0.582 loss 0.00289 epsilon 0.10
+Rally episode  250/300 reward  -2.065 loss 0.02160 epsilon 0.10
+Rally episode  260/300 reward  -2.456 loss 0.02086 epsilon 0.10
+Rally episode  270/300 reward  -1.504 loss 0.00281 epsilon 0.10
+Rally episode  280/300 reward  -1.889 loss 0.00281 epsilon 0.10
+Rally episode  290/300 reward  -2.163 loss 0.01561 epsilon 0.10
+Rally episode  300/300 reward  -1.314 loss 0.03824 epsilon 0.10
+Saved artifacts/rally.json; 32.9s; held-out mean reward -1.802

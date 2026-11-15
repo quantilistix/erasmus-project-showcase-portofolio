@@ -1,0 +1,92 @@
+#version 450
+#ifdef PREDICTIVE_SUBGROUP
+#extension GL_KHR_shader_subgroup_basic : require
+#extension GL_KHR_shader_subgroup_shuffle_relative : require
+#endif
+layout(local_size_x=64) in;
+layout(std430,binding=0) buffer Parameters { float p[]; };
+layout(std430,binding=1) readonly buffer Metadata { int m[]; };
+layout(std430,binding=2) buffer Boundary { float b[]; };
+layout(std430,binding=3) buffer State { float s[]; };
+layout(push_constant) uniform Config { int mode; int clampOutputs; float h; float rate; float gain; int pad; float weightLimit; float activationLimit; } c;
+layout(constant_id=0) const int phase=0;
+shared float part[64];
+void main(){
+ int N=m[0],I=m[1],E=m[2];
+ int group=int(gl_WorkGroupID.y*gl_NumWorkGroups.x+gl_WorkGroupID.x),lane=int(gl_LocalInvocationID.x);
+ int inOffsets=4,inEdges=inOffsets+N+1,sources=inEdges+E,dests=sources+E,outOffsets=dests+E,outEdges=outOffsets+N+1,outputMap=outEdges+E,inverse=outputMap+N,inInverse=inverse+E;
+ if(phase==3){
+  int index=group*64+lane;if(index<c.pad)b[c.pad+index]=p[floatBitsToInt(b[index])];return;
+ }
+ if(phase==4){
+  int index=group*64+lane;
+  for(int node=index;node<N;node+=int(gl_NumWorkGroups.x*gl_NumWorkGroups.y)*64){
+   int o=m[outputMap+node];
+   float x=node<I?b[node]:s[node];
+   if(o>=0&&(c.clampOutputs&1)!=0)x=b[I+o];
+   s[node]=clamp(x,0.0,c.activationLimit);
+   if(o>=0){
+    if((c.clampOutputs&2)!=0){s[N+2*node]=s[node];s[N+2*node+1]=0;}
+   }
+  }
+  return;
+ }
+ if(phase==2){
+  int edge=group*64+lane;if(edge>=E)return;
+  int i=m[sources+edge],j=m[dests+edge];
+  p[edge]=clamp(p[edge]-c.rate*p[E+edge]*(s[N+2*i]-s[N+2*i+1])*s[j],-c.weightLimit,c.weightLimit);
+  p[2*E+m[inverse+edge]]=p[edge];
+  p[3*E+m[inInverse+edge]]=p[edge];return;
+ }
+ // A full set of subgroup lanes can replace local indices without changing
+ // which 64 strided edge products feed each logical reduction lane.
+#ifdef PREDICTIVE_SUBGROUP
+ bool shuffleReduction=gl_SubgroupSize<=64&&gl_NumSubgroups*gl_SubgroupSize==64;
+ if(shuffleReduction)lane=int(gl_SubgroupID*gl_SubgroupSize+gl_SubgroupInvocationID);
+#endif
+ int node=phase==1?group+I:group;if(node>=N)return;float sum=0;
+ if(phase==0&&(c.clampOutputs&2)!=0&&m[outputMap+node]>=0){
+  if(lane==0){s[N+2*node]=s[node];s[N+2*node+1]=0;}return;
+ }
+ if(phase==0){
+  for(int k=m[outOffsets+node]+lane;k<m[outOffsets+node+1];k+=64){
+   int j=m[outEdges+k];sum+=p[2*E+k]*s[j];
+  }
+ }else{
+  int o=m[outputMap+node];
+  if((c.clampOutputs&1)!=0&&o>=0){if(lane==0)s[node]=clamp(b[I+o],0.0,c.activationLimit);return;}
+  for(int k=m[inOffsets+node]+lane;k<m[inOffsets+node+1];k+=64){int i=m[inEdges+k];sum+=p[3*E+k]*(s[N+2*i]-s[N+2*i+1]);}
+ }
+ float total;
+#ifdef PREDICTIVE_SUBGROUP
+ if(shuffleReduction){
+  // Keep the original 32,16,8,4,2,1 addition tree. Only the cross-subgroup
+  // levels need shared memory and workgroup-wide synchronization.
+  if(gl_NumSubgroups>1){
+   part[lane]=sum;barrier();
+   for(int stride=32;stride>=int(gl_SubgroupSize);stride>>=1){
+    if(lane<stride)part[lane]+=part[lane+stride];barrier();
+   }
+   sum=part[lane];
+  }
+  for(int stride=int(gl_SubgroupSize)/2;stride>0;stride>>=1){
+   float other=subgroupShuffleDown(sum,uint(stride));
+   if(gl_SubgroupInvocationID<uint(stride))sum+=other;
+  }
+  total=sum;
+ }else
+#endif
+ {
+  part[lane]=sum;barrier();for(int stride=32;stride>0;stride>>=1){if(lane<stride)part[lane]+=part[lane+stride];barrier();}
+  total=part[0];
+ }
+ if(lane==0){
+  if(phase==0){
+   float x=s[node];
+   float e=s[N+2*node]-s[N+2*node+1]+c.h*(x-c.gain*total);
+   s[N+2*node]=max(e,0.0);s[N+2*node+1]=max(-e,0.0);
+  }else{
+   s[node]=clamp(s[node]+c.h*(-(s[N+2*node]-s[N+2*node+1])+c.gain*total),0.0,c.activationLimit);
+  }
+ }
+}

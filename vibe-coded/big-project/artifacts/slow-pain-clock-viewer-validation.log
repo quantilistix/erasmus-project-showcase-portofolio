@@ -1,0 +1,9 @@
+Continuing saved realtime session: artifacts/realtime/catch
+Added a clock input to the saved main model; existing connections/biases/plasticity retained, new clock weights start at zero.
+Intel(R) Arc(tm) Graphics (MTL); 5,108 neurons; 3,147,776 edges; reward head 995→32→2 (128 hidden probes + 864 raw pixels + 3 executed controls).
+Calibration: 6000 frames. Then freeze reward weights, biases and plasticity; continue main learning every active frame.
+Pain samples hold for 30 frames (2.00 Hz refresh at target pace); one 0.50 Hz sine clock input.
+Noise ONLY in 16 learned-pain and 16 primitive-pain input neurons. Raw senses and controls unchanged.
+Realtime viewer: Tab AI/manual; arrows move; Space pause learning; R reset game; Escape quit and save. Right: hidden activation heatmap; bars: pleasure, learned pain, primitive pain.
+Completed 60 learning frames in 1.13s. mean 11.60 ms/frame (~86.2 compute fps), recent p95 15.01 ms
+Frozen-head realtime (60 frames): mean 11.60 ms/frame (~86.2 compute fps), recent p95 15.01 ms

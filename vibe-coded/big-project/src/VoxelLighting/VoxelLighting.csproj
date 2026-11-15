@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- The per-frame propagation kernel must stay optimized in IDE/Debug builds too. -->
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GlmSharp" Version="0.9.8" />
+    <InternalsVisibleTo Include="VoxelGame" />
+    <InternalsVisibleTo Include="VoxelTests" />
+  </ItemGroup>
+</Project>

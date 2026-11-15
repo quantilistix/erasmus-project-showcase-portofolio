@@ -1,0 +1,9 @@
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 14,052 nonnegative rate neurons, 4,133,376 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 17 enemies; exit route 119 tiles. Missed-shot teacher penalty 0.65 per projectile; exploration +3.00 per new cell and +1.00 per new region; stationary pain after 45 physics ticks. Stereo PCM/FFT enabled. Vision: 384 RGB first-person rays over 120 degrees, with distance shading.
+Persistent neural state: 2 synchronous connection hops per frame; current view only. Training buffers are separate.
+Eight independent buttons press above 0.50; no wait control. Move/turn/fire can be held together.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+frame 36260 TRAIN health=100 ammo=7/18 controls=Forward explored=125 regions=11 stillFrames=5888 idealP=0.000 idealPain=0.003 hits=9 misses=177 kills=3 ammoPickups=9 healthPickups=9 exits=1 P=0.070 pain=0.021 primitiveP=0.000 primitivePain=0.000 R=-0.003 loss=0.20816 rewardLoss=0.00457 ticks=30280 mainUpdates=23300 rewardUpdates=36260; mean 23.91 ms/frame (~41.8 compute fps), recent p95 24.98 ms
+Saved main.ngb, reward.json and maze.json in artifacts/maze.
+500 learning frames in 12.55s; mean 23.91 ms/frame (~41.8 compute fps), recent p95 24.98 ms

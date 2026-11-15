@@ -1,0 +1,6 @@
+Catch: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Held-out mean reward (50 episodes): agent -0.225; random -2.095
+Dodge: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Held-out mean reward (50 episodes): agent 3.356; random 2.095
+Rally: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Held-out mean reward (50 episodes): agent -1.671; random -1.571

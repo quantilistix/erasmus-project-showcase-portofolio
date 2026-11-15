@@ -1,0 +1,105 @@
+Catch: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Before: -1.437; random: -2.036
+Selection baseline reward -2.009 (seed 17001; separate from final evaluation).
+Catch episode   10/300 reward  -2.431 loss 0.03061 epsilon 0.97 selection -2.424 best -2.009
+Catch episode   20/300 reward  -3.251 loss 0.04351 epsilon 0.93 selection -1.141 best -1.141
+Catch episode   30/300 reward  -2.270 loss 0.00791 epsilon 0.89 selection -1.681 best -1.141
+Catch episode   40/300 reward  -1.776 loss 0.02745 epsilon 0.85 selection -1.724 best -1.141
+Catch episode   50/300 reward  -2.975 loss 0.04477 epsilon 0.82 selection -2.560 best -1.141
+Catch episode   60/300 reward  -2.997 loss 0.08056 epsilon 0.78 selection -1.777 best -1.141
+Catch episode   70/300 reward  -2.592 loss 0.03181 epsilon 0.74 selection -2.670 best -1.141
+Catch episode   80/300 reward  -2.024 loss 0.03897 epsilon 0.70 selection -3.617 best -1.141
+Catch episode   90/300 reward  -3.134 loss 0.06750 epsilon 0.67 selection -2.697 best -1.141
+Catch episode  100/300 reward  -1.746 loss 0.02504 epsilon 0.63 selection -3.035 best -1.141
+Catch episode  110/300 reward  -1.900 loss 0.02727 epsilon 0.59 selection -2.095 best -1.141
+Catch episode  120/300 reward  -1.361 loss 0.02228 epsilon 0.55 selection -2.664 best -1.141
+Catch episode  130/300 reward  -2.008 loss 0.04468 epsilon 0.52 selection -2.752 best -1.141
+Catch episode  140/300 reward  -1.305 loss 0.01958 epsilon 0.48 selection -1.637 best -1.141
+Catch episode  150/300 reward  -1.519 loss 0.06100 epsilon 0.44 selection -2.714 best -1.141
+Catch episode  160/300 reward  -1.985 loss 0.02333 epsilon 0.40 selection -0.558 best -0.558
+Catch episode  170/300 reward  -1.530 loss 0.00480 epsilon 0.37 selection -1.321 best -0.558
+Catch episode  180/300 reward  -2.554 loss 0.02056 epsilon 0.33 selection -1.584 best -0.558
+Catch episode  190/300 reward  -1.009 loss 0.02081 epsilon 0.29 selection -2.428 best -0.558
+Catch episode  200/300 reward  -1.622 loss 0.00446 epsilon 0.25 selection -3.048 best -0.558
+Catch episode  210/300 reward  -2.130 loss 0.02228 epsilon 0.22 selection -2.395 best -0.558
+Catch episode  220/300 reward  -0.915 loss 0.02020 epsilon 0.18 selection -1.373 best -0.558
+Catch episode  230/300 reward  -0.781 loss 0.04451 epsilon 0.14 selection -1.650 best -0.558
+Catch episode  240/300 reward  -1.288 loss 0.06104 epsilon 0.10 selection -1.420 best -0.558
+Catch episode  250/300 reward  -0.751 loss 0.04708 epsilon 0.10 selection -0.689 best -0.558
+Catch episode  260/300 reward  -1.870 loss 0.02570 epsilon 0.10 selection -1.048 best -0.558
+Catch episode  270/300 reward  -1.903 loss 0.03915 epsilon 0.10 selection -1.358 best -0.558
+Catch episode  280/300 reward  -0.942 loss 0.03446 epsilon 0.10 selection -1.070 best -0.558
+Catch episode  290/300 reward  -0.554 loss 0.04019 epsilon 0.10 selection -1.321 best -0.558
+Catch episode  300/300 reward  -0.884 loss 0.00377 epsilon 0.10 selection -0.220 best -0.220
+Restored best validation policy: -0.220.
+Saved artifacts/catch.json; 67.0s; held-out mean reward -0.104
+Dodge: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Before: 1.971; random: 2.036
+Selection baseline reward 1.624 (seed 17001; separate from final evaluation).
+Dodge episode   10/300 reward   2.440 loss 0.03076 epsilon 0.97 selection 2.084 best 2.084
+Dodge episode   20/300 reward   2.853 loss 0.04072 epsilon 0.93 selection 1.952 best 2.084
+Dodge episode   30/300 reward   3.155 loss 0.00716 epsilon 0.89 selection 0.551 best 2.084
+Dodge episode   40/300 reward   2.262 loss 0.02279 epsilon 0.85 selection 2.202 best 2.202
+Dodge episode   50/300 reward   3.197 loss 0.03552 epsilon 0.82 selection 1.402 best 2.202
+Dodge episode   60/300 reward   3.613 loss 0.08637 epsilon 0.78 selection 1.216 best 2.202
+Dodge episode   70/300 reward   2.090 loss 0.02383 epsilon 0.74 selection 3.300 best 3.300
+Dodge episode   80/300 reward   2.751 loss 0.04554 epsilon 0.70 selection 3.507 best 3.507
+Dodge episode   90/300 reward   2.343 loss 0.08513 epsilon 0.67 selection 3.506 best 3.507
+Dodge episode  100/300 reward   2.870 loss 0.02585 epsilon 0.63 selection 2.887 best 3.507
+Dodge episode  110/300 reward   2.288 loss 0.01065 epsilon 0.59 selection 2.866 best 3.507
+Dodge episode  120/300 reward   2.166 loss 0.02646 epsilon 0.55 selection 3.928 best 3.928
+Dodge episode  130/300 reward   2.244 loss 0.01712 epsilon 0.52 selection 2.684 best 3.928
+Dodge episode  140/300 reward   2.597 loss 0.02845 epsilon 0.48 selection 2.859 best 3.928
+Dodge episode  150/300 reward   2.295 loss 0.08215 epsilon 0.44 selection 3.503 best 3.928
+Dodge episode  160/300 reward   2.607 loss 0.02040 epsilon 0.40 selection 3.910 best 3.928
+Dodge episode  170/300 reward   2.682 loss 0.00560 epsilon 0.37 selection 3.686 best 3.928
+Dodge episode  180/300 reward   3.410 loss 0.02394 epsilon 0.33 selection 3.288 best 3.928
+Dodge episode  190/300 reward   3.017 loss 0.02179 epsilon 0.29 selection 3.186 best 3.928
+Dodge episode  200/300 reward   3.272 loss 0.00487 epsilon 0.25 selection 3.348 best 3.928
+Dodge episode  210/300 reward   2.055 loss 0.02648 epsilon 0.22 selection 3.716 best 3.928
+Dodge episode  220/300 reward   4.293 loss 0.01210 epsilon 0.18 selection 3.743 best 3.928
+Dodge episode  230/300 reward   2.237 loss 0.03816 epsilon 0.14 selection 3.934 best 3.934
+Dodge episode  240/300 reward   2.452 loss 0.05083 epsilon 0.10 selection 3.082 best 3.934
+Dodge episode  250/300 reward   2.873 loss 0.03256 epsilon 0.10 selection 2.964 best 3.934
+Dodge episode  260/300 reward   2.864 loss 0.00929 epsilon 0.10 selection 3.765 best 3.934
+Dodge episode  270/300 reward   2.412 loss 0.03437 epsilon 0.10 selection 3.719 best 3.934
+Dodge episode  280/300 reward   2.304 loss 0.04374 epsilon 0.10 selection 3.658 best 3.934
+Dodge episode  290/300 reward   3.588 loss 0.02367 epsilon 0.10 selection 4.014 best 4.014
+Dodge episode  300/300 reward   3.488 loss 0.00464 epsilon 0.10 selection 3.496 best 4.014
+Restored best validation policy: 4.014.
+Saved artifacts/dodge.json; 67.0s; held-out mean reward 3.524
+Rally: Intel(R) Arc(tm) Graphics (MTL); 1011 nodes, 46736 connections, 2 steps; raw frames + PCM + FFT.
+Before: -1.798; random: -0.658
+Selection baseline reward -1.515 (seed 17001; separate from final evaluation).
+Rally episode   10/300 reward  -1.607 loss 0.00896 epsilon 0.97 selection -1.798 best -1.515
+Rally episode   20/300 reward  -1.954 loss 0.02534 epsilon 0.93 selection -2.202 best -1.515
+Rally episode   30/300 reward  -2.317 loss 0.00543 epsilon 0.89 selection -1.646 best -1.515
+Rally episode   40/300 reward  -1.081 loss 0.00547 epsilon 0.85 selection -2.147 best -1.515
+Rally episode   50/300 reward  -0.889 loss 0.00611 epsilon 0.82 selection -1.680 best -1.515
+Rally episode   60/300 reward  -1.764 loss 0.02177 epsilon 0.78 selection -1.609 best -1.515
+Rally episode   70/300 reward  -1.593 loss 0.04266 epsilon 0.74 selection -1.843 best -1.515
+Rally episode   80/300 reward  -1.915 loss 0.02669 epsilon 0.70 selection -1.446 best -1.446
+Rally episode   90/300 reward  -1.131 loss 0.00490 epsilon 0.67 selection -2.231 best -1.446
+Rally episode  100/300 reward  -1.419 loss 0.00526 epsilon 0.63 selection -2.016 best -1.446
+Rally episode  110/300 reward  -1.115 loss 0.00484 epsilon 0.59 selection -2.065 best -1.446
+Rally episode  120/300 reward  -1.889 loss 0.00483 epsilon 0.55 selection -1.373 best -1.373
+Rally episode  130/300 reward  -1.560 loss 0.02183 epsilon 0.52 selection -1.421 best -1.373
+Rally episode  140/300 reward  -1.937 loss 0.04638 epsilon 0.48 selection -1.980 best -1.373
+Rally episode  150/300 reward  -1.808 loss 0.02167 epsilon 0.44 selection -2.077 best -1.373
+Rally episode  160/300 reward  -2.415 loss 0.00414 epsilon 0.40 selection -2.196 best -1.373
+Rally episode  170/300 reward  -2.353 loss 0.02296 epsilon 0.37 selection -1.601 best -1.373
+Rally episode  180/300 reward  -1.892 loss 0.03517 epsilon 0.33 selection -2.277 best -1.373
+Rally episode  190/300 reward  -1.635 loss 0.02120 epsilon 0.29 selection -1.538 best -1.373
+Rally episode  200/300 reward  -1.157 loss 0.00391 epsilon 0.25 selection -2.212 best -1.373
+Rally episode  210/300 reward  -2.237 loss 0.00379 epsilon 0.22 selection -1.623 best -1.373
+Rally episode  220/300 reward  -1.703 loss 0.03711 epsilon 0.18 selection -2.162 best -1.373
+Rally episode  230/300 reward  -0.666 loss 0.00365 epsilon 0.14 selection -2.181 best -1.373
+Rally episode  240/300 reward  -1.598 loss 0.00408 epsilon 0.10 selection -2.184 best -1.373
+Rally episode  250/300 reward  -2.499 loss 0.02392 epsilon 0.10 selection -1.976 best -1.373
+Rally episode  260/300 reward  -1.470 loss 0.01911 epsilon 0.10 selection -1.424 best -1.373
+Rally episode  270/300 reward  -0.844 loss 0.01892 epsilon 0.10 selection -1.618 best -1.373
+Rally episode  280/300 reward  -2.145 loss 0.00317 epsilon 0.10 selection -1.575 best -1.373
+Rally episode  290/300 reward  -1.719 loss 0.03905 epsilon 0.10 selection -0.957 best -0.957
+Rally episode  300/300 reward  -1.054 loss 0.04013 epsilon 0.10 selection -0.906 best -0.906
+Restored best validation policy: -0.906.
+Saved artifacts/rally.json; 70.7s; held-out mean reward -1.873

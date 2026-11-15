@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "-Wall",
+                "-fdiagnostics-color=always",
+                "-std=c++23",
+                "-I${workspaceFolder}/dependencies/include",
+                "-I${workspaceFolder}/include",
+                "${workspaceFolder}/dependencies/src/*.c",
+                "${workspaceFolder}/main.cpp",
+                "${workspaceFolder}/src/*.cpp",
+                "-lGL",
+                "-lglfw",
+                "-o",
+                "${workspaceFolder}/Application"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

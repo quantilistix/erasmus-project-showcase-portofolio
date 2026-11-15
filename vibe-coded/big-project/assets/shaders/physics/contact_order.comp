@@ -1,0 +1,59 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Atomic contact enumeration has no stable order. Sort small rigid adjacency lists
+// by feature identity before floating-point accumulation in the primal solve.
+layout(local_size_x = 64) in;
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+shared uint refs[256];
+shared uvec3 keys[256];
+
+bool greaterKey(uvec3 a, uvec3 b)
+{
+    return a.x > b.x || (a.x == b.x && (a.y > b.y || (a.y == b.y && a.z > b.z)));
+}
+
+void main()
+{
+    uint r = gl_WorkGroupID.x;
+    if (r >= counts.y)
+        return;
+    uint block = counts.x + r;
+    uint begin = blockContactBegin(block);
+    uint size = blockContactEnd(block) - begin;
+    if (size > 256u || size < 2u)
+        return;
+    uint sortSize = 1u << uint(findMSB(size - 1u) + 1);
+    uint lane = gl_LocalInvocationID.x;
+    for (uint i = lane; i < sortSize; i += 64u)
+    {
+        uint ref = i < size ? blockContactRefs[begin + i] : NO_BLOCK;
+        refs[i] = ref;
+        keys[i] = ref != NO_BLOCK ? uvec3(contacts[ref].key.xy, contacts[ref].header.x) : uvec3(NO_BLOCK);
+    }
+    barrier();
+    for (uint width = 2u; width <= sortSize; width *= 2u)
+    {
+        for (uint stride = width / 2u; stride > 0u; stride /= 2u)
+        {
+            for (uint i = lane; i < sortSize; i += 64u)
+            {
+                uint other = i ^ stride;
+                if (other > i)
+                {
+                    bool ascending = (i & width) == 0u;
+                    if (ascending ? greaterKey(keys[i], keys[other]) : greaterKey(keys[other], keys[i]))
+                    {
+                        uvec3 key = keys[i]; keys[i] = keys[other]; keys[other] = key;
+                        uint ref = refs[i]; refs[i] = refs[other]; refs[other] = ref;
+                    }
+                }
+            }
+            barrier();
+        }
+    }
+    for (uint i = lane; i < size; i += 64u)
+        blockContactRefs[begin + i] = refs[i];
+}

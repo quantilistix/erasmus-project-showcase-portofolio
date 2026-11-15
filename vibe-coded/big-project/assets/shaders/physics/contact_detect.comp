@@ -1,0 +1,1200 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Contact generation, one thread per candidate triangle pair of the broad phase
+// (contact_pairs.comp). Every triangle owns some of its vertices and edges (each vertex and edge
+// has exactly one owner), so testing a triangle pair as "owned vertices against the other
+// triangle, owned edges against owned edges" visits every vertex-triangle and edge-edge pair
+// exactly once.
+//
+// A pair becomes a contact when it can touch during the step:
+//  - DCD: at x^t the primitives are within reach (margin + how far both move this step) and in
+//    front of each other, so a speculative constraint linearized at x^t can stop them;
+//  - CCD: otherwise, the linear motion from x^t to the end positions makes them coplanar at a
+//    time where they overlap, and the contact is placed where they would have hit.
+// The initial pass uses the inertial prediction as end positions; continuous passes during the
+// solve use the current iterate and only add pairs the step does not have yet.
+//
+// Geometry is computed in float relative to an origin at the pair's first triangle, so it keeps
+// full float precision however far from the world origin the bodies are.
+//
+// Contacts are keyed by their feature pair. The key finds last step's dual variables for warm
+// starting (AVBD §3.7) and, within a step, stops later passes from adding a contact twice.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint VERTEX_KEY_BIT = 0x80000000u;
+const uint CACHE_DUPLICATE = 0xFFFFFFFEu;
+// Dispatch flags. MODE_SWEEP also sweeps every pair for contacts its motion makes during the step
+// (continuous detection). MODE_FREE_FLIGHT sweeps only pairs whose moving bodies are in free
+// flight (see main).
+const uint MODE_SWEEP = 1u;
+const uint MODE_FREE_FLIGHT = 2u;
+
+const float PARALLEL_EPSILON = 1e-4;
+const float INTERIOR_EPSILON = 1e-5;
+// Angular roundoff for local supporting-plane tests (not a motion allowance).
+const float FEATURE_EPSILON = 1e-4;
+const float INSIDE_EPSILON = 1e-5;
+const float IMPACT_INSIDE_EPSILON = 1e-3;
+const float SLIVER_RATIO = 1e-5;
+// Translating bodies cannot rotate away from an incorrectly admitted side face.
+// Test their discrete contacts against the actual feature cone. Freely rotating
+// bodies and swept contacts retain the angular allowance used during convergence.
+const float ADMIT_SINE = 0.42;
+bool translatingPair;
+float featureAllowance(float tau)
+{
+    return translatingPair && tau == 0.0 ? FEATURE_EPSILON : ADMIT_SINE;
+}
+// The motion over a step, as a fraction of the band, below which a vertex counts as not moving
+// into a plane (takesVertex).
+const float MOTION_FRACTION = 0.01;
+// Most triangles walked around one vertex.
+const uint MAX_FAN = 64u;
+
+const uint RELATION_FLAT = 0u;
+const uint RELATION_CONVEX = 1u;
+const uint RELATION_CONCAVE = 2u;
+
+// Every position this thread reads is relative to this world point.
+dvec3 origin;
+
+vec3 startOf(uint v)
+{
+    return vec3(vertexStart[v].xyz - origin);
+}
+
+vec3 endOf(uint v)
+{
+    return vec3(vertexEnd[v].xyz - origin);
+}
+
+vec3 lastOf(uint v)
+{
+    return vec3(vertexLast[v].xyz - origin);
+}
+
+// The velocity of a collision vertex at the start of the step.
+vec3 vertexVelocity(uint v)
+{
+    uvec4 info = vertexInfo[v];
+    if (info.y == KIND_NODE)
+        return vec3(nodes[info.z].velocity.xyz);
+    if (info.y != KIND_RIGID)
+        return vec3(0.0);
+
+    Rigid body = rigids[info.z - counts.x];
+    vec3 arm = vec3(vertexStart[v].xyz - body.previousPosition.xyz);
+    return vec3(body.linearVelocity.xyz) + cross(vec3(body.angularVelocity.xyz), arm);
+}
+
+// ---------------------------------------------------------------------------------------------
+// Contact cache
+// ---------------------------------------------------------------------------------------------
+
+uint cacheHash(uint a, uint b)
+{
+    uint h = a * 0x9E3779B1u ^ (b + 0x7F4A7C15u + (a << 6) + (a >> 2));
+    h ^= h >> 16;
+    h *= 0x85EBCA6Bu;
+    h ^= h >> 13;
+    h *= 0xC2B2AE35u;
+    h ^= h >> 16;
+    return h;
+}
+
+// Dense indices still serve detection, but cache identity belongs to a surface
+// lifetime and its local feature. Unrelated topology edits cannot renumber that key.
+uvec4 featureIdentity(uint a, uint b)
+{
+    if ((a & VERTEX_KEY_BIT) != 0u)
+    {
+        uint v = a & ~VERTEX_KEY_BIT;
+        Body bodyA = bodies[vertexInfo[v].x];
+        Body bodyB = bodies[triangles[b].vertices.w];
+        return uvec4(bodyA.features.x, VERTEX_KEY_BIT | (v - bodyA.extra.y),
+                     bodyB.features.x, b - bodyB.info.z);
+    }
+    Body bodyA = bodies[vertexInfo[edges[a].x].x];
+    Body bodyB = bodies[vertexInfo[edges[b].x].x];
+    return uvec4(bodyA.features.x, a - bodyA.features.y,
+                 bodyB.features.x, b - bodyB.features.y);
+}
+
+uint identityHash(uvec4 key)
+{
+    return cacheHash(cacheHash(key.x, key.y), cacheHash(key.z, key.w));
+}
+
+uint previousFind(uint keyA, uint keyB)
+{
+    uint mask = capacities.y - 1u;
+    uvec4 identity = featureIdentity(keyA, keyB);
+    uint slot = identityHash(identity) & mask;
+
+    for (uint probe = 0u; probe < CACHE_MAX_PROBES; probe++)
+    {
+        uvec4 header = cachePrevious[slot].header;
+        if (header.x == CACHE_EMPTY)
+            return NO_BLOCK;
+        if (all(equal(cachePrevious[slot].identity, identity)))
+            return slot;
+
+        slot = (slot + 1u) & mask;
+    }
+
+    return NO_BLOCK;
+}
+
+// Claims a slot for the key in this step's table. Returns CACHE_DUPLICATE when an earlier pass
+// already added it, NO_BLOCK when the probe run is full. Within one pass every key is generated
+// by one thread only, so a slot another thread is still writing never holds this key.
+uint currentInsert(uint keyA, uint keyB)
+{
+    uint mask = capacities.y - 1u;
+    uvec4 identity = featureIdentity(keyA, keyB);
+    uint slot = identityHash(identity) & mask;
+
+    for (uint probe = 0u; probe < CACHE_MAX_PROBES; probe++)
+    {
+        uint state = atomicCompSwap(cacheCurrent[slot].header.x, CACHE_EMPTY, CACHE_LOCKED);
+        if (state == CACHE_EMPTY)
+        {
+            cacheCurrent[slot].header.yzw = uvec3(keyA, keyB, NO_BLOCK);
+            cacheCurrent[slot].identity = identity;
+            memoryBarrierBuffer();
+            atomicExchange(cacheCurrent[slot].header.x, CACHE_FILLED);
+            return slot;
+        }
+
+        if (state == CACHE_FILLED && all(equal(cacheCurrent[slot].identity, identity)))
+            return CACHE_DUPLICATE;
+
+        slot = (slot + 1u) & mask;
+    }
+
+    return NO_BLOCK;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Contact output
+// ---------------------------------------------------------------------------------------------
+
+// One side of a contact: up to three collision vertices of one body and their weights.
+struct Side
+{
+    uvec3 vertices;
+    vec3 weights;
+    uint count;
+    vec3 point;       // contact point at x^t, relative to the origin
+    uint triangle;    // the triangle whose material the side touches with: the feature's owner
+};
+
+vec4 sideMaterial(Side side)
+{
+    return vec4(materials[triangles[side.triangle].edges.w >> TRIANGLE_MATERIAL_SHIFT]);
+}
+
+void describeSide
+(
+    Side side,
+    out uint kind,
+    out uint rigidBlock,
+    out uvec4 sideNodes,
+    out vec4 weights,
+    out vec3 offset,
+    out vec3 velocity,
+    out float mass
+)
+{
+    mass = 0.0;
+    uvec4 info = vertexInfo[side.vertices.x];
+    kind = info.y;
+    rigidBlock = NO_BLOCK;
+    sideNodes = uvec4(NO_BLOCK);
+    weights = vec4(0.0);
+    offset = vec3(0.0);
+    velocity = vec3(0.0);
+
+    if (kind == KIND_NODE)
+    {
+        for (uint k = 0u; k < side.count; k++)
+        {
+            uint node = vertexInfo[side.vertices[k]].z;
+            sideNodes[k] = node;
+            weights[k] = side.weights[k];
+            velocity += side.weights[k] * vec3(nodes[node].velocity.xyz);
+            if (!isPinned(nodes[node]))
+                mass = max(mass, float(nodes[node].position.w));
+        }
+    }
+    else if (kind == KIND_RIGID)
+    {
+        rigidBlock = info.z;
+        uint r = rigidBlock - counts.x;
+        offset = side.point + vec3(origin - rigids[r].previousPosition.xyz);
+        velocity = vec3(rigids[r].linearVelocity.xyz) + cross(vec3(rigids[r].angularVelocity.xyz), offset);
+        mass = float(rigids[r].position.w);
+    }
+}
+
+void markTouching(uint body)
+{
+    if (body < bodyCounts.x)
+        atomicOr(bodies[body].extra.w, BODY_TOUCHING);
+}
+
+bool touching(uint body)
+{
+    return body < bodyCounts.x && (bodies[body].extra.w & BODY_TOUCHING) != 0u;
+}
+
+void emitContact(uint type, uint keyA, uint keyB, Side a, Side b, vec3 n, float c0, uint previous)
+{
+    uint slot = currentInsert(keyA, keyB);
+    if (slot == CACHE_DUPLICATE)
+        return;
+
+    uint index = atomicAdd(counters[COUNTER_CONTACTS], 1u);
+    if (index >= capacities.x)
+    {
+        atomicAdd(counters[COUNTER_DROPPED_CONTACTS], 1u);
+        return;
+    }
+
+    if (slot != NO_BLOCK)
+        cacheCurrent[slot].header.w = index;
+
+    uint kindA;
+    uint kindB;
+    uint rigidA;
+    uint rigidB;
+    uvec4 nodesA;
+    uvec4 nodesB;
+    vec4 weightsA;
+    vec4 weightsB;
+    vec3 offsetA;
+    vec3 offsetB;
+    vec3 velocityA;
+    vec3 velocityB;
+    float massA;
+    float massB;
+    describeSide(a, kindA, rigidA, nodesA, weightsA, offsetA, velocityA, massA);
+    describeSide(b, kindB, rigidB, nodesB, weightsB, offsetB, velocityB, massB);
+
+    vec4 materialA = sideMaterial(a);
+    vec4 materialB = sideMaterial(b);
+    weightsA.w = sqrt(materialA.x * materialB.x);
+    weightsB.w = collision.z == 0.0 ? max(materialA.y, materialB.y) : sqrt(materialA.y * materialB.y);
+
+    float alpha = float(avbd.x);
+    float gamma = float(avbd.z);
+    // At least as stiff as the heavier side's inertia (m / h²), so the first iterations move the
+    // bodies a good part of the way to satisfying the contact whatever their mass.
+    float h = float(gravityAndStep.w);
+    float maxStiffness = float(limits.x);
+    float startStiffness = min(max(float(avbd.w), max(massA, massB) / (h * h)), maxStiffness);
+
+    Contact contact;
+    contact.header = uvec4(kindA | (kindB << 4) | (type << 8), rigidA, rigidB, slot);
+    contact.nodesA = nodesA;
+    contact.nodesB = nodesB;
+    contact.key = uvec4(keyA, keyB, vertexInfo[a.vertices.x].w, vertexInfo[b.vertices.x].w);
+    contact.weightsA = weightsA;
+    contact.weightsB = weightsB;
+    contact.normal = vec4(n, c0);
+    contact.offsetA = vec4(offsetA, dot(n, velocityA - velocityB));
+    contact.offsetB = vec4(offsetB, 0.0);
+
+    // A feature pair can meet from a different side after turning. Its old compressive
+    // force must not be reused across a reversal of the supporting normal.
+    if (c0 <= float(collision.x))
+    {
+        markTouching(vertexInfo[a.vertices.x].x);
+        markTouching(vertexInfo[b.vertices.x].x);
+    }
+
+    if (previous != NO_BLOCK && dot(n, cachePrevious[previous].normal.xyz) > 0.0)
+    {
+        atomicAdd(counters[COUNTER_WARM_STARTS], 1u);
+        // AVBD Eq. 19
+        contact.lambda = alpha * gamma * cachePrevious[previous].lambda;
+        contact.penalty = clamp(gamma * cachePrevious[previous].penalty, vec4(startStiffness), vec4(maxStiffness));
+    }
+    else
+    {
+        contact.lambda = vec4(0.0);
+        contact.penalty = vec4(startStiffness);
+    }
+
+    contacts[index] = contact;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Geometry
+// ---------------------------------------------------------------------------------------------
+
+vec3 barycentric(vec3 p, vec3 a, vec3 b, vec3 c)
+{
+    vec3 ab = b - a;
+    vec3 ac = c - a;
+    vec3 ap = p - a;
+    float d00 = dot(ab, ab);
+    float d01 = dot(ab, ac);
+    float d11 = dot(ac, ac);
+    float d20 = dot(ap, ab);
+    float d21 = dot(ap, ac);
+    float denominator = d00 * d11 - d01 * d01;
+    if (abs(denominator) < 1e-20)
+        return vec3(-1.0);
+
+    float wB = (d11 * d20 - d01 * d21) / denominator;
+    float wC = (d00 * d21 - d01 * d20) / denominator;
+    return vec3(1.0 - wB - wC, wB, wC);
+}
+
+bool isInside(vec3 bary, float epsilon)
+{
+    return bary.x >= -epsilon && bary.y >= -epsilon && bary.z >= -epsilon;
+}
+
+vec3 triangleNormal(vec3 a, vec3 b, vec3 c);
+vec3 atTime(uint v, float tau);
+
+// Convert a world-space footprint allowance to barycentric coordinates using
+// each opposite edge's altitude. Endpoint and face coverage must use one distance.
+vec3 barycentricSlop(vec3 a, vec3 b, vec3 c, float slop)
+{
+    float area = length(cross(b - a, c - a));
+    return slop * vec3(length(c - b), length(a - c), length(b - a)) / max(area, 1e-20);
+}
+
+// Parameters of the closest points between segments p0p1 and q0q1.
+void closestSegmentParameters(vec3 p0, vec3 p1, vec3 q0, vec3 q1, out float s, out float t)
+{
+    vec3 d1 = p1 - p0;
+    vec3 d2 = q1 - q0;
+    vec3 r = p0 - q0;
+    float a = dot(d1, d1);
+    float e = dot(d2, d2);
+    float f = dot(d2, r);
+
+    if (a < 1e-20 && e < 1e-20)
+    {
+        s = 0.0;
+        t = 0.0;
+        return;
+    }
+
+    if (a < 1e-20)
+    {
+        s = 0.0;
+        t = clamp(f / e, 0.0, 1.0);
+        return;
+    }
+
+    float c = dot(d1, r);
+    if (e < 1e-20)
+    {
+        t = 0.0;
+        s = clamp(-c / a, 0.0, 1.0);
+        return;
+    }
+
+    float b = dot(d1, d2);
+    float denominator = a * e - b * b;
+    s = denominator > 1e-20 ? clamp((b * f - c * e) / denominator, 0.0, 1.0) : 0.0;
+    t = (b * s + f) / e;
+
+    if (t < 0.0)
+    {
+        t = 0.0;
+        s = clamp(-c / a, 0.0, 1.0);
+    }
+    else if (t > 1.0)
+    {
+        t = 1.0;
+        s = clamp((b - c) / a, 0.0, 1.0);
+    }
+}
+
+// Coefficients (constant first) of f(τ) = (P + τ dP) · ((B + τ dB) × (C + τ dC)), which is zero
+// when the moving point and triangle, or the two moving edges, are coplanar.
+vec4 coplanarityCubic(vec3 p, vec3 dp, vec3 b, vec3 db, vec3 c, vec3 dc)
+{
+    vec3 n0 = cross(b, c);
+    vec3 n1 = cross(b, dc) + cross(db, c);
+    vec3 n2 = cross(db, dc);
+    return vec4(dot(p, n0), dot(p, n1) + dot(dp, n0), dot(p, n2) + dot(dp, n1), dot(dp, n2));
+}
+
+float evaluateCubic(vec4 k, float t)
+{
+    return ((k.w * t + k.z) * t + k.y) * t + k.x;
+}
+
+// Roots of the cubic in [0, 1] in increasing order. The derivative's roots split [0, 1] into
+// monotonic pieces, each of which holds at most one root, found by bisection.
+uint cubicRoots(vec4 k, out float roots[3])
+{
+    float splits[4];
+    uint splitCount = 0u;
+    splits[splitCount++] = 0.0;
+
+    float qa = 3.0 * k.w;
+    float qb = 2.0 * k.z;
+    float qc = k.y;
+    float scale = max(max(abs(qa), abs(qb)), abs(qc));
+    if (scale > 0.0 && abs(qa) > 1e-12 * scale)
+    {
+        float discriminant = qb * qb - 4.0 * qa * qc;
+        if (discriminant >= 0.0)
+        {
+            float root = sqrt(discriminant);
+            float r1 = (-qb - root) / (2.0 * qa);
+            float r2 = (-qb + root) / (2.0 * qa);
+            float lower = min(r1, r2);
+            float upper = max(r1, r2);
+            if (lower > 0.0 && lower < 1.0)
+                splits[splitCount++] = lower;
+            if (upper > 0.0 && upper < 1.0 && upper != lower)
+                splits[splitCount++] = upper;
+        }
+    }
+    else if (scale > 0.0 && abs(qb) > 1e-12 * scale)
+    {
+        float root = -qc / qb;
+        if (root > 0.0 && root < 1.0)
+            splits[splitCount++] = root;
+    }
+
+    splits[splitCount++] = 1.0;
+
+    uint rootCount = 0u;
+    for (uint i = 0u; i + 1u < splitCount; i++)
+    {
+        float lo = splits[i];
+        float hi = splits[i + 1u];
+        float fLo = evaluateCubic(k, lo);
+        float fHi = evaluateCubic(k, hi);
+
+        if (fLo == 0.0)
+        {
+            roots[rootCount++] = lo;
+            continue;
+        }
+
+        if ((fLo < 0.0) == (fHi < 0.0) && fHi != 0.0)
+            continue;
+
+        for (int step = 0; step < 24; step++)
+        {
+            float mid = 0.5 * (lo + hi);
+            float fMid = evaluateCubic(k, mid);
+            if ((fMid < 0.0) == (fLo < 0.0))
+            {
+                lo = mid;
+                fLo = fMid;
+            }
+            else
+            {
+                hi = mid;
+            }
+        }
+
+        roots[rootCount++] = hi;
+    }
+
+    return rootCount;
+}
+
+// The unit normal, or zero for a sliver: a triangle whose height is under SLIVER_RATIO of its
+// longest edge. A sliver's normal is float noise, so the edges and neighbours of a sliver take
+// its contacts instead. |ab × ac| is the longest edge times the height onto it.
+vec3 triangleNormal(vec3 a, vec3 b, vec3 c)
+{
+    vec3 n = cross(b - a, c - a);
+    float longestSquared = max(dot(b - a, b - a), max(dot(c - b, c - b), dot(a - c, a - c)));
+    float l = length(n);
+    return l > SLIVER_RATIO * longestSquared ? n / l : vec3(0.0);
+}
+
+// ---------------------------------------------------------------------------------------------
+// Narrow phase
+// ---------------------------------------------------------------------------------------------
+
+vec3 faceNormal(uint t, float tau)
+{
+    uvec4 face = triangles[t].vertices;
+    return triangleNormal(atTime(face.x, tau), atTime(face.y, tau), atTime(face.z, tau));
+}
+
+uint cornerOf(uvec4 face, uint v)
+{
+    return face.x == v ? 0u : (face.y == v ? 1u : 2u);
+}
+
+// The triangle across from t over the edge that leaves corner k of t forward (toward corner
+// k + 1) or backward (toward corner k + 2), or NO_BLOCK across an open edge.
+uint fanNeighbour(uint t, uint k, bool forward)
+{
+    uvec4 edge = edges[triangles[t].edges[forward ? k : (k + 2u) % 3u]];
+    return edge.z == t ? edge.w : edge.z;
+}
+
+// Whether vertex v, a corner of triangle owner, can touch along `outward`, a direction out of
+// its body. No incident edge may lean toward it by more than ADMIT_SINE, which makes the vertex
+// its body's extreme point that way, the Lin-Canny condition of a vertex-face pair (the face's
+// reversed normal lies in the vertex's normal cone); and `outward` must face the side of the
+// surface the vertex's triangles face. The fan is walked through the edge adjacency; an open
+// one both ways from the owner. At a rim only the edges the fan has limit it. Past a seam whose
+// surface goes on in another body (FixedBody.OpenEdgesContinue, as between a map's chunks) the
+// surface is taken to go on in the plane of the face at the seam: exact for a flat seam, and
+// only more permissive where the other body's surface rises (a map's convex edges never cross a
+// chunk seam). Without that, a vertex in a seam sees half its fan: the corner of a floor and a
+// wall at a chunk seam pushed a character sliding along the wall straight back. A soft surface
+// bends, so its vertices touch any way.
+bool vertexAdmits(uint v, uint owner, vec3 outward, float tau)
+{
+    if (vertexInfo[v].y == KIND_NODE)
+        return true;
+
+    float allowance = featureAllowance(tau);
+    vec3 p = atTime(v, tau);
+    vec3 normals = vec3(0.0);
+    for (uint direction = 0u; direction < 2u; direction++)
+    {
+        uint t = owner;
+        for (uint visit = 0u; visit < MAX_FAN; visit++)
+        {
+            uvec4 face = triangles[t].vertices;
+            uint k = cornerOf(face, v);
+            vec3 a = atTime(face[(k + 1u) % 3u], tau) - p;
+            vec3 b = atTime(face[(k + 2u) % 3u], tau) - p;
+            if (dot(outward, a) > allowance * length(a) || dot(outward, b) > allowance * length(b))
+                return false;
+            if (direction == 0u || t != owner)
+                normals += triangleNormal(vec3(0.0), a, b);
+
+            uint next = fanNeighbour(t, k, direction == 0u);
+            if (next == owner)
+                return dot(normals, outward) > -allowance * length(normals);
+            if (next == NO_BLOCK)
+            {
+                if ((bodies[face.w].extra.w & BODY_OPEN_EDGES_CONTINUE) != 0u)
+                {
+                    vec3 along = normalize(direction == 0u ? a : b);
+                    vec3 inside = direction == 0u ? b : a;
+                    vec3 beyond = dot(inside, along) * along - inside;
+                    if (dot(outward, beyond) > allowance * length(beyond))
+                        return false;
+                }
+                break;
+            }
+            t = next;
+        }
+    }
+
+    return dot(normals, outward) > -allowance * length(normals);
+}
+
+// How face f (normal m) meets face t (normal n) at a point both share (pivot): in one plane (FLAT),
+// falling away behind each other's planes (CONVEX: near the pivot point their solid is the
+// intersection of the two half-spaces), or otherwise (CONCAVE, which includes the two sides of
+// a sheet: their solid is the union, and each face's plane is a constraint of its own).
+uint faceRelation(uint t, vec3 n, uint f, vec3 m, vec3 pivot, float tau)
+{
+    if (length(cross(m, n)) <= FEATURE_EPSILON)
+        return dot(m, n) > 0.0 ? RELATION_FLAT : RELATION_CONCAVE;
+
+    uvec4 tv = triangles[t].vertices;
+    uvec4 fv = triangles[f].vertices;
+    for (uint k = 0u; k < 3u; k++)
+    {
+        vec3 fromF = atTime(fv[k], tau) - pivot;
+        vec3 fromT = atTime(tv[k], tau) - pivot;
+        if (dot(n, fromF) > FEATURE_EPSILON * length(fromF) || dot(m, fromT) > FEATURE_EPSILON * length(fromT))
+            return RELATION_CONCAVE;
+    }
+
+    return RELATION_CONVEX;
+}
+
+// How vertex v moves relative to triangle t's point at barycentric weights, over the step: the
+// sweep's motion for a continuous test (tau > 0), else the velocities as the step begins (the
+// solver left them, and this step's edits added to them, such as a character's legs pushing;
+// unlike the displacement over the last step, they are still known after a body is placed
+// somewhere new).
+vec3 surfaceMotion(uint v, uint t, vec3 weights, vec3 sweep, float tau)
+{
+    if (tau > 0.0)
+        return sweep;
+
+    uvec4 tv = triangles[t].vertices;
+    return float(gravityAndStep.w) * (vertexVelocity(v)
+        - (weights.x * vertexVelocity(tv.x) + weights.y * vertexVelocity(tv.y) + weights.z * vertexVelocity(tv.z)));
+}
+
+// Whether face f (normal m, v at signed distance gf from its plane, within the band of it), which
+// meets triangle t in a convex edge or corner whose band v lies in, takes v's contact from t
+// (normal n, v at signed distance g from its plane). f takes it when v may touch along f's normal:
+// v rides on f's plane. A vertex within the band of both planes is at the edge itself: it belongs
+// to the face whose plane it is moving along, not the one it is moving into (a box sliding on a
+// floor into the side of a block level with that floor rides over the block); failing that, to
+// the face it is deeper behind, then to the lower triangle. `admitted` remembers the last normal
+// vertexAdmits was asked about (xyz) and its answer (w: 1, 0, or -1 for none), as the triangles
+// of one face share it.
+bool takesVertex(uint v, uint vt, uint t, vec3 n, float g, uint f, vec3 m, float gf, vec3 weights, vec3 sweep, float tau, inout vec4 admitted)
+{
+    if (admitted.w < 0.0 || dot(admitted.xyz, m) < 1.0 - FEATURE_EPSILON)
+        admitted = vec4(m, vertexAdmits(v, vt, -m, tau) ? 1.0 : 0.0);
+    if (admitted.w == 0.0)
+        return false;
+
+    float band = float(collision.y);
+    if (abs(g) > band)
+        return true;
+
+    vec3 motion = surfaceMotion(v, t, weights, sweep, tau);
+    float still = MOTION_FRACTION * band;
+    bool intoT = -dot(n, motion) > still;
+    bool intoF = -dot(m, motion) > still;
+    if (intoT != intoF)
+        return intoT;
+    if (gf != g)
+        return gf < g;
+    return f < t;
+}
+
+// Whether triangle t (normal n), which vertex v (a corner of vt) projects onto with barycentric
+// coordinates bary, inside its footprint widened by `slop` (the band, per corner), holds v's
+// contact, v being at signed distance g from t's plane. `sweep` is the motion of a continuous test.
+//
+// First v must be able to touch along t's normal at all (vertexAdmits): a vertex of a flat slope
+// cannot push a character's upright side as the character walks up it; something else of the
+// slope's surface touches first. The contact then keeps v in front of t's plane. Inside the
+// triangle that plane is the surface; across a flat seam it goes on; across a concave edge the
+// neighbour rises in front of it, so it still constrains nothing that is not solid. Across a
+// convex edge the surface falls away behind it, and within the band (the penetration tolerance)
+// of such an edge or corner the faces that meet there compete for the vertex (takesVertex):
+// otherwise a box resting a hair deep in a floor is stopped by the side of every block level with
+// that floor, and a box sliding along a wall by the far side of a hole in it. On a flat seam the
+// triangle the point lies in takes it, on the seam its owner; past an open edge whose surface goes
+// on in another body, that body does.
+bool holdsVertex(uint v, uint vt, uint t, vec3 n, float g, vec3 bary, vec3 slop, vec3 sweep, float tau)
+{
+    if (!vertexAdmits(v, vt, -n, tau))
+        return false;
+
+    float band = float(collision.y);
+    vec3 p = atTime(v, tau);
+    vec3 weights = max(bary, vec3(0.0));
+    weights /= max(weights.x + weights.y + weights.z, 1e-20);
+    vec4 admitted = vec4(n, 1.0);
+    uvec4 face = triangles[t].vertices;
+    uvec4 neighbours = uvec4(NO_BLOCK);
+    for (uint k = 0u; k < 3u; k++)
+    {
+        if (bary[k] > slop[k])
+            continue;
+
+        // The edge opposite corner k.
+        uvec4 edge = edges[triangles[t].edges[(k + 1u) % 3u]];
+        uint f = edge.z == t ? edge.w : edge.z;
+        neighbours[k] = f;
+        if (f == NO_BLOCK)
+        {
+            if ((bodies[face.w].extra.w & BODY_OPEN_EDGES_CONTINUE) != 0u && bary[k] < -INSIDE_EPSILON)
+                return false;
+            continue;
+        }
+
+        vec3 m = faceNormal(f, tau);
+        if (m == vec3(0.0))
+            continue;
+
+        if (dot(m, n) > 0.0 && length(cross(m, n)) <= FEATURE_EPSILON)
+        {
+            if (bary[k] < -INSIDE_EPSILON || (bary[k] <= INSIDE_EPSILON && edge.z != t))
+                return false;
+            continue;
+        }
+
+        vec3 pivot = atTime(edge.x, tau);
+        float gf = dot(m, p - pivot);
+        if (abs(gf) <= band && faceRelation(t, n, f, m, pivot, tau) == RELATION_CONVEX
+            && takesVertex(v, vt, t, n, g, f, m, gf, weights, sweep, tau, admitted))
+            return false;
+    }
+
+    // Near a corner every face around it competes, not only the two across t's edges.
+    for (uint k = 0u; k < 3u; k++)
+    {
+        uint before = (k + 1u) % 3u;
+        uint after = (k + 2u) % 3u;
+        if (bary[before] > slop[before] || bary[after] > slop[after])
+            continue;
+
+        uint w = face[k];
+        vec3 pivot = atTime(w, tau);
+        for (uint direction = 0u; direction < 2u; direction++)
+        {
+            uint f = t;
+            for (uint visit = 0u; visit < MAX_FAN; visit++)
+            {
+                f = fanNeighbour(f, cornerOf(triangles[f].vertices, w), direction == 0u);
+                if (f == NO_BLOCK || f == t)
+                    break;
+                if (f == neighbours.x || f == neighbours.y || f == neighbours.z)
+                    continue;
+
+                vec3 m = faceNormal(f, tau);
+                if (m == vec3(0.0))
+                    continue;
+
+                float gf = dot(m, p - pivot);
+                if (abs(gf) <= band && faceRelation(t, n, f, m, pivot, tau) == RELATION_CONVEX
+                    && takesVertex(v, vt, t, n, g, f, m, gf, weights, sweep, tau, admitted))
+                    return false;
+            }
+
+            if (f == t)
+                break;
+        }
+    }
+
+    return true;
+}
+
+// v is a vertex of triangle vt, which owns it. Continuous detection runs only when `sweep` is set.
+void testVertexTriangle(uint v, uint vt, uint t, bool sweep)
+{
+    uvec4 tv = triangles[t].vertices;
+    vec3 p0 = startOf(v);
+    vec3 a0 = startOf(tv.x);
+    vec3 b0 = startOf(tv.y);
+    vec3 c0 = startOf(tv.z);
+    vec3 dp = endOf(v) - p0;
+    vec3 da = endOf(tv.x) - a0;
+    vec3 db = endOf(tv.y) - b0;
+    vec3 dc = endOf(tv.z) - c0;
+
+    float margin = float(collision.x);
+    float tolerance = float(collision.y);
+    float reach = margin + length(dp) + max(length(da), max(length(db), length(dc)));
+
+    vec3 n = triangleNormal(a0, b0, c0);
+    if (n == vec3(0.0))
+        return;
+
+    float d0 = dot(p0 - a0, n);
+    if (d0 > reach)
+        return;
+
+    uint keyA = VERTEX_KEY_BIT | v;
+    uint keyB = t;
+
+    Side vertexSide;
+    vertexSide.vertices = uvec3(v, v, v);
+    vertexSide.weights = vec3(1.0, 0.0, 0.0);
+    vertexSide.count = 1u;
+    vertexSide.point = p0;
+    vertexSide.triangle = vt;
+
+    Side triangleSide;
+    triangleSide.vertices = tv.xyz;
+    triangleSide.count = 3u;
+    triangleSide.triangle = t;
+
+    // barycentric returns (-1,-1,-1) for a numerically singular triangle. The band allowance
+    // must not turn that sentinel into an accepted contact.
+    vec3 bary = barycentric(p0 - d0 * n, a0, b0, c0);
+    vec3 slop = barycentricSlop(a0, b0, c0, tolerance);
+    bool inside = bary.x + bary.y + bary.z > 0.0 && isInside(bary + slop, INSIDE_EPSILON);
+    vec3 weights = max(bary, vec3(0.0));
+    weights /= max(weights.x + weights.y + weights.z, 1e-20);
+
+    bool holds = inside && holdsVertex(v, vt, t, n, d0, bary, slop, vec3(0.0), 0.0);
+
+    if (d0 >= -tolerance)
+    {
+        if (holds)
+        {
+            triangleSide.weights = weights;
+            triangleSide.point = weights.x * a0 + weights.y * b0 + weights.z * c0;
+            emitContact(CONTACT_VERTEX_TRIANGLE, keyA, keyB, vertexSide, triangleSide, n, d0, previousFind(keyA, keyB));
+            return;
+        }
+
+        if (!sweep)
+            return;
+
+        float roots[3];
+        uint rootCount = cubicRoots(coplanarityCubic(p0 - a0, dp - da, b0 - a0, db - da, c0 - a0, dc - da), roots);
+        for (uint i = 0u; i < rootCount; i++)
+        {
+            float tau = roots[i];
+            vec3 aT = a0 + tau * da;
+            vec3 bT = b0 + tau * db;
+            vec3 cT = c0 + tau * dc;
+            vec3 nT = triangleNormal(aT, bT, cT);
+            if (nT == vec3(0.0))
+                return;
+
+            vec3 baryT = barycentric(p0 + tau * dp, aT, bT, cT);
+            vec3 slopT = barycentricSlop(aT, bT, cT, tolerance);
+            if (baryT.x + baryT.y + baryT.z <= 0.0 || !isInside(baryT + slopT, IMPACT_INSIDE_EPSILON))
+                continue;
+
+            vec3 weightsT = clamp(baryT, 0.0, 1.0);
+            weightsT /= weightsT.x + weightsT.y + weightsT.z;
+            vec3 motion = dp - (weightsT.x * da + weightsT.y * db + weightsT.z * dc);
+            if (!holdsVertex(v, vt, t, nT, 0.0, baryT, slopT, motion, tau))
+                continue;
+
+            triangleSide.weights = weightsT;
+            triangleSide.point = weightsT.x * a0 + weightsT.y * b0 + weightsT.z * c0;
+            emitContact(CONTACT_VERTEX_TRIANGLE, keyA, keyB, vertexSide, triangleSide, nT, dot(p0 - triangleSide.point, nT), previousFind(keyA, keyB));
+            return;
+        }
+
+        return;
+    }
+
+    // Behind the triangle at x^t. On a non-convex mesh a vertex is behind most faces, so this
+    // only counts as penetration when the contact already existed last step or the vertex
+    // crossed the triangle during it.
+    if (!holds)
+        return;
+
+    uint previous = previousFind(keyA, keyB);
+    bool persists = previous != NO_BLOCK && d0 >= -float(limits.w);
+    if (!persists)
+    {
+        vec3 aL = lastOf(tv.x);
+        vec3 nL = triangleNormal(aL, lastOf(tv.y), lastOf(tv.z));
+        if (nL == vec3(0.0) || dot(lastOf(v) - aL, nL) < -tolerance)
+            return;
+    }
+
+    triangleSide.weights = weights;
+    triangleSide.point = weights.x * a0 + weights.y * b0 + weights.z * c0;
+    emitContact(CONTACT_VERTEX_TRIANGLE, keyA, keyB, vertexSide, triangleSide, n, d0, previous);
+}
+
+vec3 atTime(uint v, float tau)
+{
+    return tau == 0.0 ? startOf(v) : mix(startOf(v), endOf(v), tau);
+}
+
+// The vector into a triangle from its edge, perpendicular to the edge. A supporting
+// normal must face away from this vector. Using both incident triangles is the local
+// normal-cone (Gauss map) test, and handles seams and convex edges without an up axis.
+vec3 edgeInterior(uvec4 edge, uvec4 triangle, vec3 base, vec3 along, float tau)
+{
+    uint far = triangle.x != edge.x && triangle.x != edge.y ? triangle.x
+             : (triangle.y != edge.x && triangle.y != edge.y ? triangle.y : triangle.z);
+    vec3 into = atTime(far, tau) - base;
+    return into - dot(into, along) * along;
+}
+
+bool edgeSupports(uvec4 edge, vec3 outward, float tau)
+{
+    // A soft surface can already wrap around the other edge. Preserve its primitive
+    // crossing constraint; the rigid/fixed participant still supplies a solid cone.
+    if (edge.z == NO_BLOCK || vertexInfo[edge.x].y == KIND_NODE)
+        return true;
+    vec3 base = atTime(edge.x, tau);
+    vec3 along = normalize(atTime(edge.y, tau) - base);
+    uvec4 a = triangles[edge.z].vertices;
+    vec3 na = triangleNormal(atTime(a.x, tau), atTime(a.y, tau), atTime(a.z, tau));
+    vec3 intoA = edgeInterior(edge, a, base, along, tau);
+    if (na == vec3(0.0))
+        return true; // Degenerate adjacency cannot safely prune a CCD event.
+
+    if (edge.w == NO_BLOCK)
+    {
+        if ((bodies[a.w].extra.w & BODY_OPEN_EDGES_CONTINUE) != 0u)
+            return dot(outward, na) > 0.0 && length(cross(outward, na)) <= FEATURE_EPSILON;
+        // A real sheet rim supports its outward half-plane; it is not an internal seam.
+        return dot(outward, na) >= -FEATURE_EPSILON
+            && dot(outward, intoA) <= FEATURE_EPSILON * length(intoA);
+    }
+
+    uvec4 b = triangles[edge.w].vertices;
+    vec3 nb = triangleNormal(atTime(b.x, tau), atTime(b.y, tau), atTime(b.z, tau));
+    vec3 intoB = edgeInterior(edge, b, base, along, tau);
+    if (nb == vec3(0.0))
+        return true;
+    // A reentrant edge is inside the surface, not an exposed supporting feature.
+    if (dot(na, intoB) > FEATURE_EPSILON * length(intoB))
+        return false;
+    return dot(outward, na + nb) > 0.0
+        && dot(outward, intoA) <= FEATURE_EPSILON * length(intoA)
+        && dot(outward, intoB) <= FEATURE_EPSILON * length(intoB);
+}
+
+// Of the faces beside an edge, the one whose outward normal is nearest `outward`, or NO_BLOCK.
+uint nearestEdgeFace(uvec4 edge, vec3 outward, float tau, out vec3 normal)
+{
+    uint best = NO_BLOCK;
+    normal = vec3(0.0);
+    for (uint k = 2u; k < 4u; k++)
+    {
+        if (edge[k] == NO_BLOCK)
+            continue;
+        vec3 m = faceNormal(edge[k], tau);
+        if (m != vec3(0.0) && (best == NO_BLOCK || dot(m, outward) > dot(normal, outward)))
+        {
+            best = edge[k];
+            normal = m;
+        }
+    }
+
+    return best;
+}
+
+// Whether an edge running along `along` touches face f (outward normal m) where it crosses f's
+// boundary edge `edge`: going on over f, it must not lean into f by more than ADMIT_SINE, so the
+// crossing is (within the allowance vertexAdmits gives a vertex) its point nearest f. Where it
+// leans in, its nearest point is further over the face, at its other crossing or its end. A seam
+// inside f's plane has f on both sides, so there the edge may lean in neither way.
+bool crossingTouchesFace(uvec4 edge, uint f, vec3 m, vec3 along, float tau)
+{
+    float allowance = featureAllowance(tau);
+    vec3 base = atTime(edge.x, tau);
+    vec3 alongEdge = normalize(atTime(edge.y, tau) - base);
+    vec3 over = edgeInterior(edge, triangles[f].vertices, base, alongEdge, tau);
+    vec3 onward = dot(along, over) >= 0.0 ? along : -along;
+    if (dot(m, onward) < -allowance)
+        return false;
+
+    uint across = edge.z == f ? edge.w : edge.z;
+    if (across == NO_BLOCK)
+        return true;
+    vec3 acrossNormal = faceNormal(across, tau);
+    bool seam = dot(acrossNormal, m) > 0.0 && length(cross(acrossNormal, m)) <= FEATURE_EPSILON;
+    return !seam || dot(m, -onward) >= -allowance;
+}
+
+// The normal of an edge-edge contact, from B to A, given the edges' cross product n, their unit
+// directions and their separation (A's closest point minus B's) at x^t: outward for B and inward
+// for A at the same time as n, decided by geometry, never history. When n lies in both edges'
+// normal cones, the edges themselves are the closest features. When it lies in one edge's cone
+// only, the closest features are that edge and the face of the other edge that n points past
+// (the Voronoi transition of Lin-Canny / V-Clip): a tilted face resting on a block's top edge
+// touches it where the edge leaves the face, with the face's normal, though no corner of either
+// lies in the other's face. Zero when neither applies.
+vec3 edgePairNormal(vec3 n, uvec4 a, uvec4 b, vec3 alongA, vec3 alongB, vec3 separation, float tau)
+{
+    bool forward = edgeSupports(a, -n, tau) && edgeSupports(b, n, tau);
+    bool backward = edgeSupports(a, n, tau) && edgeSupports(b, -n, tau);
+    if (forward && backward)
+        return dot(n, separation) >= 0.0 ? n : -n;
+    if (forward)
+        return n;
+    if (backward)
+        return -n;
+
+    vec3 best = vec3(0.0);
+    for (int side = 0; side < 2; side++)
+    {
+        vec3 m = side == 0 ? n : -n;
+        vec3 normal;
+        vec3 candidate = vec3(0.0);
+        if (edgeSupports(a, -m, tau))
+        {
+            uint f = nearestEdgeFace(b, m, tau, normal);
+            if (f != NO_BLOCK && dot(normal, m) > 0.0 && edgeSupports(a, -normal, tau) && crossingTouchesFace(b, f, normal, alongA, tau))
+                candidate = normal;
+        }
+        else if (edgeSupports(b, m, tau))
+        {
+            uint f = nearestEdgeFace(a, -m, tau, normal);
+            if (f != NO_BLOCK && dot(normal, m) < 0.0 && edgeSupports(b, -normal, tau) && crossingTouchesFace(a, f, normal, alongB, tau))
+                candidate = -normal;
+        }
+
+        if (candidate != vec3(0.0) && (best == vec3(0.0) || dot(candidate, separation) > dot(best, separation)))
+            best = candidate;
+    }
+
+    return best;
+}
+
+void testEdgeEdge(uint ea, uint eb, bool sweep)
+{
+    uvec4 edgeA = edges[ea];
+    uvec4 edgeB = edges[eb];
+
+    vec3 p0 = startOf(edgeA.x);
+    vec3 p1 = startOf(edgeA.y);
+    vec3 q0 = startOf(edgeB.x);
+    vec3 q1 = startOf(edgeB.y);
+    vec3 dp0 = endOf(edgeA.x) - p0;
+    vec3 dp1 = endOf(edgeA.y) - p1;
+    vec3 dq0 = endOf(edgeB.x) - q0;
+    vec3 dq1 = endOf(edgeB.y) - q1;
+
+    float margin = float(collision.x);
+    float reach = margin + max(length(dp0), length(dp1)) + max(length(dq0), length(dq1));
+
+    float s;
+    float t;
+    closestSegmentParameters(p0, p1, q0, q1, s, t);
+    vec3 xa = mix(p0, p1, s);
+    vec3 xb = mix(q0, q1, t);
+    if (length(xa - xb) > reach)
+        return;
+
+    uint keyA = ea;
+    uint keyB = eb;
+
+    // An edge's first triangle owns it.
+    Side sideA;
+    sideA.vertices = uvec3(edgeA.x, edgeA.y, edgeA.y);
+    sideA.count = 2u;
+    sideA.triangle = edgeA.z;
+
+    Side sideB;
+    sideB.vertices = uvec3(edgeB.x, edgeB.y, edgeB.y);
+    sideB.count = 2u;
+    sideB.triangle = edgeB.z;
+
+    float lengthA = length(p1 - p0);
+    float lengthB = length(q1 - q0);
+    vec3 axis = cross(p1 - p0, q1 - q0);
+    float axisLength = length(axis);
+    bool parallel = axisLength <= PARALLEL_EPSILON * lengthA * lengthB;
+
+    // Within the contact tolerance an endpoint belongs to the adjacent faces.
+    // Their footprints use the same world-space allowance (barycentricSlop), so
+    // this handoff leaves no hole in a resting contact manifold.
+    float tolerance = float(collision.y);
+    if (lengthA < 1e-10 || lengthB < 1e-10)
+        return;
+    float endA = max(INTERIOR_EPSILON, tolerance / lengthA);
+    float endB = max(INTERIOR_EPSILON, tolerance / lengthB);
+    bool interior = s > endA && s < 1.0 - endA && t > endB && t < 1.0 - endB;
+
+    if (interior && !parallel)
+    {
+        vec3 n = edgePairNormal(axis / axisLength, edgeA, edgeB, (p1 - p0) / lengthA, (q1 - q0) / lengthB, xa - xb, 0.0);
+        float c0 = dot(n, xa - xb);
+        if (n != vec3(0.0) && c0 >= -float(limits.w))
+        {
+            sideA.weights = vec3(1.0 - s, s, 0.0);
+            sideA.point = xa;
+            sideB.weights = vec3(1.0 - t, t, 0.0);
+            sideB.point = xb;
+            emitContact(CONTACT_EDGE_EDGE, keyA, keyB, sideA, sideB, n, c0, previousFind(keyA, keyB));
+            return;
+        }
+        // An invalid start normal does NOT reject the sweep. Rotation/deformation can
+        // make the edges exposed at a later time of impact.
+    }
+
+    if (!sweep)
+        return;
+
+    float roots[3];
+    uint rootCount = cubicRoots(coplanarityCubic(q0 - p0, dq0 - dp0, p1 - p0, dp1 - dp0, q1 - q0, dq1 - dq0), roots);
+    for (uint i = 0u; i < rootCount; i++)
+    {
+        float tau = roots[i];
+        vec3 pT0 = p0 + tau * dp0;
+        vec3 pT1 = p1 + tau * dp1;
+        vec3 qT0 = q0 + tau * dq0;
+        vec3 qT1 = q1 + tau * dq1;
+
+        vec3 axisT = cross(pT1 - pT0, qT1 - qT0);
+        float axisTLength = length(axisT);
+        if (axisTLength <= PARALLEL_EPSILON * length(pT1 - pT0) * length(qT1 - qT0))
+            continue;
+
+        endA = max(INTERIOR_EPSILON, tolerance / length(pT1 - pT0));
+        endB = max(INTERIOR_EPSILON, tolerance / length(qT1 - qT0));
+        float sT;
+        float tT;
+        closestSegmentParameters(pT0, pT1, qT0, qT1, sT, tT);
+        float gap = length(mix(pT0, pT1, sT) - mix(qT0, qT1, tT));
+        if (gap > IMPACT_INSIDE_EPSILON * max(lengthA, lengthB) || sT <= endA || sT >= 1.0 - endA || tT <= endB || tT >= 1.0 - endB)
+            continue;
+
+        xa = mix(p0, p1, sT);
+        xb = mix(q0, q1, tT);
+        vec3 n = edgePairNormal(axisT / axisTLength, edgeA, edgeB, normalize(pT1 - pT0), normalize(qT1 - qT0), xa - xb, tau);
+        // A crossing the edges reach from behind each other, as a body sweeping on through
+        // another meets its far side, is no entering contact: its constraint would pull the
+        // body on through. Like a vertex, an edge must start the step in front.
+        if (n == vec3(0.0) || dot(n, xa - xb) < -tolerance)
+            continue; // A later root can be an entering contact with a different cone.
+        uint previous = previousFind(keyA, keyB);
+
+        sideA.weights = vec3(1.0 - sT, sT, 0.0);
+        sideA.point = xa;
+        sideB.weights = vec3(1.0 - tT, tT, 0.0);
+        sideB.point = xb;
+        emitContact(CONTACT_EDGE_EDGE, keyA, keyB, sideA, sideB, n, dot(n, xa - xb), previous);
+        return;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Pair
+// ---------------------------------------------------------------------------------------------
+
+void testTrianglePair(uint t1, uint t2, bool sweep)
+{
+    Triangle a = triangles[t1];
+    Triangle b = triangles[t2];
+    Body bodyA = bodies[a.vertices.w];
+    Body bodyB = bodies[b.vertices.w];
+    translatingPair = (bodyA.info.x == KIND_RIGID && rigidRotationFixed(rigids[bodyA.info.y - counts.x]))
+        || (bodyB.info.x == KIND_RIGID && rigidRotationFixed(rigids[bodyB.info.y - counts.x]));
+    uint ownA = a.edges.w;
+    uint ownB = b.edges.w;
+
+    for (int k = 0; k < 3; k++)
+    {
+        if ((ownA & (1u << k)) != 0u)
+            testVertexTriangle(a.vertices[k], t1, t2, sweep);
+        if ((ownB & (1u << k)) != 0u)
+            testVertexTriangle(b.vertices[k], t2, t1, sweep);
+    }
+
+    for (int i = 0; i < 3; i++)
+    {
+        if ((ownA & (8u << i)) == 0u)
+            continue;
+
+        for (int j = 0; j < 3; j++)
+        {
+            if ((ownB & (8u << j)) != 0u)
+                testEdgeEdge(a.edges[i], b.edges[j], sweep);
+        }
+    }
+}
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    if (index >= pairTotal())
+        return;
+
+    // The inertial prediction is the motion only of a body in free flight. One touching something
+    // (resting, sliding, pressed against a wall) is carried by it a few millimetres into its
+    // supports, and a sweep of that would find the sides of blocks level with a floor in its way.
+    // Continuous passes sweep such bodies along the motion the solver has constrained instead.
+    uvec2 pair = pairs[index];
+    if ((flags & MODE_FREE_FLIGHT) != 0u && (touching(triangles[pair.x].vertices.w) || touching(triangles[pair.y].vertices.w)))
+        return;
+
+    origin = vertexStart[triangles[pair.x].vertices.x].xyz;
+    testTrianglePair(pair.x, pair.y, (flags & (MODE_SWEEP | MODE_FREE_FLIGHT)) != 0u);
+}

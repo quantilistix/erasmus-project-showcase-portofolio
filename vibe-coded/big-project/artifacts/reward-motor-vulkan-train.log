@@ -1,0 +1,28 @@
+Checkpoint: /tmp/reward-pc-smoke
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+llvmpipe (LLVM 20.1.2, 256 bits) / predictive coding / device-local weights / subgroup reductions (software Vulkan on CPU); 3,120 normal neurons plus paired error populations, 49,664 shared w/-w connections. Eight nonnegative motor outputs.
+Vulkan selected a CPU renderer. Hardware acceleration requires an accessible GPU and its Vulkan driver; use --list-devices and --device INDEX to select a different device.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One PC local weight update/frame; reward motor decisions every 12 frames.
+Main PC plasticity uses positive base eta. Reward/pain train a local motor actor/critic with eligibility traces; the PC graph supplies representation and receives the actual button clamps.
+Motor feedback = .1 * instantaneous normalized calculated pleasure - calculated pain + primitive event reward/cost + 4 on completion + .02 per new cell. Sensation traces are not repaid.
+Training uses calculated teacher labels; play uses the frozen reward network. Primitive signals and discovery remain available in both modes.
+Drive inputs retain constant pleasure plus held pain noise. Manual/bot control clears policy credit; it teaches PC associations without off-policy reinforcement.
+Total error = SUM(E^2), statistics only. Motor learning is a small local readout; no replay or backpropagation through the predictive networks.
+Level 1; maze geometry stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /tmp/reward-pc-smoke.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=28 total_error_sum_e2=21959.515814 reward_error_sum_e2=22481.522084 teaching_error_sum_e2=24291.462564 total_pleasure=0.06949 total_pain=0.12135 sensation_balance=-0.05186 eta_effective=0.00001000 motor_td=0.05239 motor_updates=2 learning_reward=-0.02110 main_ticks=224 reward_ticks=224 local_updates=28/28
+SENSE primitive_pain=0.1458 applied_pain=0.0000 applied_pleasure=17.5849 inferred_pain=0.0000 inferred_pleasure=77.8474 HP=59.53 ammo=0/0 controls=Forward, Fire
+PC frame=71 total_error_sum_e2=170742.799889 reward_error_sum_e2=174250.215424 teaching_error_sum_e2=179783.533469 total_pleasure=0.04228 total_pain=0.12350 sensation_balance=-0.08122 eta_effective=0.00001000 motor_td=0.03217 motor_updates=5 learning_reward=-0.04028 main_ticks=568 reward_ticks=568 local_updates=71/71
+SENSE primitive_pain=0.1662 applied_pain=0.0000 applied_pleasure=10.7004 inferred_pain=0.0000 inferred_pleasure=43.2585 HP=58.82 ammo=0/0 controls=Forward, TurnLeft, TurnRight, Fire, Reload
+PC frame=131 total_error_sum_e2=613572.530103 reward_error_sum_e2=623577.138101 teaching_error_sum_e2=634102.028538 total_pleasure=0.03666 total_pain=0.19164 sensation_balance=-0.15499 eta_effective=0.00001000 motor_td=-0.44991 motor_updates=10 learning_reward=0.00196 main_ticks=1048 reward_ticks=1048 local_updates=131/131
+SENSE primitive_pain=0.1265 applied_pain=0.0644 applied_pleasure=9.2764 inferred_pain=0.0000 inferred_pleasure=65.7059 HP=57.82 ammo=0/0 controls=Forward, TurnLeft, StrafeLeft
+PC frame=144 total_error_sum_e2=754983.461340 reward_error_sum_e2=767639.662094 teaching_error_sum_e2=779289.669587 total_pleasure=0.03573 total_pain=0.18321 sensation_balance=-0.14748 eta_effective=0.00001000 motor_td=-0.43212 motor_updates=11 learning_reward=-0.02387 main_ticks=1152 reward_ticks=1152 local_updates=144/144
+SENSE primitive_pain=0.1534 applied_pain=0.0554 applied_pleasure=9.1477 inferred_pain=0.0000 inferred_pleasure=81.0685 HP=57.60 ammo=0/0 controls=Forward, Backward, TurnLeft, TurnRight, StrafeRight, Reload
+PC frame=199 total_error_sum_e2=1442005.629339 reward_error_sum_e2=1472833.359379 teaching_error_sum_e2=1489139.321791 total_pleasure=0.05318 total_pain=0.15960 sensation_balance=-0.10642 eta_effective=0.00001000 motor_td=0.07011 motor_updates=16 learning_reward=-0.04764 main_ticks=1592 reward_ticks=1592 local_updates=199/199
+SENSE primitive_pain=0.1799 applied_pain=0.0294 applied_pleasure=13.4571 inferred_pain=0.0000 inferred_pleasure=241.4492 HP=56.68 ammo=0/0 controls=Forward, TurnRight, StrafeRight, Fire
+PC frame=240 total_error_sum_e2=2115398.155895 reward_error_sum_e2=2198159.306175 teaching_error_sum_e2=2218780.391984 total_pleasure=0.03898 total_pain=0.15044 sensation_balance=-0.11147 eta_effective=0.00001000 motor_td=0.06376 motor_updates=19 learning_reward=0.00243 main_ticks=1920 reward_ticks=1920 local_updates=240/240
+SENSE primitive_pain=0.1320 applied_pain=0.0183 applied_pleasure=9.8635 inferred_pain=0.0000 inferred_pleasure=209.1325 HP=56.00 ammo=0/0 controls=Forward, Backward, TurnLeft, StrafeLeft, Fire, Reload
+Level 1, geometry stage 1/5, completions 0, mean 40.08 ms/frame (~25.0 compute fps), recent p95 42.00 ms
+Saved main.pcn, reward.pcn and maze.json in /tmp/reward-pc-smoke.
+240 learning frames in 9.71s; mean 40.08 ms/frame (~25.0 compute fps), recent p95 42.00 ms

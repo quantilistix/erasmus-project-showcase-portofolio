@@ -1,0 +1,47 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Files each contact under every block it touches, as compressed rows: a counting pass, a
+// scan (contact_scan.comp) that turns counts into offsets, then a filling pass.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_FILL = 1u;
+
+void visit(uint block, uint c)
+{
+    if (block == NO_BLOCK)
+        return;
+
+    uint slot = atomicAdd(blockContactCursor[block], 1u);
+    if ((flags & MODE_FILL) == 0u)
+        return;
+
+    if (slot < capacities.z)
+        blockContactRefs[slot] = c;
+    else
+        atomicAdd(counters[COUNTER_DROPPED_REFS], 1u);
+}
+
+void main()
+{
+    uint c = gl_GlobalInvocationID.x;
+    if (c >= contactTotal())
+        return;
+
+    uvec4 header = contacts[c].header;
+    uvec4 nodesA = contacts[c].nodesA;
+    uvec4 nodesB = contacts[c].nodesB;
+
+    visit(header.y, c);
+    visit(header.z, c);
+    for (int k = 0; k < 3; k++)
+    {
+        visit(nodesA[k], c);
+        visit(nodesB[k], c);
+    }
+}

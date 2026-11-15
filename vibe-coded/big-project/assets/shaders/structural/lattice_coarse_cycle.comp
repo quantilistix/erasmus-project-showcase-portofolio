@@ -1,0 +1,66 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One workgroup: the rest of the multigrid cycle from a small level (size.w) to the single
+// node at the top (coarseSize.x levels in all), each step a loop of the workgroup over the
+// level's nodes between barriers. The small levels would otherwise cost a few dispatches
+// each, mostly waiting. The levels' boxes and offsets come from the Levels buffer.
+
+layout(local_size_x = 256) in;
+
+#include "lattice_common.glsl"
+
+void synchronize()
+{
+    memoryBarrierBuffer();
+    barrier();
+}
+
+void sweep(Level level, int color)
+{
+    for (int i = int(gl_LocalInvocationID.x); i < nodeCount(level.size); i += 256)
+        smoothNode(level, i, color);
+    synchronize();
+}
+
+void main()
+{
+    int first = pass.size.w;
+    int top = pass.coarseSize.x - 1;
+    int sweeps = pass.coarseSize.y;
+    int local = int(gl_LocalInvocationID.x);
+
+    for (int l = first; l < top; l++)
+    {
+        Level fine = levelAt(l);
+        Level coarse = levelAt(l + 1);
+        for (int k = 0; k < sweeps; k++)
+        {
+            sweep(fine, 0);
+            sweep(fine, 1);
+        }
+        for (int i = local; i < nodeCount(fine.size); i += 256)
+            residualNode(fine, i);
+        synchronize();
+        for (int a = local; a < nodeCount(coarse.size); a += 256)
+            restrictNode(fine, coarse, a);
+        synchronize();
+    }
+
+    sweep(levelAt(top), 0);
+
+    for (int l = top - 1; l >= first; l--)
+    {
+        Level fine = levelAt(l);
+        Level coarse = levelAt(l + 1);
+        for (int i = local; i < nodeCount(fine.size); i += 256)
+            prolongNode(fine, coarse, i);
+        synchronize();
+        for (int k = 0; k < sweeps; k++)
+        {
+            sweep(fine, 1);
+            sweep(fine, 0);
+        }
+    }
+}

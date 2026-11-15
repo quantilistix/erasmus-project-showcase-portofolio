@@ -1,0 +1,109 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Conservative advancement of the initial guess. The guess runs each body along its inertial
+// path, which on an impact ends deep inside whatever it hits; starting there, every contact
+// begins badly violated and the early iterations push with large, uneven forces. Instead each
+// body stops where its first contact would close (linearized), so iterations start from a
+// feasible state. Small violations, as in resting or sliding contact, are left alone so the
+// guess keeps its motion along the surface.
+//
+// A soft body stops as a whole: stopping only the nodes that touch would leave the rest to run
+// past them, an inverted guess the springs cannot undo. Three passes: reset the per-body
+// fractions (one thread per soft and rigid body), lower the fractions of the bodies each
+// contact touches (one thread per contact), then apply them (one thread per block).
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_RESET = 0u;
+const uint MODE_FIND = 1u;
+const uint MODE_APPLY = 2u;
+const double FIXED_POINT_ONE = 4294967295.0;
+
+// Fraction slot of the body on one side of a contact: soft bodies, then rigid bodies.
+uint fractionSlot(uint kind, uint rigidBlock, uint node)
+{
+    if (kind == KIND_NODE)
+        return nodeBodies[node];
+    if (kind == KIND_RIGID)
+        return bodyCounts.w + rigidBlock - counts.x;
+
+    return NO_BLOCK;
+}
+
+// The fraction of its motion at which a side approaching by `approach` closes a gap of `start`
+// with the other side, approaching by `other`: together if both approach, or where the other
+// will be if it moves away.
+uint closingFraction(float start, float approach, float other)
+{
+    return uint(double(clamp((start - min(other, 0.0)) / (approach + max(other, 0.0)), 0.0, 1.0)) * FIXED_POINT_ONE);
+}
+
+void lowerFraction(uint slot, uint fraction)
+{
+    if (slot != NO_BLOCK)
+        atomicMin(guessFractions[slot], fraction);
+}
+
+double appliedFraction(uint slot)
+{
+    return double(guessFractions[slot]) / FIXED_POINT_ONE;
+}
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+
+    if (flags == MODE_RESET)
+    {
+        if (index < bodyCounts.w + counts.y)
+            guessFractions[index] = 0xFFFFFFFFu;
+        return;
+    }
+
+    if (flags == MODE_FIND)
+    {
+        if (index >= contactTotal())
+            return;
+
+        Contact c = contacts[index];
+        float start = c.normal.w;
+        if (start <= 0.0)
+            return;
+
+        float approachA = -dot(c.normal.xyz, sideDisplacement(contactKindA(c), c.header.y, c.nodesA, c.weightsA, c.offsetA.xyz));
+        float approachB = dot(c.normal.xyz, sideDisplacement(contactKindB(c), c.header.z, c.nodesB, c.weightsB, c.offsetB.xyz));
+        if (start - approachA - approachB >= -float(collision.x))
+            return;
+
+        // Only a side moving into the contact stops, where it meets the other: one moving away,
+        // such as a body pushed ahead of another, keeps its motion, or the pusher would hold it
+        // back every step.
+        if (approachA > 0.0)
+            lowerFraction(fractionSlot(contactKindA(c), c.header.y, c.nodesA.x), closingFraction(start, approachA, approachB));
+        if (approachB > 0.0)
+            lowerFraction(fractionSlot(contactKindB(c), c.header.z, c.nodesB.x), closingFraction(start, approachB, approachA));
+        return;
+    }
+
+    if (index >= capacities.w)
+        return;
+
+    if (index < counts.x)
+    {
+        double fraction = appliedFraction(nodeBodies[index]);
+        nodes[index].position.xyz = mix(nodes[index].previous.xyz, nodes[index].position.xyz, fraction);
+        return;
+    }
+
+    uint r = index - counts.x;
+    double fraction = appliedFraction(bodyCounts.w + r);
+    Rigid body = rigids[r];
+    dvec3 rotation = quatDifference(body.orientation, body.previousOrientation);
+    rigids[r].position.xyz = mix(body.previousPosition.xyz, body.position.xyz, fraction);
+    rigids[r].orientation = quatIntegrate(body.previousOrientation, fraction * rotation);
+}

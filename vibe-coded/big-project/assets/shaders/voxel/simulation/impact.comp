@@ -1,0 +1,82 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+layout(local_size_x=256) in;
+layout(std430,binding=9) readonly buffer Requests { dvec4 requests[]; };
+layout(std430,binding=10) buffer Work { dvec4 work[]; };
+layout(std430,binding=14) readonly buffer SideA { vec4 stressA[]; };
+layout(std430,binding=15) readonly buffer SideB { vec4 stressB[]; };
+layout(push_constant) uniform Parameters { uvec4 counts; vec4 physics; uvec4 batch; } p;
+shared double a[256],b[256];
+void reduce(bool minimum) {
+    uint lane=gl_LocalInvocationID.x;
+    barrier();
+    for(uint stride=128u;stride>0u;stride>>=1u) {
+        if(lane<stride) { a[lane]=minimum ? min(a[lane],a[lane+stride]) : a[lane]+a[lane+stride]; b[lane]+=b[lane+stride]; }
+        barrier();
+    }
+}
+void main() {
+    uint lane=gl_LocalInvocationID.x,n=p.batch.y,mode=p.counts.x;
+    uint i=gl_GlobalInvocationID.x+gl_GlobalInvocationID.y*gl_NumWorkGroups.x*gl_WorkGroupSize.x;
+    double infinity=uintBitsToFloat(0x7f800000u);
+    if(mode==0u) {
+        if(i>=n) return;
+        uint inputStart=1u+i*4u,outputStart=3u+i*2u;
+        dvec4 material=requests[inputStart],limits=requests[inputStart+1u],already=requests[inputStart+2u],meta=requests[inputStart+3u];
+        dvec4 unit=dvec4(0);
+        if(meta.x>=0.0LF) unit=dvec4((uint(meta.y)&1u)==0u ? stressA[int(meta.x)] : stressB[int(meta.x)]);
+        for(uint j=0u;j<uint(meta.w);j++) {
+            uint at=uint(requests[0].z)+uint(meta.z)*2u+j*2u;
+            dvec4 load=requests[at],surface=requests[at+1u];
+            double area=surface.w*surface.w*clamp(load.w,1.0LF/9.0LF,1.0LF);
+            double normal=max(0.0LF,dot(load.xyz,surface.xyz));
+            double tangent=length(load.xyz-dot(load.xyz,surface.xyz)*surface.xyz);
+            unit.y=max(unit.y,normal/area); unit.z=max(unit.z,1.5LF*tangent/area);
+            unit.w+=0.25LF*surface.w*(normal*normal/material.x+tangent*tangent/material.y)/area;
+        }
+        double first=infinity; int failure=0;
+        if((uint(meta.y)&2u)!=0u)
+            for(int axis=0;axis<3;axis++) {
+                if(!(unit[axis]>0.0LF)||isinf(limits[axis])) continue;
+                double reached=(limits[axis]-min(already[axis],0.95LF*limits[axis]))/unit[axis];
+                if(reached<first) { first=reached; failure=axis; }
+            }
+        if(material.w>0.5LF) failure=1;
+        double modulus=failure==2 ? material.y : material.x;
+        double capacity=limits[failure]*limits[failure]/(2.0LF*modulus)*material.z;
+        work[outputStart]=unit;
+        work[outputStart+1u]=dvec4(first,capacity,0,0);
+        return;
+    }
+    if(mode==1u||mode==3u||mode==5u) {
+        double first=mode==1u ? infinity : 0.0LF,second=0.0LF;
+        for(uint j=lane;j<n;j+=256u) {
+            dvec4 unit=work[3u+j*2u],info=work[4u+j*2u];
+            if(mode==1u) { first=min(first,info.x); second+=unit.w; }
+            else if(mode==3u) { first+=info.z; second+=work[2].x>0.5LF&&info.x<=work[0].w ? 1.0LF : 0.0LF; }
+            else if(info.w>0.0LF) first+=info.w*info.y/2.0LF;
+        }
+        a[lane]=first; b[lane]=second; reduce(mode==1u);
+        if(lane==0u) {
+            if(mode==1u) {
+                double scale=b[0]>0.0LF ? sqrt(requests[0].x/b[0]) : 0.0LF;
+                bool damage=a[0]<scale;
+                work[0]=dvec4(a[0],b[0],scale,min(scale,a[0]*1.05LF));
+                work[1]=dvec4(0,0,damage ? requests[0].x-a[0]*a[0]*b[0] : 0.0LF,0);
+                work[2]=dvec4(damage ? 1.0LF : 0.0LF,requests[0].x,0,0);
+            } else if(mode==3u) { work[1].x=a[0]; work[1].y=b[0]; }
+            else { work[1].w=a[0]; work[2].y=max(0.0LF,requests[0].x-a[0]); }
+        }
+        return;
+    }
+    if(i>=n) return;
+    uint at=4u+i*2u;
+    dvec4 info=work[at];
+    if(mode==2u) info.z=work[2].x>0.5LF&&info.x<=work[0].w
+        ? work[at-1u].w*(work[0].z*work[0].z-info.x*info.x) : 0.0LF;
+    else if(mode==4u&&work[2].x>0.5LF&&info.x<=work[0].w) {
+        double share=work[1].x>0.0LF ? info.z/work[1].x : 1.0LF/work[1].y;
+        info.w=min(2.0LF*work[1].z*share/info.y,requests[2u+i*4u].w-requests[3u+i*4u].w);
+    }
+    work[at]=info;
+}

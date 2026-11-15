@@ -1,0 +1,63 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One workgroup: sums the partials of lattice_dot.comp (offsets.y of them) and updates the
+// conjugate gradient's scalars. Mode 0: α = rz / pq. Mode 1: β = rz' / rz, rz = rz', rr, one
+// more iteration. Mode 2 (restart): rz, rr, bb, and no iterations yet. Mode 3: rr, one more
+// iteration, whose β waits for the next submission. Mode 4: that β, as mode 1 but not counted.
+
+layout(local_size_x = 256) in;
+
+#include "lattice_common.glsl"
+
+shared vec3 sums[256];
+
+void main()
+{
+    uint local = gl_LocalInvocationID.x;
+    vec3 value = vec3(0.0);
+    for (uint k = local; k < pass.offsets.y; k += 256u)
+        value += partials[k].xyz;
+
+    sums[local] = value;
+    barrier();
+    for (uint stride = 128u; stride > 0u; stride >>= 1u)
+    {
+        if (local < stride)
+            sums[local] += sums[local + stride];
+        barrier();
+    }
+
+    if (local != 0u)
+        return;
+
+    vec3 total = sums[0];
+    if (pass.coarseSize.w == 0)
+    {
+        state.pq = total.x;
+        state.alpha = total.x > 0.0 ? state.rz / total.x : 0.0;
+    }
+    else if (pass.coarseSize.w == 1 || pass.coarseSize.w == 4)
+    {
+        state.beta = state.rz > 0.0 ? total.x / state.rz : 0.0;
+        state.rz = total.x;
+        state.rr = total.y;
+        if (pass.coarseSize.w == 1)
+            state.iterations += 1u;
+    }
+    else if (pass.coarseSize.w == 3)
+    {
+        state.rr = total.y;
+        state.iterations += 1u;
+    }
+    else
+    {
+        state.rz = total.x;
+        state.rr = total.y;
+        state.bb = total.z;
+        state.alpha = 0.0;
+        state.beta = 0.0;
+        state.iterations = 0u;
+    }
+}

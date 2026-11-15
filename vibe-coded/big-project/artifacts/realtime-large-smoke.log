@@ -1,0 +1,7 @@
+Creating 8 hidden layers × 512 neurons, with adjacent + odd-to-odd connections…
+Intel(R) Arc(tm) Graphics (MTL); 5,107 neurons; 3,147,264 edges; reward head 128→32→2.
+Calibration: 120 frames. Then freeze reward weights, biases and plasticity; continue main learning every active frame.
+Noise ONLY in 16 learned-pain and 16 primitive-pain input neurons. Raw senses and controls unchanged.
+frame    120 REALTIME reward FROZEN P=0.194 pain=0.243 primitive=0.956 gain=1.049 mainLoss=0.35794 headLoss=0.09251 mainUpdates=120 headUpdates=120; mean 8.24 ms/frame (~121.3 compute fps), recent p95 14.62 ms
+frame    180 REALTIME reward FROZEN P=0.166 pain=0.016 primitive=0.142 gain=1.042 mainLoss=0.01064 headLoss=0.09251 mainUpdates=180 headUpdates=120; mean 7.31 ms/frame (~136.9 compute fps), recent p95 14.09 ms
+Completed 180 learning frames in 1.32s. mean 7.31 ms/frame (~136.9 compute fps), recent p95 14.09 ms

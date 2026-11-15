@@ -1,0 +1,33 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// The loads b on level 0. Mode 0, one thread per node: every cell's weight, mass × gravity
+// (parameters.xyz). Mode 1, one thread per entry of cellLoads (offsets.y of them): adds a
+// force and a moment about the cell's center; each node appears once.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    if (pass.coarseSize.w == 0)
+    {
+        if (i >= nodeCount(pass.size.xyz))
+            return;
+
+        vec4 cell = cells[i];
+        b[i] = cell.w > 0.0 ? six(cell.z * pass.parameters.xyz, vec3(0.0)) : zeroSix();
+        return;
+    }
+
+    if (uint(i) >= pass.offsets.y)
+        return;
+
+    CellLoad load = cellLoads[i];
+    uint node = load.node.x;
+    b[node].u += vec4(load.force.xyz, 0.0);
+    b[node].t += vec4(load.moment.xyz, 0.0);
+}

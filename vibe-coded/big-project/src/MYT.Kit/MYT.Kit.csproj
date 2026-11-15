@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="PhysicsTests" />
+    <InternalsVisibleTo Include="VoxelGame" />
+    <InternalsVisibleTo Include="VoxelTests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../MYT.IKit/MYT.IKit.csproj" />
+    <ProjectReference Include="../NeuralGraph/NeuralGraph.csproj" />
+  </ItemGroup>
+
+  <ItemGroup><EmbeddedResource Include="Graph/Shaders/*.spv" /></ItemGroup>
+</Project>

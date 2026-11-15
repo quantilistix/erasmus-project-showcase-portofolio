@@ -1,0 +1,86 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Applies the edits queued on the CPU since the last step, one thread per block (nodes first,
+// then rigid bodies). Each thread walks every edit in order, so edits to the same body apply
+// in the order they were made.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+void editNode(uint n, Edit edit)
+{
+    if (isPinned(nodes[n]))
+        return;
+
+    uint type = edit.header.x;
+    if (type == EDIT_NODES_VELOCITY)
+    {
+        nodes[n].velocity.xyz = edit.a.xyz;
+        nodes[n].previousVelocity.xyz = edit.a.xyz;
+    }
+    else if (type == EDIT_NODES_ADD_VELOCITY)
+    {
+        nodes[n].velocity.xyz += edit.a.xyz;
+        nodes[n].previousVelocity.xyz += edit.a.xyz;
+    }
+    else if (type == EDIT_NODES_TRANSLATE)
+    {
+        nodes[n].position.xyz += edit.a.xyz;
+    }
+}
+
+void editRigid(uint r, Edit edit)
+{
+    uint type = edit.header.x;
+    if (type == EDIT_RIGID_POSE)
+    {
+        rigids[r].position.xyz = edit.a.xyz;
+        rigids[r].orientation = normalize(edit.b);
+    }
+    else if (type == EDIT_RIGID_LINEAR_VELOCITY)
+    {
+        rigids[r].linearVelocity.xyz = edit.a.xyz;
+        rigids[r].previousLinearVelocity.xyz = edit.a.xyz;
+    }
+    else if (type == EDIT_RIGID_ANGULAR_VELOCITY)
+    {
+        if (!rigidRotationFixed(rigids[r]))
+            rigids[r].angularVelocity.xyz = edit.a.xyz;
+    }
+    else if (type == EDIT_RIGID_IMPULSE)
+    {
+        Rigid body = rigids[r];
+        vec3 arm = vec3(edit.b.xyz - body.position.xyz);
+        mat3 inverseInertia = rigidInverseWorldInertia(body);
+        rigids[r].linearVelocity.xyz += edit.a.xyz / body.position.w;
+        rigids[r].angularVelocity.xyz += dvec3(inverseInertia * cross(arm, vec3(edit.a.xyz)));
+    }
+}
+
+void main()
+{
+    uint block = gl_GlobalInvocationID.x;
+    if (block >= capacities.w)
+        return;
+
+    for (uint e = 0u; e < bodyCounts.y; e++)
+    {
+        Edit edit = edits[e];
+        if (block < edit.header.y || block >= edit.header.y + edit.header.z)
+            continue;
+
+        // A teleported body did not travel through the space between its old and new
+        // positions, so it must not look like it crossed anything there.
+        if (edit.header.w != NO_BLOCK)
+            atomicOr(bodies[edit.header.w].extra.w, BODY_RESET_LAST);
+
+        if (block < counts.x)
+            editNode(block, edit);
+        else
+            editRigid(block - counts.x, edit);
+    }
+}

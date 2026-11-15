@@ -1,0 +1,1 @@
+This program is a wave simulator writen in Lua and Love2D. It simulates a grid where each cell has a displacement and velocity. Each cell is either dragged up or down by it's neighbours depending on the relative position to them.

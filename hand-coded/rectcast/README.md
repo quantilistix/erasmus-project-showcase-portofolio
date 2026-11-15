@@ -1,0 +1,1 @@
+This is a first person view program, writen in Lua and Love2D, using an optimized technique of ray casting that only works for lines aligned with the coordinate system's axies (horizontal lines and vertical lines).

@@ -1,0 +1,21 @@
+Checkpoint: /tmp/pc2-unused
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+llvmpipe (LLVM 20.1.2, 256 bits) / predictive coding / device-local weights / subgroup reductions (software Vulkan on CPU); 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Vulkan selected a CPU renderer. Hardware acceleration requires an accessible GPU and its Vulkan driver; use --list-devices and --device INDEX to select a different device.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One local weight update/frame.
+Main eta = base eta * (1 + total pleasure - total pain). Totals use normalized applied signals plus primitive sensations from the preceding feedback (ideal in train, inferred in play). Propagation gain stays 1.
+Exploration pleasure is disabled. Inactivity pain ramps to 1 over five simulated seconds; meaningful displacement resets its raw target.
+Nonprimitive pleasure/pain and primitive pleasure fade with a 60-update half-life. Primitive pain is unchanged.
+Drive inputs = total pleasure + total pain * held U(0,1); noise refreshes every 12 frames. Negative reward factors reverse local plasticity.
+Total error = SUM(E^2), statistics only. No actor/value objective, replay, backpropagation, biases or least-squares reward shortcut.
+Level 1; maze geometry stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /tmp/pc2-unused.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=21 total_error_sum_e2=10644.478488 reward_error_sum_e2=11198.285182 teaching_error_sum_e2=12276.424505 total_pleasure=0.07500 total_pain=0.12100 reward_factor=0.95400 eta_effective=0.00000954 main_ticks=168 reward_ticks=168 local_updates=21/21
+SENSE primitive_pain=0.1666 applied_pain=0.0000 applied_pleasure=19.4546 inferred_pain=0.0041 inferred_pleasure=0.0000 HP=59.65 ammo=0/0 controls=Backward
+PC frame=74 total_error_sum_e2=148054.951798 reward_error_sum_e2=155538.327598 teaching_error_sum_e2=160360.186640 total_pleasure=0.05014 total_pain=0.14772 reward_factor=0.90242 eta_effective=0.00000902 main_ticks=592 reward_ticks=592 local_updates=74/74
+SENSE primitive_pain=0.1568 applied_pain=0.0259 applied_pleasure=12.6886 inferred_pain=0.0000 inferred_pleasure=0.0000 HP=58.77 ammo=0/0 controls=Forward
+PC frame=120 total_error_sum_e2=437974.390126 reward_error_sum_e2=459239.484441 teaching_error_sum_e2=466892.768065 total_pleasure=0.05233 total_pain=0.23521 reward_factor=0.81712 eta_effective=0.00000817 main_ticks=960 reward_ticks=960 local_updates=120/120
+SENSE primitive_pain=0.1260 applied_pain=0.1111 applied_pleasure=14.0424 inferred_pain=0.0000 inferred_pleasure=0.0000 HP=58.00 ammo=0/0 controls=TurnLeft
+Level 1, geometry stage 1/5, completions 0, mean 107.92 ms/frame (~9.3 compute fps), recent p95 107.77 ms
+120 learning frames in 12.96s; mean 107.92 ms/frame (~9.3 compute fps), recent p95 107.77 ms

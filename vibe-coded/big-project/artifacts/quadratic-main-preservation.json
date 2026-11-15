@@ -1,0 +1,14 @@
+{
+  "ClockInputAdded": true,
+  "ExistingWeightsPreserved": true,
+  "BiasesPreserved": true,
+  "ExistingPlasticityPreserved": true,
+  "NewClockWeightsZero": true,
+  "MappedEdgesPreserved": true,
+  "OutputMappingPreserved": true,
+  "MainUpdatesBefore": 10704,
+  "MainUpdatesAfter": 10704,
+  "RewardUpdatesBefore": 20000,
+  "RewardUpdatesAfter": 32000,
+  "FinalFrame": 40704
+}

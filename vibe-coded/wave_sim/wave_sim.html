@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced 2D Wave Simulator with Receivers</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: white;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 100vw;
+            overflow: hidden;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        button {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background: #444;
+            color: white;
+            cursor: pointer;
+            touch-action: manipulation;
+            min-width: 60px;
+        }
+
+        button:hover {
+            background: #555;
+        }
+
+        button.active {
+            background: #0a7c4c;
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .mode-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .slider-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .slider-control input[type="range"] {
+            width: 100px;
+        }
+
+        .slider-control span {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .canvas-container {
+            position: relative;
+            border: 2px solid #555;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            touch-action: none;
+            width: 1200px;
+            height: 800px;
+        }
+
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 5px;
+            width: 120px;
+            height: 120px;
+            margin-top: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-up { grid-column: 2; grid-row: 1; }
+        .nav-left { grid-column: 1; grid-row: 2; }
+        .nav-right { grid-column: 3; grid-row: 2; }
+        .nav-down { grid-column: 2; grid-row: 3; }
+
+        .info {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .physics-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .view-info {
+            margin-top: 10px;
+            padding: 8px;
+            background: #444;
+            border-radius: 6px;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 800px) {
+            .controls {
+                justify-content: center;
+            }
+            
+            .control-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .canvas-container {
+                width: 100%;
+                max-width: 800px;
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <div class="control-group">
+                <button id="startBtn">Start</button>
+                <button id="stopBtn" disabled>Stop</button>
+                <button id="stepBtn">Step</button>
+                <button id="clearBtn">Clear</button>
+                
+            <div class="mode-control">
+                <label>Zoom:</label>
+                <button id="zoomOut">-</button>
+                <span id="zoomLevel">1x</span>
+                <button id="zoomIn">+</button>
+            </div>
+        </div>
+            
+            <div class="mode-control">
+                <label>Mode:</label>
+                <button id="waveMode" class="active">Wave</button>
+                <button id="wallMode">Wall</button>
+                <button id="emitterMode">Emitter</button>
+                <button id="receiverMode">Receiver</button>
+            </div>
+            
+            <div class="slider-control">
+                <label>Intensity:</label>
+                <input type="range" id="intensitySlider" min="-3" max="3" step="0.1" value="1">
+                <span id="intensityValue">1.0</span>
+            </div>
+
+            <div class="slider-control">
+                <label>Frequency:</label>
+                <input type="range" id="frequencySlider" min="0.01" max="0.2" step="0.01" value="0.1">
+                <span id="frequencyValue">0.10</span>
+            </div>
+            
+            <div class="slider-control">
+                <label>Brush Size:</label>
+                <input type="range" id="brushSlider" min="1" max="10" step="1" value="1">
+                <span id="brushValue">1</span>
+            </div>
+            
+            <div class="slider-control">
+                <label>Wall Absorption:</label>
+                <input type="range" id="absorptionSlider" min="0" max="1" step="0.1" value="0">
+                <span id="absorptionValue">0.0</span>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="waveCanvas"></canvas>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn nav-up" id="navUp">↑</button>
+            <button class="nav-btn nav-left" id="navLeft">←</button>
+            <button class="nav-btn nav-right" id="navRight">→</button>
+            <button class="nav-btn nav-down" id="navDown">↓</button>
+        </div>
+
+        <div class="view-info">
+            <strong>View:</strong> <span id="viewPosition">X: 0, Y: 0</span> | Use arrow keys or nav buttons to move around
+        </div>
+
+        <div class="info">
+            <strong>Wave Mode:</strong> Click/drag to create wave sources (negative values create inverse waves)<br>
+            <strong>Wall Mode:</strong> Click/drag to place walls that reflect waves<br>
+            <strong>Emitter Mode:</strong> Click/drag to place emitters with current frequency & amplitude<br>
+            <strong>Receiver Mode:</strong> Click/drag to place receivers that detect specific frequencies<br>
+            <strong>Controls:</strong> Arrow keys to navigate, +/- to zoom, brush size for painting area<br>
+            <strong>Receivers:</strong> Dark when inactive, bright when detecting their target frequency<br>
+            <strong>Wall Absorption:</strong> Each wall stores its absorption value (0.0-1.0)<br>
+            Dark walls = reflective, bright walls = absorptive
+        </div>
+        
+        <div class="physics-info">
+            <strong>Physics:</strong> Each cell has displacement, velocity, and acceleration.<br>
+            Acceleration = (sum of neighbor displacements - 4×center) × wave_speed²<br>
+            Velocity += acceleration, Position += velocity × damping<br>
+            Walls can reflect (absorption=0) or absorb (absorption=1) waves.<br>
+            <strong>Receivers:</strong> Use DFT analysis on last N frames to detect target frequencies.
+        </div>
+    </div>
+
+    <script>
+        class WaveSimulator {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.gridWidth = 300;  // Even larger grid
+                this.gridHeight = 200;
+                this.baseCellSize = 4;
+                this.zoomLevel = 1;
+                this.zoomLevels = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8];
+                this.currentZoomIndex = 3; // Start at 1x
+                this.cellSize = this.baseCellSize * this.zoomLevel;
+                
+                // Viewport for panning
+                this.viewX = 0;
+                this.viewY = 0;
+                this.viewWidth = 300;  // Cells visible in viewport
+                this.viewHeight = 200;
+                
+                this.updateCanvasSize();
+                
+                // Double buffering - current and next arrays
+                this.displacement = new Array(this.gridWidth * this.gridHeight).fill(0);
+                this.velocity = new Array(this.gridWidth * this.gridHeight).fill(0);
+                this.walls = new Array(this.gridWidth * this.gridHeight).fill(null); // null = no wall, object = {absorption}
+                this.emitters = new Array(this.gridWidth * this.gridHeight).fill(null); // null = no emitter, object = {frequency, amplitude}
+                this.receivers = new Array(this.gridWidth * this.gridHeight).fill(null); // null = no receiver, object = {frequency, history, brightness}
+                this.timeStep = 0; // Track time for emitters
+                
+                // Receiver parameters
+                this.receiverHistorySize = 60; // Number of frames to keep for DFT analysis
+                this.minFrequency = 0.01; // Minimum frequency receivers can detect
+                
+                // Next frame buffers
+                this.nextDisplacement = new Array(this.gridWidth * this.gridHeight).fill(0);
+                this.nextVelocity = new Array(this.gridWidth * this.gridHeight).fill(0);
+                
+                this.damping = 0.998;
+                this.waveSpeed = 0.5;
+                this.wallAbsorption = 0.0; // Default absorption for new walls
+                this.running = false;
+                this.animationId = null;
+                this.drawMode = 'wave'; // 'wave', 'wall', 'emitter', or 'receiver'
+                this.brushSize = 1;
+                
+                this.setupEventListeners();
+                this.draw();
+            }
+            
+            updateCanvasSize() {
+                this.cellSize = this.baseCellSize * this.zoomLevel;
+                this.viewWidth = Math.floor(1200 / this.cellSize);
+                this.viewHeight = Math.floor(800 / this.cellSize);
+                
+                this.canvas.width = this.viewWidth * this.cellSize;
+                this.canvas.height = this.viewHeight * this.cellSize;
+                
+                // Clamp view position to valid bounds
+                this.viewX = Math.max(0, Math.min(this.viewX, this.gridWidth - this.viewWidth));
+                this.viewY = Math.max(0, Math.min(this.viewY, this.gridHeight - this.viewHeight));
+                
+                this.updateViewDisplay();
+            }
+            
+            zoomIn() {
+                if (this.currentZoomIndex < this.zoomLevels.length - 1) {
+                    this.currentZoomIndex++;
+                    this.zoomLevel = this.zoomLevels[this.currentZoomIndex];
+                    this.updateCanvasSize();
+                    this.updateZoomDisplay();
+                    this.draw();
+                }
+            }
+            
+            zoomOut() {
+                if (this.currentZoomIndex > 0) {
+                    this.currentZoomIndex--;
+                    this.zoomLevel = this.zoomLevels[this.currentZoomIndex];
+                    this.updateCanvasSize();
+                    this.updateZoomDisplay();
+                    this.draw();
+                }
+            }
+            
+            updateZoomDisplay() {
+                const zoomDisplay = document.getElementById('zoomLevel');
+                if (zoomDisplay) {
+                    zoomDisplay.textContent = this.zoomLevel + 'x';
+                }
+            }
+
+            updateViewDisplay() {
+                const viewDisplay = document.getElementById('viewPosition');
+                if (viewDisplay) {
+                    viewDisplay.textContent = `X: ${this.viewX}, Y: ${this.viewY}`;
+                }
+            }
+
+            setBrushSize(size) {
+                this.brushSize = Math.max(1, Math.min(10, size));
+            }
+            
+            setupEventListeners() {
+                this.canvas.addEventListener('mousedown', (e) => this.handleStart(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMove(e));
+                this.canvas.addEventListener('mouseup', () => this.handleEnd());
+                
+                this.canvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.handleStart(e.touches[0]);
+                });
+                this.canvas.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    this.handleMove(e.touches[0]);
+                });
+                this.canvas.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.handleEnd();
+                });
+
+                // Arrow key navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.tagName !== 'INPUT') { // Don't interfere with sliders
+                        switch(e.key) {
+                            case 'ArrowUp':
+                                e.preventDefault();
+                                this.move(0, -5);
+                                break;
+                            case 'ArrowDown':
+                                e.preventDefault();
+                                this.move(0, 5);
+                                break;
+                            case 'ArrowLeft':
+                                e.preventDefault();
+                                this.move(-5, 0);
+                                break;
+                            case 'ArrowRight':
+                                e.preventDefault();
+                                this.move(5, 0);
+                                break;
+                        }
+                    }
+                });
+                
+                this.isDrawing = false;
+            }
+            
+            handleStart(e) {
+                this.isDrawing = true;
+                this.handleDraw(e);
+            }
+            
+            handleMove(e) {
+                if (this.isDrawing) {
+                    this.handleDraw(e);
+                }
+            }
+            
+            handleEnd() {
+                this.isDrawing = false;
+            }
+            
+            handleDraw(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const canvasX = Math.floor((e.clientX - rect.left) / this.cellSize);
+                const canvasY = Math.floor((e.clientY - rect.top) / this.cellSize);
+                
+                // Convert canvas coordinates to grid coordinates
+                const gridX = canvasX + this.viewX;
+                const gridY = canvasY + this.viewY;
+                
+                if (gridX >= 0 && gridX < this.gridWidth && gridY >= 0 && gridY < this.gridHeight) {
+                    // Apply brush size
+                    const radius = Math.floor(this.brushSize / 2);
+                    
+                    for (let dy = -radius; dy <= radius; dy++) {
+                        for (let dx = -radius; dx <= radius; dx++) {
+                            const x = gridX + dx;
+                            const y = gridY + dy;
+                            
+                            if (x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight) {
+                                const index = y * this.gridWidth + x;
+                                
+                                if (this.drawMode === 'wave') {
+                                    if (!this.walls[index] && !this.emitters[index] && !this.receivers[index]) { // Can't place waves on walls, emitters, or receivers
+                                        const intensitySlider = document.getElementById('intensitySlider');
+                                        if (intensitySlider) {
+                                            const intensity = parseFloat(intensitySlider.value);
+                                            this.displacement[index] = intensity;
+                                        }
+                                    }
+                                } else if (this.drawMode === 'wall') {
+                                    // Set cells to wall state with current absorption
+                                    const absorptionSlider = document.getElementById('absorptionSlider');
+                                    const absorption = absorptionSlider ? parseFloat(absorptionSlider.value) : 0.0;
+                                    this.walls[index] = { absorption: absorption };
+                                    this.emitters[index] = null; // Remove emitter if placing wall
+                                    this.receivers[index] = null; // Remove receiver if placing wall
+                                    this.displacement[index] = 0;
+                                    this.velocity[index] = 0;
+                                } else if (this.drawMode === 'emitter') {
+                                    if (!this.walls[index] && !this.receivers[index]) { // Can't place emitters on walls or receivers
+                                        const frequencySlider = document.getElementById('frequencySlider');
+                                        const intensitySlider = document.getElementById('intensitySlider');
+                                        if (frequencySlider && intensitySlider) {
+                                            const frequency = parseFloat(frequencySlider.value);
+                                            const amplitude = parseFloat(intensitySlider.value);
+                                            this.emitters[index] = { frequency: frequency, amplitude: amplitude };
+                                            this.receivers[index] = null; // Remove receiver if placing emitter
+                                        }
+                                    }
+                                } else if (this.drawMode === 'receiver') {
+                                    if (!this.walls[index] && !this.emitters[index]) { // Can't place receivers on walls or emitters
+                                        const frequencySlider = document.getElementById('frequencySlider');
+                                        if (frequencySlider) {
+                                            const frequency = Math.max(parseFloat(frequencySlider.value), this.minFrequency);
+                                            this.receivers[index] = {
+                                                frequency: frequency,
+                                                history: new Array(this.receiverHistorySize).fill(0),
+                                                brightness: 0
+                                            };
+                                            this.emitters[index] = null; // Remove emitter if placing receiver
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    this.draw();
+                }
+            }
+            
+            getIndex(x, y) {
+                return y * this.gridWidth + x;
+            }
+            
+            updateReceivers() {
+                // Update receiver history and calculate brightness
+                for (let i = 0; i < this.receivers.length; i++) {
+                    const receiver = this.receivers[i];
+                    if (receiver) {
+                        // Add current displacement to history
+                        receiver.history.push(this.displacement[i]);
+                        if (receiver.history.length > this.receiverHistorySize) {
+                            receiver.history.shift(); // Remove oldest value
+                        }
+                        
+                        // Perform DFT for the target frequency
+                        if (receiver.history.length >= this.receiverHistorySize) {
+                            const N = receiver.history.length;
+                            let realSum = 0;
+                            let imagSum = 0;
+                            
+                            for (let n = 0; n < N; n++) {
+                                const angle = -2 * Math.PI * receiver.frequency * n;
+                                realSum += receiver.history[n] * Math.cos(angle);
+                                imagSum += receiver.history[n] * Math.sin(angle);
+                            }
+                            
+                            // Calculate magnitude (amplitude of the frequency component)
+                            const magnitude = Math.sqrt(realSum * realSum + imagSum * imagSum) / N;
+                            
+                            // Convert to brightness (with some scaling for visibility)
+                            receiver.brightness = Math.min(magnitude * 2, 1.0);
+                        }
+                    }
+                }
+            }
+            
+            step() {
+                this.timeStep++;
+                
+                // Clear next frame buffers
+                this.nextDisplacement.fill(0);
+                this.nextVelocity.fill(0);
+                
+                // Calculate physics for each cell
+                for (let y = 0; y < this.gridHeight; y++) {
+                    for (let x = 0; x < this.gridWidth; x++) {
+                        const index = this.getIndex(x, y);
+                        
+                        // Handle emitters - they force displacement to sine wave
+                        if (this.emitters[index]) {
+                            const emitter = this.emitters[index];
+                            const sineValue = emitter.amplitude * Math.sin(this.timeStep * emitter.frequency * 2 * Math.PI);
+                            this.nextDisplacement[index] = sineValue;
+                            this.nextVelocity[index] = 0; // Emitters don't have velocity
+                            continue;
+                        }
+                        
+                        // Handle walls - now with per-wall absorption
+                        if (this.walls[index]) {
+                            const wall = this.walls[index];
+                            
+                            // Calculate average displacement of neighboring non-wall cells
+                            let neighborSum = 0;
+                            let neighborCount = 0;
+                            
+                            const neighbors = [
+                                {dx: -1, dy: 0}, // left
+                                {dx: 1, dy: 0},  // right
+                                {dx: 0, dy: -1}, // up
+                                {dx: 0, dy: 1}   // down
+                            ];
+                            
+                            for (const {dx, dy} of neighbors) {
+                                const nx = x + dx;
+                                const ny = y + dy;
+                                
+                                if (nx >= 0 && nx < this.gridWidth && ny >= 0 && ny < this.gridHeight) {
+                                    const neighborIndex = this.getIndex(nx, ny);
+                                    if (!this.walls[neighborIndex]) { // Only count non-wall neighbors
+                                        neighborSum += this.displacement[neighborIndex];
+                                        neighborCount++;
+                                    }
+                                }
+                            }
+                            
+                            const averageDisplacement = neighborCount > 0 ? neighborSum / neighborCount : 0;
+                            
+                            // Use this wall's specific absorption value
+                            // absorption = 0: displacement = 0 (perfect reflection)
+                            // absorption = 1: displacement = average (perfect absorption)
+                            this.nextDisplacement[index] = (1 - wall.absorption) * 0 + wall.absorption * averageDisplacement;
+                            this.nextVelocity[index] = 0;
+                            continue;
+                        }
+                        
+                        // Calculate acceleration based on neighboring cells
+                        let acceleration = 0;
+                        let neighborCount = 0;
+                        
+                        // Sum neighboring displacements
+                        const neighbors = [
+                            {dx: -1, dy: 0}, // left
+                            {dx: 1, dy: 0},  // right
+                            {dx: 0, dy: -1}, // up
+                            {dx: 0, dy: 1}   // down
+                        ];
+                        
+                        let neighborSum = 0;
+                        
+                        for (const {dx, dy} of neighbors) {
+                            const nx = x + dx;
+                            const ny = y + dy;
+                            
+                            if (nx >= 0 && nx < this.gridWidth && ny >= 0 && ny < this.gridHeight) {
+                                const neighborIndex = this.getIndex(nx, ny);
+                                neighborSum += this.displacement[neighborIndex];
+                                neighborCount++;
+                            }
+                        }
+                        
+                        // Wave equation: acceleration = (sum_neighbors - 4*center) * wave_speed^2
+                        const currentDisplacement = this.displacement[index];
+                        acceleration = (neighborSum - neighborCount * currentDisplacement) * this.waveSpeed * this.waveSpeed;
+                        
+                        // Update velocity: v = v + a
+                        let newVelocity = this.velocity[index] + acceleration;
+                        newVelocity *= this.damping; // Apply damping
+                        
+                        // Update displacement: d = d + v
+                        let newDisplacement = currentDisplacement + newVelocity;
+                        
+                        this.nextVelocity[index] = newVelocity;
+                        this.nextDisplacement[index] = newDisplacement;
+                    }
+                }
+                
+                // Swap buffers (double buffering)
+                [this.displacement, this.nextDisplacement] = [this.nextDisplacement, this.displacement];
+                [this.velocity, this.nextVelocity] = [this.nextVelocity, this.velocity];
+                
+                // Update receivers
+                this.updateReceivers();
+                
+                this.draw();
+            }
+            
+            draw() {
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+                const data = imageData.data;
+                
+                for (let y = 0; y < this.viewHeight && (y + this.viewY) < this.gridHeight; y++) {
+                    for (let x = 0; x < this.viewWidth && (x + this.viewX) < this.gridWidth; x++) {
+                        const gridX = x + this.viewX;
+                        const gridY = y + this.viewY;
+                        const index = this.getIndex(gridX, gridY);
+                        
+                        let r, g, b;
+                        
+                        if (this.walls[index]) {
+                            // Walls are colored based on their absorption
+                            const wall = this.walls[index];
+                            const baseColor = 20;  // Dark base
+                            const absorptionColor = wall.absorption * 100; // Brighter for higher absorption
+                            
+                            // Reflective walls (low absorption) are dark, absorptive walls (high absorption) are brighter
+                            r = baseColor + absorptionColor;
+                            g = baseColor + absorptionColor * 0.5;  // Slightly reddish tint
+                            b = baseColor;
+                        } else if (this.emitters[index]) {
+                            // Emitters are bright green/yellow
+                            const emitter = this.emitters[index];
+                            const sineValue = emitter.amplitude * Math.sin(this.timeStep * emitter.frequency * 2 * Math.PI);
+                            let intensity = Math.abs(sineValue) * 0.5 + 0.3; // Always visible with oscillating brightness
+                            
+                            r = Math.floor(intensity * 255);
+                            g = Math.floor(intensity * 255);
+                            b = Math.floor(intensity * 100);
+                        } else if (this.receivers[index]) {
+                            // Receivers are dark when inactive, bright when detecting frequency
+                            const receiver = this.receivers[index];
+                            const baseBrightness = 30; // Dark base color
+                            const brightness = baseBrightness + receiver.brightness * 200; // Scale up for visibility
+                            
+                            // Purple/magenta color scheme for receivers
+                            r = Math.floor(brightness);
+                            g = Math.floor(brightness * 0.3);
+                            b = Math.floor(brightness);
+                        } else {
+                            const displacement = this.displacement[index];
+                            let intensity = Math.abs(displacement);
+                            intensity = Math.min(intensity * 0.8, 1); // Scale for better visibility
+                            
+                            if (displacement > 0.01) {
+                                // Positive displacement: blue to white
+                                r = Math.floor(intensity * 100 + 50);
+                                g = Math.floor(intensity * 150 + 50);
+                                b = Math.floor(intensity * 155 + 100);
+                            } else if (displacement < -0.01) {
+                                // Negative displacement: red to white
+                                r = Math.floor(intensity * 155 + 100);
+                                g = Math.floor(intensity * 100 + 50);
+                                b = Math.floor(intensity * 150 + 50);
+                            } else {
+                                // Near zero: dark gray
+                                r = g = b = 20;
+                            }
+                        }
+                        
+                        // Fill the cell
+                        for (let dy = 0; dy < this.cellSize; dy++) {
+                            for (let dx = 0; dx < this.cellSize; dx++) {
+                                const pixelX = x * this.cellSize + dx;
+                                const pixelY = y * this.cellSize + dy;
+                                
+                                if (pixelX < this.canvas.width && pixelY < this.canvas.height) {
+                                    const pixelIndex = (pixelY * this.canvas.width + pixelX) * 4;
+                                    
+                                    data[pixelIndex] = r;     // Red
+                                    data[pixelIndex + 1] = g; // Green
+                                    data[pixelIndex + 2] = b; // Blue
+                                    data[pixelIndex + 3] = 255; // Alpha
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                this.ctx.putImageData(imageData, 0, 0);
+            }
+            
+            setDrawMode(mode) {
+                this.drawMode = mode;
+            }
+            
+            start() {
+                if (!this.running) {
+                    this.running = true;
+                    this.animate();
+                }
+            }
+            
+            stop() {
+                this.running = false;
+                if (this.animationId) {
+                    cancelAnimationFrame(this.animationId);
+                }
+            }
+            
+            animate() {
+                if (this.running) {
+                    this.step();
+                    this.animationId = requestAnimationFrame(() => this.animate());
+                }
+            }
+            
+            clear() {
+                this.displacement.fill(0);
+                this.velocity.fill(0);
+                this.walls.fill(null);
+                this.emitters.fill(null);
+                this.receivers.fill(null);
+                this.nextDisplacement.fill(0);
+                this.nextVelocity.fill(0);
+                this.timeStep = 0;
+                this.draw();
+            }
+            
+            setWallAbsorption(absorption) {
+                this.wallAbsorption = Math.max(0, Math.min(1, absorption));
+            }
+            
+            move(dx, dy) {
+                this.viewX = Math.max(0, Math.min(this.viewX + dx, this.gridWidth - this.viewWidth));
+                this.viewY = Math.max(0, Math.min(this.viewY + dy, this.gridHeight - this.viewHeight));
+                this.updateViewDisplay();
+                this.draw();
+            }
+        }
+        
+        // Initialize the simulator
+        const canvas = document.getElementById('waveCanvas');
+        const simulator = new WaveSimulator(canvas);
+        
+        // Control buttons
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const stepBtn = document.getElementById('stepBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const waveMode = document.getElementById('waveMode');
+        const wallMode = document.getElementById('wallMode');
+        const emitterMode = document.getElementById('emitterMode');
+        const receiverMode = document.getElementById('receiverMode');
+        const zoomInBtn = document.getElementById('zoomIn');
+        const zoomOutBtn = document.getElementById('zoomOut');
+        const intensitySlider = document.getElementById('intensitySlider');
+        const intensityValue = document.getElementById('intensityValue');
+        const frequencySlider = document.getElementById('frequencySlider');
+        const frequencyValue = document.getElementById('frequencyValue');
+        const brushSlider = document.getElementById('brushSlider');
+        const brushValue = document.getElementById('brushValue');
+        const absorptionSlider = document.getElementById('absorptionSlider');
+        const absorptionValue = document.getElementById('absorptionValue');
+        
+        startBtn.addEventListener('click', () => {
+            simulator.start();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            startBtn.classList.remove('active');
+            stopBtn.classList.add('active');
+        });
+        
+        stopBtn.addEventListener('click', () => {
+            simulator.stop();
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            stopBtn.classList.remove('active');
+            startBtn.classList.add('active');
+        });
+        
+        stepBtn.addEventListener('click', () => {
+            if (!simulator.running) {
+                simulator.step();
+            }
+        });
+        
+        clearBtn.addEventListener('click', () => {
+            simulator.clear();
+        });
+        
+        function setActiveMode(activeButton) {
+            [waveMode, wallMode, emitterMode, receiverMode].forEach(btn => {
+                btn.classList.remove('active');
+            });
+            activeButton.classList.add('active');
+        }
+        
+        waveMode.addEventListener('click', () => {
+            simulator.setDrawMode('wave');
+            setActiveMode(waveMode);
+        });
+        
+        wallMode.addEventListener('click', () => {
+            simulator.setDrawMode('wall');
+            setActiveMode(wallMode);
+        });
+
+        emitterMode.addEventListener('click', () => {
+            simulator.setDrawMode('emitter');
+            setActiveMode(emitterMode);
+        });
+
+        receiverMode.addEventListener('click', () => {
+            simulator.setDrawMode('receiver');
+            setActiveMode(receiverMode);
+        });
+        
+        zoomInBtn.addEventListener('click', () => {
+            simulator.zoomIn();
+        });
+        
+        zoomOutBtn.addEventListener('click', () => {
+            simulator.zoomOut();
+        });
+        
+        intensitySlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            if (intensityValue) {
+                intensityValue.textContent = value === 0 ? '0' : value.toFixed(1);
+            }
+        });
+
+        frequencySlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            if (frequencyValue) {
+                frequencyValue.textContent = value.toFixed(2);
+            }
+        });
+
+        brushSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            simulator.setBrushSize(value);
+            if (brushValue) {
+                brushValue.textContent = value.toString();
+            }
+        });
+
+        absorptionSlider.addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            simulator.setWallAbsorption(value);
+            if (absorptionValue) {
+                absorptionValue.textContent = value.toFixed(1);
+            }
+        });
+        
+        // Navigation buttons
+        document.getElementById('navUp').addEventListener('click', () => simulator.move(0, -10));
+        document.getElementById('navDown').addEventListener('click', () => simulator.move(0, 10));
+        document.getElementById('navLeft').addEventListener('click', () => simulator.move(-10, 0));
+        document.getElementById('navRight').addEventListener('click', () => simulator.move(10, 0));
+        
+        // Initial state
+        startBtn.classList.add('active');
+        simulator.updateZoomDisplay();
+        
+        // Focus the body so arrow keys work immediately
+        document.body.focus();
+    </script>
+</body>
+</html>

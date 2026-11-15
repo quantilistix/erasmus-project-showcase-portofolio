@@ -1,0 +1,12 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "common.glsl"
+layout(local_size_x=64) in;
+void main() {
+    uint i=invocation();
+    if(i>=p.batch.x) return;
+    // CPU combines simultaneous sources in the same cell. Each invocation has
+    // exclusive ownership; neither float atomics nor per-source field storage.
+    uvec4 source=sources[p.batch.y+i];
+    state[source.x].x+=uintBitsToFloat(source.y);
+}

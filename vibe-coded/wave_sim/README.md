@@ -1,0 +1,1 @@
+This is an advanced wave simulator writen in JavaScript with HTML. You can draw an environment. You can draw the grid cell wave displacement values, walls with absorbtion levels, emitters that emit waves at the given frequency and amplitude and recievers that light when a certain frequency is detected (fourier transform on 1 frequency).

@@ -1,0 +1,13 @@
+txt name="TNT"
+txt tehnical_name="tnt"
+bln breakable=true
+bln transparent=false
+flt durability=0
+arr tool={}
+mod model="cube.ply"
+fun function="tnt"
+c33 crafting={"gunpowder";"sand";"gunpowder";"sand";"gunpowder";"sand";"gunpowder";"sand";"gunpowder";}
+smt smelting={}
+drp drops={"tnt",1-1;}
+arr textures={"tnt_bottom.png";"tnt_top.png";"tnt_side.png";"tnt_side.png";"tnt_side.png";"tnt_side.png";"tnt_top_lit1.png";"tnt_top_lit2.png";"tnt_top_lit3.png";"tnt_top_lit4.png";"tnt_top_lit5.png";}
+syn{}

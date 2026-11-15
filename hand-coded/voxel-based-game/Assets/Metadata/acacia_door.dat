@@ -1,0 +1,13 @@
+txt name="Acacia door"
+txt tehnical_name="acacia_door"
+bln breakable=true
+bln transparent=true
+flt durability=10
+arr tool={"axe";}
+mod model="door.ply"
+fun function="door"
+c00 crafting={}
+smt smelting={}
+drp drops={"acacia_door_item",1-1,0-5;}
+arr textures={"acacia_door_bottom.png";"acacia_door_side.png";"acacia_door_side.png";"acacia_door_side.png";"acacia_door_side.png";"acacia_door_top.png";}
+syn{opened=bln;pos=bln}

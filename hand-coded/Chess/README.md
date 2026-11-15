@@ -1,0 +1,1 @@
+This is a basic unfinished chess program writen in Lua with the graphics library Love2D. It has some known bugs.

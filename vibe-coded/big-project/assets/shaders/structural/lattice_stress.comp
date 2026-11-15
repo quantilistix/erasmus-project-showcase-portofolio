@@ -1,0 +1,70 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0, one thread per cell (offsets.y of them), in double: the worst stresses over a cell's
+// faces from the solution (StressLattice.ComputeStresses): tension and compression from the
+// axial force and the bending moments, shear from the shear force and the torsion. Written at
+// the cell's index, so the readback holds the cells alone, in their order.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    if (index >= pass.offsets.y)
+        return;
+
+    int i = cellNodes[index];
+    ivec3 size = pass.size.xyz;
+
+    double h = double(cellSize());
+    double area = h * h;
+    double sectionModulus = h * h * h / 6.0LF;
+    double torsionModulus = double(TORSION_SHEAR_FACTOR) * h * h * h;
+    double halfCell = 0.5LF * h;
+    ivec3 c = nodeCoordinate(i, size);
+    double tension = 0.0LF;
+    double compression = 0.0LF;
+    double shear = 0.0LF;
+    WideSix own=x[i];
+    double energy=0.5LF*double(anchorStiffness(i))*(dot(own.u.xyz,own.u.xyz)+h*h*dot(own.t.xyz,own.t.xyz));
+
+    for (int d = 0; d < 6; d++)
+    {
+        ivec3 n = c + DIRECTIONS[d];
+        if (!inside(n, size))
+            continue;
+
+        int j = nodeIndex(n, size);
+        vec4 other = cells[j];
+        if (other.w == 0.0)
+            continue;
+
+        int axis = d >> 1;
+        bool lower = (d & 1) == 0;
+        WideSix xl = x[lower ? i : j];
+        WideSix xu = x[lower ? j : i];
+        dvec4 k = dvec4(bondBetween(i, j, d));
+
+        dvec3 gap = xu.u.xyz - xl.u.xyz + halfCell * wideAxisCross(axis, xl.t.xyz + xu.t.xyz);
+        dvec3 twist = xu.t.xyz - xl.t.xyz;
+        dvec3 force = wideStiffen(axis, gap, k.x, k.y);
+        dvec3 moment = wideStiffen(axis, twist, k.w, k.z);
+        energy+=0.25LF*(dot(force,gap)+dot(moment,twist));
+
+        int a1 = (axis + 1) % 3;
+        int a2 = (axis + 2) % 3;
+        double axial = force[axis] / area;
+        double bending = (abs(moment[a1]) + abs(moment[a2])) / sectionModulus;
+        double shearForce = sqrt(force[a1] * force[a1] + force[a2] * force[a2]);
+
+        tension = max(tension, axial + bending);
+        compression = max(compression, -axial + bending);
+        shear = max(shear, double(SHEAR_PEAK_FACTOR) * shearForce / area + abs(moment[axis]) / torsionModulus);
+    }
+
+    stresses[index] = vec4(float(tension), float(compression), float(shear), float(energy));
+}

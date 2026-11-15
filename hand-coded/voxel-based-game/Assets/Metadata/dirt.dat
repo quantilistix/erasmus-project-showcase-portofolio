@@ -1,0 +1,13 @@
+txt name="Dirt"
+txt tehnical_name="dirt"
+bln breakable=true
+bln transparent=false
+flt durability=2
+arr tool={"shovel";}
+mod model="cube.ply"
+fun function="none"
+c00 crafting={}
+smt smelting={}
+drp drops={"dirt",1-1,0-5;}
+arr textures={"dirt.png";"dirt.png";"dirt.png";"dirt.png";"dirt.png";"dirt.png";}
+syn{}

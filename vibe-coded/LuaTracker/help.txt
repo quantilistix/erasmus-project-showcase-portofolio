@@ -1,0 +1,48 @@
+Commands:                                                     
+    00 nop (none, none) does nothing                                                                              
+    01 volume (lvalue, rvalue) sets stereo volume to value                                                             
+    02 volume increment (lvalue, rvalue) increments stereo volume by value                                                  
+    03 volume decrement (value, value) decrements stereo volume by value                                                  
+    04 tempo (value1, value2) sets tempo to 16*value1 + value2                                                              
+    05 tempo increment (value1, value2) increments tempo by 16*value1 + value2                                                   
+    06 tempo decrement (value1, value2) decrements tempo by 16*value1 + value2                                                   
+    07 backwards tempo (value1, value2) sets tempo to -16*value1 - value2, but instruments are played forwards                                                   
+    08 backwards tempo and playback (value1, value2) sets tempo to -16*value1 - value2 and plays the instruments backwards                 
+    09 pause (value1, value2) waits an extra 16*value1 + value2                                                            
+    0A jump (pattern, note) jumps to location after time interval, not instantly
+    0B call (pattern, note) saves address on the stack jumps to location after time interval
+    0C ret (none, none) returns from call and pops the stack
+    0D jciz (pattern, note) jump conditional; jumps to location if 00 is zero
+    0E jcnz (pattern, note) jump conditional; jumps to location if 00 is not zero                          
+    0F jcic (pattern, note) jump conditional; jumps to location if FF is zero                              
+    10 jcnc (pattern, note) jump conditional; jumps to location if FF is not zero                          
+    11 load (register, value) set register to value                                                           
+    12 load (register1, register2) set register1 to register2                                                        
+    13 add (register, value) add register and value -> 00, FF                                                            
+    14 add (register1, register2) add register1 and register 2 -> 00, FF                                                         
+    15 sub/cmp (register, value) subtract register and value -> 00, FF                                                             
+    16 sub/cmp (register1, register2) subtract register1 and register2 -> 00, FF
+    17 mul (register, value) multiply register and value -> 00, FF           
+    18 mul (register1, register2) multiply register1 and register2 -> 00, FF           
+    19 div (register, value) divide register and value -> 00, FF           
+    1A div (register1, register2) divide register1 and register2 -> 00, FF   
+    1B mod (register, value) takes register's modulo of value -> 00, FF
+    1C mod (register1, register2) takes register1's modulo of register2 -> 00, FF
+    1D rotl (register, amount) rotate left by amount -> register                                      
+    1E rotr (register, amount) rotate right by amount -> register                                             
+    1F shiftlz (register, amount) shift left by amount, set new bit to 0 -> register                          
+    20 shiftrz (register, amount) shift right by amount, set new bit to 0 -> register                         
+    21 shiftlo (register, amount) shift left by amount, set new bit to 1 -> register
+    22 shiftro (register, amount) shift right by amount, set new bit to 1 -> register
+    
+    ... nop yet
+    
+    FF - nop
+
+                                                                                      
+    00-FF registers (same set for all channels, allows multithreading or for dedicated channels for commands)                                                                     
+    Special registers                                                                   
+    00-register where result operations go                                              
+    FF-register where the operation flag goes (e.g. carry out)   
+    
+    Stack

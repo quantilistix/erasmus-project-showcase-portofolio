@@ -1,0 +1,36 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Dispatch sizes of the passes whose element counts the CPU does not know: the per-contact
+// passes, or with MODE_PAIRS the narrow phase over the broad phase's candidate pairs. The pair
+// counter is reset once read, ready for the next broad phase.
+
+layout(local_size_x = 1) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_PAIRS = 1u;
+const uint MODE_REPORTS = 2u;
+
+void main()
+{
+    if (flags == MODE_REPORTS)
+    {
+        uint total = min(reportCounts.x, uint(reports.length()));
+        indirectArgs[2] = uvec4(max((total + 63u) / 64u, 1u), 1u, 1u, total);
+        return;
+    }
+    if (flags == MODE_PAIRS)
+    {
+        uint pairCount = min(counters[COUNTER_PAIRS], uint(pairs.length()));
+        counters[COUNTER_PAIR_TOTAL] += pairCount;
+        indirectArgs[1] = uvec4((pairCount + 63u) / 64u, 1u, 1u, pairCount);
+        counters[COUNTER_PAIRS] = 0u;
+        return;
+    }
+
+    uint total = contactTotal();
+    indirectArgs[0] = uvec4((total + 63u) / 64u, 1u, 1u, total);
+}

@@ -1,0 +1,39 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One thread per node of the coarser level: the reference point of each aggregate, the mean
+// of its occupied children's, and how many there are. size, coarseSize = the finer and
+// coarser boxes (size.w the finer level); offsets = their first nodes and first block nodes.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int a = int(gl_GlobalInvocationID.x);
+    Level fine = thisLevel();
+    Level coarse = coarserLevel();
+    if (a >= nodeCount(coarse.size))
+        return;
+
+    ivec3 ca = nodeCoordinate(a, coarse.size);
+    vec3 sum = vec3(0.0);
+    float count = 0.0;
+    for (int k = 0; k < 8; k++)
+    {
+        ivec3 child = 2 * ca + ivec3(k & 1, (k >> 1) & 1, k >> 2);
+        if (!inside(child, fine.size))
+            continue;
+
+        int i = nodeIndex(child, fine.size);
+        if (!occupiedAt(fine, i))
+            continue;
+
+        sum += positionAt(fine, i);
+        count += 1.0;
+    }
+
+    positions[coarse.blocks + uint(a)] = vec4(count > 0.0 ? sum / count : vec3(0.0), count);
+}

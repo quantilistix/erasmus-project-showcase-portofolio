@@ -1,0 +1,54 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Exclusive scan of the per-block contact counts into offsets, by a single workgroup: each
+// thread sums a contiguous chunk, the chunk sums are scanned, then each thread writes its
+// chunk's offsets and resets the cursors to them for the filling pass.
+
+layout(local_size_x = 256) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+shared uint chunkOffsets[256];
+
+void main()
+{
+    uint thread = gl_LocalInvocationID.x;
+    uint blocks = capacities.w;
+    uint chunk = (blocks + 255u) / 256u;
+    uint begin = min(thread * chunk, blocks);
+    uint end = min(begin + chunk, blocks);
+
+    uint sum = 0u;
+    for (uint i = begin; i < end; i++)
+        sum += blockContactCursor[i];
+
+    chunkOffsets[thread] = sum;
+    barrier();
+
+    if (thread == 0u)
+    {
+        uint running = 0u;
+        for (uint i = 0u; i < 256u; i++)
+        {
+            uint value = chunkOffsets[i];
+            chunkOffsets[i] = running;
+            running += value;
+        }
+
+        blockContactOffsets[blocks] = running;
+    }
+
+    barrier();
+
+    uint running = chunkOffsets[thread];
+    for (uint i = begin; i < end; i++)
+    {
+        uint count = blockContactCursor[i];
+        blockContactOffsets[i] = running;
+        blockContactCursor[i] = running;
+        running += count;
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "code-runner.clearPreviousOutput": true,
+    "code-runner.enableAppInsights": false,
+    "code-runner.customCommand": "",
+    "code-runner.defaultLanguage": "lua",
+    "code-runner.executorMapByGlob": {
+        "*.lua": "$workspaceRoot/scripts/run.sh"
+    },
+    "code-runner.showRunCommandInExplorerContextMenu": false,
+    "code-runner.showRunCommandInEditorContextMenu": false,
+    "code-runner.saveFileBeforeRun": true,
+    "code-runner.saveAllFilesBeforeRun": true,
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoClosingComments": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoClosingOvertype": "never",
+    "editor.autoIndent": "full",
+    "editor.autoIndentOnPaste": false,
+    "editor.autoIndentOnPasteWithinString": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false,
+    "editor.formatOnPaste": false,
+    "Lua.diagnostics.globals": [
+        "love",
+        "bit",
+        "jit"
+    ],
+    "Lua.diagnostics.disable": [
+        "assign-type-mismatch",
+        "lowercase-global",
+        "cast-local-type"
+    ],
+}

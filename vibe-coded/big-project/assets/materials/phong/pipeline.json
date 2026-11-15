@@ -1,0 +1,82 @@
+{
+  "renderMode": "DynamicRendering",
+  "dynamicRendering": {
+    "colorAttachmentFormats": ["B8G8R8A8Srgb"],
+    "depthAttachmentFormat": "D32Sfloat",
+    "stencilAttachmentFormat": "Undefined"
+  },
+  "vertexInput": {
+    "bindings": [
+      {
+        "binding": 0,
+        "stride": 24,
+        "inputRate": "Vertex"
+      }
+    ],
+    "attributes": [
+      {
+        "location": 0,
+        "binding": 0,
+        "format": "R32G32B32Sfloat",
+        "offset": 0
+      },
+      {
+        "location": 1,
+        "binding": 0,
+        "format": "R32G32B32Sfloat",
+        "offset": 12
+      }
+    ]
+  },
+  "inputAssembly": {
+    "topology": "TriangleList",
+    "primitiveRestartEnable": false
+  },
+  "rasterization": {
+    "depthClampEnable": false,
+    "rasterizerDiscardEnable": false,
+    "polygonMode": "Fill",
+    "cullMode": "Back",
+    "frontFace": "CounterClockwise",
+    "depthBiasEnable": false,
+    "lineWidth": 1.0
+  },
+  "depthStencil": {
+    "depthTestEnable": true,
+    "depthWriteEnable": true,
+    "depthCompareOp": "Less",
+    "depthBoundsTestEnable": false,
+    "stencilTestEnable": false
+  },
+  "colorBlend": {
+    "logicOpEnable": false,
+    "attachments": [
+      {
+        "blendEnable": false,
+        "colorWriteR": true,
+        "colorWriteG": true,
+        "colorWriteB": true,
+        "colorWriteA": true
+      }
+    ]
+  },
+  "dynamicStates": ["Viewport", "Scissor"],
+  "descriptorSetLayouts": [
+    {
+      "bindings": [
+        {
+          "binding": 0,
+          "descriptorType": "UniformBuffer",
+          "descriptorCount": 1,
+          "stageFlags": ["Vertex"]
+        },
+        {
+          "binding": 1,
+          "descriptorType": "UniformBuffer",
+          "descriptorCount": 1,
+          "stageFlags": ["Fragment"]
+        }
+      ]
+    }
+  ]
+}

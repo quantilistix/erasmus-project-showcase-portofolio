@@ -1,0 +1,7 @@
+Upgraded grayscale checkpoint to RGB: retained old weights on red ports; new green/blue weights start at zero. Use --train to adapt both networks to first-person color rays and distance shading.
+PLAY: frozen reward translator, realtime policy learning; primitive sensations remain active
+Intel(R) Arc(tm) Graphics (MTL); 14,052 nonnegative rate neurons, 4,133,376 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 17 enemies; exit route 96 tiles. Missed-shot teacher penalty 0.65 per projectile; exploration +0.30 per new cell; stationary pain after 45 physics ticks. Stereo PCM/FFT enabled. Vision: 384 RGB first-person rays over 120 degrees, with distance shading.
+Persistent neural state: 2 synchronous connection hops per frame; current view only. Training buffers are separate.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+120 learning frames in 2.90s; mean 15.63 ms/frame (~64.0 compute fps), recent p95 17.46 ms

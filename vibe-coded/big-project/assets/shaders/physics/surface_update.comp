@@ -1,0 +1,61 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Places every dynamic collision vertex for a detection pass. The initial pass sets the start
+// positions (x^t) and predicts the end positions from the inertial target; continuous passes
+// only move the end positions to the current iterate. Fixed vertices never move.
+//
+// A rigid vertex's offset from the center of mass is rotated in float, like every relative
+// quantity, and only placed at the double-precision center; a dense mesh has too many
+// vertices to rotate in double.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_CONTINUOUS = 1u;
+
+void main()
+{
+    uint v = gl_GlobalInvocationID.x;
+    if (v >= collisionCounts.x)
+        return;
+
+    uvec4 info = vertexInfo[v];
+    bool continuous = (flags & MODE_CONTINUOUS) != 0u;
+
+    if (info.y == KIND_NODE)
+    {
+        Node node = nodes[info.z];
+        if (continuous)
+        {
+            vertexEnd[v] = dvec4(node.position.xyz, 0.0);
+            return;
+        }
+
+        vertexStart[v] = dvec4(node.previous.xyz, 0.0);
+        vertexEnd[v] = dvec4(node.inertial.xyz, 0.0);
+    }
+    else if (info.y == KIND_RIGID)
+    {
+        uint r = info.z - counts.x;
+        vec3 local = vec3(vertexLocal[v].xyz);
+        if (continuous)
+        {
+            vertexEnd[v] = dvec4(rigids[r].position.xyz + dvec3(quatRotate(vec4(rigids[r].orientation), local)), 0.0);
+            return;
+        }
+
+        vertexStart[v] = dvec4(rigids[r].previousPosition.xyz + dvec3(quatRotate(vec4(rigids[r].previousOrientation), local)), 0.0);
+        vertexEnd[v] = dvec4(rigids[r].inertialPosition.xyz + dvec3(quatRotate(vec4(rigids[r].inertialOrientation), local)), 0.0);
+    }
+    else
+    {
+        return;
+    }
+
+    if ((bodies[info.x].extra.w & BODY_RESET_LAST) != 0u)
+        vertexLast[v] = vertexStart[v];
+}

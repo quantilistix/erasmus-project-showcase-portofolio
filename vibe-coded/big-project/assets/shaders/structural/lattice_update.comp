@@ -1,0 +1,37 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0, one thread per node. Mode 0: x += α·p, r −= α·q, and z = 0 for the multigrid
+// cycle that follows, which reads r rounded to float. Mode 1: p = z + β·p. Mode 2: p = z.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    if (i >= nodeCount(pass.size.xyz) || cells[i].w == 0.0)
+        return;
+
+    if (pass.coarseSize.w == 0)
+    {
+        double alpha = double(state.alpha);
+        x[i].u += alpha * p[i].u;
+        x[i].t += alpha * p[i].t;
+        r[i].u -= alpha * q[i].u;
+        r[i].t -= alpha * q[i].t;
+        right[i] = narrow(DSix(r[i].u.xyz, r[i].t.xyz));
+        correction[i] = zeroSix();
+    }
+    else if (pass.coarseSize.w == 1)
+    {
+        double beta = double(state.beta);
+        p[i] = WideSix(dvec4(correction[i].u) + beta * p[i].u, dvec4(correction[i].t) + beta * p[i].t);
+    }
+    else
+    {
+        p[i] = WideSix(dvec4(correction[i].u), dvec4(correction[i].t));
+    }
+}

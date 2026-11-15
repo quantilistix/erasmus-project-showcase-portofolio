@@ -1,0 +1,19 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "common.glsl"
+layout(local_size_x=64) in;
+void main() {
+    uint i=invocation();
+    if(i>=p.counts.x*4096u) return;
+    vec4 value=state[i];
+    if(occupied[i]!=0u) { temporary[i]=vec4(0); return; }
+    float courant=p.physics.x*p.physics.y;
+    for(int axis=0;axis<3;axis++) {
+        int next=adjacent(i,axis*2+1);
+        // Closed material faces carry no air flux. The damage pass samples the
+        // incident pressure on those faces independently.
+        value[axis+1]=next>=0&&occupied[next]!=0u ? 0.0
+            : value[axis+1]-courant*(airPressure(next)-value.x);
+    }
+    temporary[i]=value;
+}

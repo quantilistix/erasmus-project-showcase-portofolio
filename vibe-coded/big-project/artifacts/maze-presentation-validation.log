@@ -1,0 +1,19 @@
+PASS layered topology with additional odd-to-odd connections.
+PASS finite-difference gradients: cycles, self edges, skips and output feedback.
+PASS fixed plasticity scaling, frozen connections and checkpoint round trip.
+PASS Vulkan forward/loss/updates/plasticity/upload parity on Intel(R) Arc(tm) Graphics (MTL) (IntegratedGpu).
+PASS single-pass layered execution, pleasure gain, activation readback, frozen biases and binary checkpoints.
+PASS FFT, deterministic games, raw vision/audio contracts. 8963 assertions passed.
+PASS isolated learned/primitive pain banks, calibration/freeze, per-frame learning and realtime checkpoint round trip. 8999 total assertions passed.
+PASS catch proximity supervision, outcome overrides and resumable reward-only calibration. 9046 total assertions passed.
+PASS direct raw vision/executed controls, preserved legacy reward function and resumable input migration. 9058 total assertions passed.
+PASS slow sample-and-hold pain, sine clock, function-preserving input migration and timing persistence. 9109 total assertions passed.
+PASS quadratic proximity-only curve and bounded reward ranges. 9116 total assertions passed.
+PASS broad reward calibration coverage and preserved main progress. 9120 total assertions passed.
+PASS proximity-only output range and persisted pleasure. 9122 total assertions passed.
+PASS pure learned proximity, independent primitive catch reward, weaker learned effects and preserved input migration. 9196 total assertions passed.
+PASS nonnegative input/hidden/output rates, signed channel decoding, preserved historical functions and slower game physics. 9268 total assertions passed.
+PASS persisted game speed and declared nonnegative checkpoint encoding. 9273 total assertions passed.
+PASS maze physics, egocentric sensors, projectile combat, reward separation, realtime play learning and persistence (307 assertions).
+PASS higher-resolution observer rendering, sensor isolation, smooth sine voices and sample-clocked sound durations (16 assertions).
+PASS complete verification: 9596 total assertions.

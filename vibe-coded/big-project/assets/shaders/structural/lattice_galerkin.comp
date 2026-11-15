@@ -1,0 +1,131 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// One thread per node A of the coarser level: its Galerkin blocks Pᵀ·K·P and the inverse of
+// its diagonal. P maps A's rigid motion (U, Θ) to each child's (U + Θ × r, Θ), r the child's
+// offset from A's reference point. Aggregates are aligned, so a child's neighbour across a
+// face is either in A, coupling into A's diagonal, or in A's neighbour across the same face;
+// only the couplings towards +x, +y and +z are kept, the others being their transposes. The
+// products are summed in double and the sums rounded to float.
+// size = the finer level's box (w its index), coarseSize
+// = the coarser one's; offsets.z, offsets.w = the finer and coarser levels' first block nodes.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+#include "lattice_blocks.glsl"
+
+void main()
+{
+    int a = int(gl_GlobalInvocationID.x);
+    Level fine = thisLevel();
+    Level coarse = coarserLevel();
+    if (a >= nodeCount(coarse.size))
+        return;
+
+    // The diagonal block, then the couplings towards +x, +y and +z, summed in double.
+    double diagonal[BLOCK];
+    double couplingX[BLOCK];
+    double couplingY[BLOCK];
+    double couplingZ[BLOCK];
+    for (int e = 0; e < BLOCK; e++)
+    {
+        diagonal[e] = 0.0LF;
+        couplingX[e] = 0.0LF;
+        couplingY[e] = 0.0LF;
+        couplingZ[e] = 0.0LF;
+    }
+
+    if (occupiedAt(coarse, a))
+    {
+        ivec3 ca = nodeCoordinate(a, coarse.size);
+        vec3 pa = positionAt(coarse, a);
+        float fineBlock[BLOCK];
+        double k[BLOCK];
+
+        for (int child = 0; child < 8; child++)
+        {
+            ivec3 ci = 2 * ca + ivec3(child & 1, (child >> 1) & 1, child >> 2);
+            if (!inside(ci, fine.size))
+                continue;
+
+            int i = nodeIndex(ci, fine.size);
+            if (!occupiedAt(fine, i))
+                continue;
+
+            vec3 ri = positionAt(fine, i) - pa;
+            if (fine.index == 0)
+            {
+                fineDiagonal(i, ci, fine.size, fineBlock);
+                for (int e = 0; e < BLOCK; e++)
+                    k[e] = fineBlock[e];
+            }
+            else
+            {
+                uint fineStart = blockStart(fine, i);
+                for (int e = 0; e < BLOCK; e++)
+                    k[e] = blocks[fineStart + uint(e)];
+            }
+
+            addGalerkin(diagonal, ri, k, ri);
+
+            for (int d = 0; d < 6; d++)
+            {
+                ivec3 cj = ci + DIRECTIONS[d];
+                if (!inside(cj, fine.size))
+                    continue;
+
+                int j = nodeIndex(cj, fine.size);
+                ivec3 cb = cj >> 1;
+                bool within = cb == ca;
+                if (!occupiedAt(fine, j) || (!within && (d & 1) == 1))
+                    continue;
+
+                if (fine.index == 0)
+                {
+                    fineCoupling(i, j, d, fineBlock);
+                    for (int e = 0; e < BLOCK; e++)
+                        k[e] = fineBlock[e];
+                }
+                else
+                {
+                    bool transposed;
+                    uint coupling = couplingStart(fine, i, j, d, transposed);
+                    for (int r = 0; r < 6; r++)
+                        for (int c = 0; c < 6; c++)
+                            k[r * 6 + c] = blocks[coupling + uint(transposed ? c * 6 + r : r * 6 + c)];
+                }
+
+                vec3 rj = positionAt(fine, j);
+                if (within)
+                {
+                    addGalerkin(diagonal, ri, k, rj - pa);
+                    continue;
+                }
+
+                vec3 rb = rj - positionAt(coarse, nodeIndex(cb, coarse.size));
+                if (d == 0)
+                    addGalerkin(couplingX, ri, k, rb);
+                else if (d == 2)
+                    addGalerkin(couplingY, ri, k, rb);
+                else
+                    addGalerkin(couplingZ, ri, k, rb);
+            }
+        }
+    }
+
+    uint start = blockStart(coarse, a);
+    for (int e = 0; e < BLOCK; e++)
+    {
+        blocks[start + uint(e)] = float(diagonal[e]);
+        blocks[start + uint(BLOCK + e)] = float(couplingX[e]);
+        blocks[start + uint(2 * BLOCK + e)] = float(couplingY[e]);
+        blocks[start + uint(3 * BLOCK + e)] = float(couplingZ[e]);
+    }
+
+    double inverse[BLOCK];
+    invertBlock(diagonal, inverse);
+    for (int e = 0; e < BLOCK; e++)
+        coarseInverses[(coarse.blocks + uint(a)) * uint(BLOCK) + uint(e)] = float(inverse[e]);
+}

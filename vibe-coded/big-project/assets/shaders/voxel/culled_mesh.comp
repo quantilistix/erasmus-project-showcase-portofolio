@@ -1,0 +1,202 @@
+#version 450
+layout(local_size_x=256) in;
+layout(std430,binding=0) readonly buffer Cells { uint cells[]; };
+layout(std430,binding=1) readonly buffer Materials { uint materials[]; };
+layout(std430,binding=2) writeonly buffer Vertices { uint vertices[]; };
+layout(std430,binding=3) buffer Counts { uint counts[]; };
+layout(push_constant) uniform Parameters { uint inputStart; uint outputStart; uint counter; uint transparentLeaves; } p;
+shared uint prefix[256];
+shared uint outputCapacity;
+const ivec3 normals[6]=ivec3[](ivec3(1,0,0),ivec3(-1,0,0),ivec3(0,1,0),ivec3(0,-1,0),ivec3(0,0,1),ivec3(0,0,-1));
+const ivec3 corners[24]=ivec3[](
+    ivec3(1,0,0),ivec3(1,1,0),ivec3(1,1,1),ivec3(1,0,1),
+    ivec3(0,1,0),ivec3(0,0,0),ivec3(0,0,1),ivec3(0,1,1),
+    ivec3(1,1,0),ivec3(0,1,0),ivec3(0,1,1),ivec3(1,1,1),
+    ivec3(0,0,0),ivec3(1,0,0),ivec3(1,0,1),ivec3(0,0,1),
+    ivec3(0,0,1),ivec3(1,0,1),ivec3(1,1,1),ivec3(0,1,1),
+    ivec3(1,0,0),ivec3(0,0,0),ivec3(0,1,0),ivec3(1,1,0));
+uint tag(ivec3 cell) { ivec3 q=cell+1; return cells[p.inputStart+uint(q.x+18*(q.y+18*q.z))]; }
+bool opaque(ivec3 cell) { return (materials[tag(cell)]&3u)==0u; }
+uint ao(ivec3 cell,int face,int corner)
+{
+    ivec3 offset=corners[face*4+corner]*2-1, a=ivec3(0), b=ivec3(0), front=cell+normals[face];
+    int axis=face/2; a[(axis+1)%3]=offset[(axis+1)%3]; b[(axis+2)%3]=offset[(axis+2)%3];
+    bool s1=opaque(front+a),s2=opaque(front+b),s3=opaque(front+a+b);
+    return s1&&s2 ? 0u : 3u-uint(s1)-uint(s2)-uint(s3);
+}
+uint visibleMask(ivec3 cell)
+{
+    uint own=tag(cell), flags=materials[own], mask=0u;
+    bool lod=(p.transparentLeaves&8u)!=0u;
+    if((p.transparentLeaves&16u)!=0u) return cell.z==0 ? 16u : 0u;
+    if ((flags&2u)==0u)
+    for (int face=0;face<6;face++)
+    {
+        uint neighbor=tag(cell+normals[face]), nf=materials[neighbor];
+        bool visible=(flags&4u)!=0u ? (nf&2u)!=0u :
+            ((flags&8u)!=0u&&(p.transparentLeaves&1u)!=0u)||(nf&2u)!=0u||((nf&8u)!=0u&&(p.transparentLeaves&1u)!=0u)
+            ||((nf&1u)!=0u&&neighbor/4096u!=own/4096u);
+        ivec3 next=cell+normals[face];
+        bool boundary=any(lessThan(next,ivec3(0)))||any(greaterThanEqual(next,ivec3(16)));
+        if (visible||(lod&&boundary&&(flags&4u)==0u)) mask|=1u<<face;
+    }
+    return mask;
+}
+bool halfOccupied(ivec3 subcell) {
+    ivec3 part=subcell&1;
+    uint mask=materials[tag(subcell>>1)+7u];
+    return (mask&(1u<<uint(part.x+2*part.y+4*part.z)))!=0u;
+}
+bool halfOpaque(ivec3 subcell) {
+    uint flags=materials[tag(subcell>>1)];
+    return (flags&17u)==0u&&halfOccupied(subcell);
+}
+uint shapeAo(ivec3 subcell,int face,int corner) {
+    ivec3 offset=corners[face*4+corner]*2-1,a=ivec3(0),b=ivec3(0),front=subcell+normals[face];
+    int axis=face/2; a[(axis+1)%3]=offset[(axis+1)%3]; b[(axis+2)%3]=offset[(axis+2)%3];
+    bool s1=halfOpaque(front+a),s2=halfOpaque(front+b),s3=halfOpaque(front+a+b);
+    return s1&&s2 ? 0u : 3u-uint(s1)-uint(s2)-uint(s3);
+}
+vec3 shapePoint(uint own,vec3 point) {
+    uint flags=materials[own];
+    if((flags&16u)!=0u) {
+        uint turn=(flags>>5)&3u;
+        int axis=(turn&1u)==0u ? 1 : 0;
+        point[axis]=turn<2u ? point[axis]*0.375 : 1.0-(1.0-point[axis])*0.375;
+    }
+    return point;
+}
+bool visible(uint own,uint neighbor) {
+    uint flags=materials[own],nf=materials[neighbor];
+    return (flags&4u)!=0u ? (nf&2u)!=0u :
+        ((flags&8u)!=0u&&(p.transparentLeaves&1u)!=0u)||(nf&2u)!=0u
+        ||((nf&8u)!=0u&&(p.transparentLeaves&1u)!=0u)||((nf&1u)!=0u&&neighbor/4096u!=own/4096u);
+}
+uint packShapePoint(vec3 point) {
+    uint packed=0u;
+    for(int axis=0;axis<3;axis++) {
+        float whole=floor(point[axis]),fraction=point[axis]-whole;
+        packed|=uint(whole)<<(axis*5);
+        if(fraction==0.1875||fraction==0.8125) packed|=1u<<(20+axis);
+        if(fraction>=0.5) packed|=1u<<(25+axis);
+    }
+    return packed;
+}
+void shapeQuad(ivec3 cell,ivec3 subcell,int face,uint own,vec3 low,vec3 high,bool emit,inout uint quad) {
+    if(emit) {
+        uint occlusion[4];
+        for(int k=0;k<4;k++) occlusion[k]=shapeAo(subcell,face,k);
+        int first=occlusion[0]+occlusion[2]>=occlusion[1]+occlusion[3] ? 0 : 1;
+        uint texture=materials[own+uint(face)+1u],flags=materials[own];
+        uint data=(texture&255u)|(uint(cell.x+16*(cell.y+16*cell.z))<<8);
+        if((flags&16u)!=0u) data|=(1u<<20)|(((flags>>5)&3u)<<21);
+        for(int k=0;k<4;k++) {
+            int corner=(first+k)&3;
+            vec3 point=mix(low,high,vec3(corners[face*4+corner]));
+            uint dst=p.outputStart+quad*8u+uint(k)*2u;
+            vertices[dst]=packShapePoint(point)|(uint(face)<<15)|(occlusion[corner]<<18)
+                |(((texture>>8)&3u)<<23)|(1u<<28)|(1u<<29);
+            vertices[dst+1u]=data;
+        }
+    }
+    quad++;
+}
+void shapeCell(ivec3 cell,bool emit,inout uint quad) {
+    uint own=tag(cell);
+    if((materials[own]&2u)!=0u) return;
+    for(int partIndex=0;partIndex<8;partIndex++) {
+        ivec3 part=ivec3(partIndex&1,(partIndex>>1)&1,partIndex>>2),subcell=cell*2+part;
+        if(!halfOccupied(subcell)) continue;
+        for(int face=0;face<6;face++) {
+            int axis=face>>1,u=(axis+1)%3,v=(axis+2)%3;
+            vec3 low=vec3(cell)+shapePoint(own,vec3(part)*0.5);
+            vec3 high=vec3(cell)+shapePoint(own,vec3(part+1)*0.5);
+            low[axis]=(face&1)==0 ? high[axis] : low[axis]; high[axis]=low[axis];
+            ivec3 nextHalf=subcell+normals[face],nextCell=nextHalf>>1,nextPart=nextHalf&1;
+            uint neighbor=tag(nextCell);
+            if(halfOccupied(nextHalf)&&(all(equal(nextCell,cell))||!visible(own,neighbor))) {
+                vec3 otherLow=vec3(nextCell)+shapePoint(neighbor,vec3(nextPart)*0.5);
+                vec3 otherHigh=vec3(nextCell)+shapePoint(neighbor,vec3(nextPart+1)*0.5);
+                float plane=(face&1)==0 ? otherLow[axis] : otherHigh[axis];
+                float u0=max(low[u],otherLow[u]),u1=min(high[u],otherHigh[u]);
+                float v0=max(low[v],otherLow[v]),v1=min(high[v],otherHigh[v]);
+                if(plane==low[axis]&&u0<u1&&v0<v1) {
+                    if(u0==low[u]&&u1==high[u]&&v0==low[v]&&v1==high[v]) continue;
+                    vec4 strips[4]=vec4[](vec4(low[u],u0,low[v],high[v]),vec4(u1,high[u],low[v],high[v]),
+                        vec4(u0,u1,low[v],v0),vec4(u0,u1,v1,high[v]));
+                    for(int strip=0;strip<4;strip++) {
+                        vec4 r=strips[strip];
+                        if(r.x>=r.y||r.z>=r.w) continue;
+                        vec3 a=low,b=high; a[u]=r.x;b[u]=r.y;a[v]=r.z;b[v]=r.w;
+                        shapeQuad(cell,subcell,face,own,a,b,emit,quad);
+                    }
+                    continue;
+                }
+            }
+            shapeQuad(cell,subcell,face,own,low,high,emit,quad);
+        }
+    }
+}
+void main()
+{
+    // One workgroup owns a chunk. Each lane owns sixteen consecutive cells, so
+    // the prefix sum emits the EXACT CPU cell/face order, including blended water.
+    uint lane=gl_LocalInvocationID.x, masks[16], n=0u;
+    bool shaped=(p.transparentLeaves&2u)!=0u,countOnly=(p.transparentLeaves&4u)!=0u;
+    // Bounded emission can count and generate in one dispatch. On overflow,
+    // report the required size and leave the entire output range untouched.
+    if(lane==0u) outputCapacity=(p.transparentLeaves&32u)!=0u ? counts[p.counter] : 0xffffffffu;
+    barrier();
+    for (uint k=0u;k<16u;k++)
+    {
+        uint index=lane*16u+k;
+        ivec3 cell=ivec3(index&15u,(index>>4)&15u,index>>8);
+        uint before=n;
+        if(shaped) shapeCell(cell,false,n);
+        else { masks[k]=visibleMask(cell); n+=bitCount(masks[k]); }
+        if(n>before&&(materials[tag(cell)]&4u)!=0u) atomicOr(counts[p.counter+1u],1u);
+    }
+    prefix[lane]=n; barrier();
+    for (uint stride=1u;stride<256u;stride*=2u)
+    {
+        uint add=lane>=stride ? prefix[lane-stride] : 0u;
+        barrier(); prefix[lane]+=add; barrier();
+    }
+    if (lane==0u) counts[p.counter]=prefix[255];
+    if(countOnly||prefix[255]>outputCapacity) return;
+    uint quad=prefix[lane]-n;
+    if(shaped) {
+        for(uint k=0u;k<16u;k++) {
+            uint index=lane*16u+k;
+            shapeCell(ivec3(index&15u,(index>>4)&15u,index>>8),true,quad);
+        }
+        return;
+    }
+    for (uint j=0u;j<16u;j++)
+    {
+    uint index=lane*16u+j, mask=masks[j];
+    ivec3 cell=ivec3(index&15u,(index>>4)&15u,index>>8);
+    uint own=tag(cell), flags=materials[own];
+    if (mask!=0u&&(flags&4u)!=0u) atomicOr(counts[p.counter+1u],1u);
+    for (int face=0;face<6;face++)
+    {
+        if ((mask&(1u<<face))==0u) continue;
+        uint occlusion[4];
+        bool lod=(p.transparentLeaves&8u)!=0u;
+        for(int k=0;k<4;k++) occlusion[k]=lod ? 3u : ao(cell,face,k);
+        int first=occlusion[0]+occlusion[2]>=occlusion[1]+occlusion[3] ? 0 : 1;
+        uint material=lod&&face==4 ? cells[p.inputStart+5832u+index] : own;
+        uint texture=materials[material+uint(face)+1u];
+        for (int k=0;k<4;k++)
+        {
+            int corner=(first+k)&3; ivec3 q=cell+corners[face*4+corner];
+            uint dst=p.outputStart+quad*8u+uint(k)*2u;
+            vertices[dst]=uint(q.x)|(uint(q.y)<<5)|(uint(q.z)<<10)|(uint(face)<<15)
+                |(occlusion[corner]<<18)|(uint(corner)<<20)|(lod ? 0u : (((texture>>8)&3u)<<23));
+            vertices[dst+1u]=(texture&255u)|(lod ? ((material/4096u)<<8)|(((p.transparentLeaves>>8)&31u)<<24)
+                |((p.transparentLeaves&16u)!=0u ? 1u<<31 : 0u) : index<<8);
+        }
+        quad++;
+    }
+    }
+}

@@ -1,0 +1,84 @@
+{
+  "Before": {
+    "neutral_or_revisit": {
+      "Count": 149,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.006594389,
+      "IdealPain": 0,
+      "PredictedPain": 0.0043156664,
+      "PleasureMse": 0.00020597933,
+      "PainMse": 9.487405E-05
+    },
+    "stationary": {
+      "Count": 79,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.0061286683,
+      "IdealPain": 0.02872363,
+      "PredictedPain": 0.007728815,
+      "PleasureMse": 0.0001748037,
+      "PainMse": 0.0008477109
+    },
+    "miss": {
+      "Count": 9,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.026106631,
+      "IdealPain": 0.6698765,
+      "PredictedPain": 0.04605787,
+      "PleasureMse": 0.00070837815,
+      "PainMse": 0.3895936
+    },
+    "exploration": {
+      "Count": 12,
+      "IdealPleasure": 0.3,
+      "PredictedPleasure": 0.0042313864,
+      "IdealPain": 0,
+      "PredictedPain": 0.0023897265,
+      "PleasureMse": 0.08756529,
+      "PainMse": 1.7073273E-05
+    }
+  },
+  "After": {
+    "neutral_or_revisit": {
+      "Count": 149,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.04093297,
+      "IdealPain": 0,
+      "PredictedPain": 0.030988669,
+      "PleasureMse": 0.0031756696,
+      "PainMse": 0.006202202
+    },
+    "stationary": {
+      "Count": 79,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.012227189,
+      "IdealPain": 0.02872363,
+      "PredictedPain": 0.084142946,
+      "PleasureMse": 0.00024874258,
+      "PainMse": 0.014470491
+    },
+    "miss": {
+      "Count": 9,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.016348714,
+      "IdealPain": 0.6698765,
+      "PredictedPain": 0.29890132,
+      "PleasureMse": 0.00030034577,
+      "PainMse": 0.13840863
+    },
+    "exploration": {
+      "Count": 12,
+      "IdealPleasure": 0.3,
+      "PredictedPleasure": 0.07438721,
+      "IdealPain": 0,
+      "PredictedPain": 0.006617195,
+      "PleasureMse": 0.052280508,
+      "PainMse": 0.00021838263
+    }
+  },
+  "Samples": 249,
+  "MainWeightsPreserved": true,
+  "CalibrationFrames": 4320,
+  "Frames": 17520,
+  "MainUpdates": 13200,
+  "RewardUpdates": 17520
+}

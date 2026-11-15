@@ -1,0 +1,31 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0, one thread per node, in double. Mode 0: q = K·p. Mode 1: r = b − K·x, the true
+// residual, and z = 0 for the multigrid cycle that follows.
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    if (i >= nodeCount(pass.size.xyz) || cells[i].w == 0.0)
+        return;
+
+    ivec3 c = nodeCoordinate(i, pass.size.xyz);
+    if (pass.coarseSize.w == 0)
+    {
+        DSix kp = exactRow(VECTOR_DIRECTION, i, c, pass.size.xyz);
+        q[i] = WideSix(dvec4(kp.u, 0.0LF), dvec4(kp.t, 0.0LF));
+        return;
+    }
+
+    DSix kx = exactRow(VECTOR_SOLUTION, i, c, pass.size.xyz);
+    DSix rest = DSix(dvec3(b[i].u.xyz) - kx.u, dvec3(b[i].t.xyz) - kx.t);
+    r[i] = WideSix(dvec4(rest.u, 0.0LF), dvec4(rest.t, 0.0LF));
+    right[i] = narrow(rest);
+    correction[i] = zeroSix();
+}

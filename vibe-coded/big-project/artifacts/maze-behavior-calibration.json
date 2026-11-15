@@ -1,0 +1,84 @@
+{
+  "Before": {
+    "neutral_or_revisit": {
+      "Count": 120,
+      "IdealPleasure": 0.00010044421,
+      "PredictedPleasure": 0.007975203,
+      "IdealPain": 0,
+      "PredictedPain": 0.010364724,
+      "PleasureMse": 0.0012219838,
+      "PainMse": 0.0013439761
+    },
+    "stationary": {
+      "Count": 79,
+      "IdealPleasure": 1.553728E-11,
+      "PredictedPleasure": 0.015747206,
+      "IdealPain": 0.02872363,
+      "PredictedPain": 0.032886453,
+      "PleasureMse": 0.0019221454,
+      "PainMse": 0.002891392
+    },
+    "miss": {
+      "Count": 9,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.002633562,
+      "IdealPain": 0.6698765,
+      "PredictedPain": 0.36537203,
+      "PleasureMse": 6.242084E-05,
+      "PainMse": 0.09303063
+    },
+    "exploration": {
+      "Count": 41,
+      "IdealPleasure": 0.2758599,
+      "PredictedPleasure": 0.0025133966,
+      "IdealPain": 0,
+      "PredictedPain": 0.0007666315,
+      "PleasureMse": 0.14520678,
+      "PainMse": 1.4252044E-05
+    }
+  },
+  "After": {
+    "neutral_or_revisit": {
+      "Count": 120,
+      "IdealPleasure": 0.00010044421,
+      "PredictedPleasure": 0.053303484,
+      "IdealPain": 0,
+      "PredictedPain": 0.0154310735,
+      "PleasureMse": 0.006096408,
+      "PainMse": 0.0015079376
+    },
+    "stationary": {
+      "Count": 79,
+      "IdealPleasure": 1.553728E-11,
+      "PredictedPleasure": 0.027288813,
+      "IdealPain": 0.02872363,
+      "PredictedPain": 0.038066264,
+      "PleasureMse": 0.0027220955,
+      "PainMse": 0.0028053296
+    },
+    "miss": {
+      "Count": 9,
+      "IdealPleasure": 0,
+      "PredictedPleasure": 0.040770404,
+      "IdealPain": 0.6698765,
+      "PredictedPain": 0.38335702,
+      "PleasureMse": 0.0022144378,
+      "PainMse": 0.08231023
+    },
+    "exploration": {
+      "Count": 41,
+      "IdealPleasure": 0.2758599,
+      "PredictedPleasure": 0.12761168,
+      "IdealPain": 0,
+      "PredictedPain": 0.0033802243,
+      "PleasureMse": 0.09157397,
+      "PainMse": 6.788738E-05
+    }
+  },
+  "Samples": 249,
+  "MainWeightsPreserved": true,
+  "CalibrationFrames": 4320,
+  "Frames": 40580,
+  "MainUpdates": 23300,
+  "RewardUpdates": 40580
+}

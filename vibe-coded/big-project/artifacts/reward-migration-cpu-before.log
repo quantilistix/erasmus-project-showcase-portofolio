@@ -1,0 +1,19 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/artifacts/predictive-maze
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+CPU predictive coding; 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One PC local weight update/frame; reward motor decisions every 12 frames.
+Main PC plasticity uses positive base eta. Reward/pain train a local motor actor/critic with eligibility traces; the PC graph supplies representation and receives the actual button clamps.
+Motor feedback = .1 * instantaneous normalized calculated pleasure - calculated pain + primitive event reward/cost + 4 on completion + .02 per new cell. Sensation traces are not repaid.
+Training uses calculated teacher labels; play uses the frozen reward network. Primitive signals and discovery remain available in both modes.
+Drive inputs retain constant pleasure plus held pain noise. Manual/bot control clears policy credit; it teaches PC associations without off-policy reinforcement.
+Total error = SUM(E^2), statistics only. Motor learning is a small local readout; no replay or backpropagation through the predictive networks.
+Level 11; maze geometry stage 3/5; corridor width 2; health drain, primitive pain and ideal training rewards retained. Checkpoint /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+Error: Neuron activation channels must be finite and nonnegative.
+System.ArgumentException: Neuron activation channels must be finite and nonnegative.
+   at NeuralGraph.CpuPredictiveCodingBackend.Step(ReadOnlySpan`1 inputs, Int32 steps, Single activityStep, Single weightStep, Single learningRate, Boolean learn, ReadOnlySpan`1 outputClamps) in /home/vlad/Programming/artificial_brain/src/NeuralGraph/PredictiveCoding.cs:line 117
+   at ArcadeLab.MazeSession.StepControls(Nullable`1 forcedControls) in /home/vlad/Programming/artificial_brain/src/ArcadeLab/MazeSession.cs:line 200
+   at ArcadeLab.MazeSession.Step(Nullable`1 action) in /home/vlad/Programming/artificial_brain/src/ArcadeLab/MazeSession.cs:line 242
+   at ArcadeLab.MazeCommand.Run(Options options) in /home/vlad/Programming/artificial_brain/src/ArcadeLab/MazeCommand.cs:line 56
+   at Program.<Main>$(String[] args) in /home/vlad/Programming/artificial_brain/src/ArcadeLab/Program.cs:line 15

@@ -1,0 +1,4 @@
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+120 learning frames in 3.31s; mean 20.16 ms/frame (~49.6 compute fps), recent p95 28.43 ms

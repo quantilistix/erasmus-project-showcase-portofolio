@@ -1,0 +1,38 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/artifacts/predictive-maze
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+Intel(R) Arc(tm) Graphics (MTL) / predictive coding; 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One local weight update/frame.
+Total error = SUM(E^2), statistics only. No actor/value objective, replay, backpropagation, biases or least-squares reward shortcut.
+Maze stage 1/5; corridor width 3; health drain, primitive pain and ideal training rewards retained. Checkpoint /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=9 total_error_sum_e2=1763.154206 reward_error_sum_e2=1868.057050 teaching_error_sum_e2=2307.900095 main_ticks=72 reward_ticks=72 local_updates=9/9
+SENSE primitive_pain=0.1705 learned_pain=0.1185 pleasure=10.2901 HP=59.85 ammo=4/8 controls=Backward
+PC frame=31 total_error_sum_e2=20894.250630 reward_error_sum_e2=22464.271115 teaching_error_sum_e2=23948.580852 main_ticks=248 reward_ticks=248 local_updates=31/31
+SENSE primitive_pain=0.1715 learned_pain=0.0043 pleasure=0.0000 HP=59.48 ammo=4/8 controls=Backward
+PC frame=91 total_error_sum_e2=177266.110954 reward_error_sum_e2=190981.271882 teaching_error_sum_e2=195388.984637 main_ticks=728 reward_ticks=728 local_updates=91/91
+SENSE primitive_pain=0.1245 learned_pain=0.0506 pleasure=0.0000 HP=58.48 ammo=4/8 controls=StrafeRight
+PC frame=95 total_error_sum_e2=194258.981888 reward_error_sum_e2=209448.498026 teaching_error_sum_e2=214263.886345 main_ticks=760 reward_ticks=760 local_updates=95/95
+SENSE primitive_pain=0.1726 learned_pain=0.0000 pleasure=0.0000 HP=58.42 ammo=4/8 controls=StrafeRight
+PC frame=128 total_error_sum_e2=378514.612123 reward_error_sum_e2=408732.718084 teaching_error_sum_e2=416492.752734 main_ticks=1024 reward_ticks=1024 local_updates=128/128
+SENSE primitive_pain=0.1653 learned_pain=0.0113 pleasure=0.0000 HP=57.87 ammo=8/4 controls=Forward
+PC frame=142 total_error_sum_e2=486904.018368 reward_error_sum_e2=525707.034286 teaching_error_sum_e2=534686.838685 main_ticks=1136 reward_ticks=1136 local_updates=142/142
+SENSE primitive_pain=0.1585 learned_pain=0.0000 pleasure=0.0000 HP=57.63 ammo=7/4 controls=StrafeRight, Fire
+PC frame=202 total_error_sum_e2=1049430.906295 reward_error_sum_e2=1133502.399010 teaching_error_sum_e2=1142968.801787 main_ticks=1616 reward_ticks=1616 local_updates=202/202
+SENSE primitive_pain=0.1301 learned_pain=0.0696 pleasure=0.0000 HP=56.63 ammo=6/4 controls=StrafeLeft, Fire
+PC frame=243 total_error_sum_e2=1342971.988172 reward_error_sum_e2=1455502.677986 teaching_error_sum_e2=1462171.919633 main_ticks=1944 reward_ticks=1944 local_updates=243/243
+SENSE primitive_pain=0.1547 learned_pain=0.0000 pleasure=0.0000 HP=55.95 ammo=6/4 controls=StrafeLeft
+PC frame=248 total_error_sum_e2=1373163.402139 reward_error_sum_e2=1489409.388015 teaching_error_sum_e2=1496304.096921 main_ticks=1984 reward_ticks=1984 local_updates=248/248
+SENSE primitive_pain=0.1770 learned_pain=0.0000 pleasure=0.0000 HP=55.87 ammo=6/4 controls=Backward
+PC frame=308 total_error_sum_e2=1786132.616855 reward_error_sum_e2=1954871.764646 teaching_error_sum_e2=1964144.250024 main_ticks=2464 reward_ticks=2464 local_updates=308/308
+SENSE primitive_pain=0.1354 learned_pain=0.4912 pleasure=0.0000 HP=54.87 ammo=7/2 controls=StrafeLeft
+PC frame=325 total_error_sum_e2=1921487.530288 reward_error_sum_e2=2108193.060754 teaching_error_sum_e2=2117258.011830 main_ticks=2600 reward_ticks=2600 local_updates=325/325
+SENSE primitive_pain=0.1588 learned_pain=0.0000 pleasure=0.0000 HP=54.58 ammo=6/2 controls=StrafeLeft, Fire
+PC frame=385 total_error_sum_e2=2516622.250536 reward_error_sum_e2=2796491.245162 teaching_error_sum_e2=2809367.368946 main_ticks=3080 reward_ticks=3080 local_updates=385/385
+SENSE primitive_pain=0.1392 learned_pain=1.0000 pleasure=0.0000 HP=53.58 ammo=6/2 controls=StrafeLeft
+PC frame=445 total_error_sum_e2=2830995.639962 reward_error_sum_e2=3178460.831843 teaching_error_sum_e2=3184781.769770 main_ticks=3560 reward_ticks=3560 local_updates=445/445
+SENSE primitive_pain=0.1422 learned_pain=1.0000 pleasure=0.0000 HP=52.58 ammo=4/2 controls=Fire
+PC frame=500 total_error_sum_e2=3108648.094183 reward_error_sum_e2=3516668.443343 teaching_error_sum_e2=3523590.024499 main_ticks=4000 reward_ticks=4000 local_updates=500/500
+SENSE primitive_pain=0.1450 learned_pain=1.0000 pleasure=0.0000 HP=51.67 ammo=4/2 controls=Fire, Reload
+Stage 1/5, completions 0, mean 41.56 ms/frame (~24.1 compute fps), recent p95 46.09 ms
+Saved main.ngb, reward.json and maze.json in /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+500 learning frames in 21.55s; mean 41.56 ms/frame (~24.1 compute fps), recent p95 46.09 ms

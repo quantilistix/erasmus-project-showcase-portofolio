@@ -1,0 +1,37 @@
+Motor learning, worst of five seeds: reward p=0.955, pain p=0.045, delayed p=0.976, context accuracy=0.969
+PASS local reward motor learning (72 assertions).
+PASS layered topology with additional odd-to-odd connections.
+PASS finite-difference gradients: cycles, self edges, skips and output feedback.
+PASS fixed plasticity scaling, frozen connections and checkpoint round trip.
+PASS Vulkan forward/loss/updates/plasticity/upload parity on llvmpipe (LLVM 20.1.2, 256 bits) (Cpu).
+PASS single-pass layered execution, pleasure gain, activation readback, frozen biases and binary checkpoints.
+PASS FFT, deterministic games, raw vision/audio contracts. 9035 assertions passed.
+PASS isolated learned/primitive pain banks, calibration/freeze, per-frame learning and realtime checkpoint round trip. 9071 total assertions passed.
+PASS catch proximity supervision, outcome overrides and resumable reward-only calibration. 9118 total assertions passed.
+PASS direct raw vision/executed controls, preserved legacy reward function and resumable input migration. 9130 total assertions passed.
+PASS slow sample-and-hold pain, sine clock, function-preserving input migration and timing persistence. 9175 total assertions passed.
+PASS quadratic proximity-only curve and bounded reward ranges. 9182 total assertions passed.
+PASS broad reward calibration coverage and preserved main progress. 9186 total assertions passed.
+PASS proximity-only output range and persisted pleasure. 9188 total assertions passed.
+PASS pure learned proximity, independent primitive catch reward, weaker learned effects and preserved input migration. 9262 total assertions passed.
+PASS nonnegative input/hidden/output rates, signed channel decoding, preserved historical functions and slower game physics. 9306 total assertions passed.
+PASS persisted game speed and declared nonnegative checkpoint encoding. 9311 total assertions passed.
+PASS maze physics, egocentric sensors, projectile combat, reward separation, realtime play learning and persistence (905 assertions).
+PASS higher-resolution observer rendering, sensor isolation, smooth sine voices and sample-clocked sound durations (19 assertions).
+PASS stereo synthesis, spatial event panning, neural stereo evidence and preserved legacy migration (22 assertions).
+PASS first-person RGB ray sensing, field of view, distance attenuation, hue preservation, HUD, predictive targets and grayscale checkpoint migration (31 assertions).
+PASS persistent propagation, impulse latency, recurrent state, training isolation and live-state persistence (57 assertions).
+PASS independent threshold buttons, simultaneous physics, raw feedback, disabled exploration rewards and persistence (66 assertions).
+PASS direct health/ammo inputs and measured pain/error diagnostics (16 assertions).
+PASS low-value visual reward, HUD exclusion, no primitive bonus and frozen play separation (19 assertions).
+PASS open-maze completion curriculum, low-brightness preference, supervised visual reward and frozen persistence (1192 assertions). Early/late open cells 8855/6893, wide cells 5467/93.
+Predictive device-local storage and exact reduction checks: llvmpipe (LLVM 20.1.2, 256 bits) / predictive coding / device-local weights / subgroup reductions (software Vulkan on CPU)
+PASS explicit predictive coding, local plasticity, statistics independence and CPU/Vulkan agreement (4343 assertions).
+PASS active predictive maze integration, nonnegative outputs, reward teaching/freeze and state persistence (975 assertions).
+PASS manual motor clamping, local plasticity, release and CPU/Vulkan state (412 assertions).
+Corridor stability: 6 movement changes in 200 frames; maximum lateral drift 0.238 units.
+Graph roaming: 15 seed/speed runs, 23 minimum explored cells, 95.2% moving frames, 72 maximum turn-only frames per run.
+Production bullet evasion: 57 dodge frames across four enemy encounters.
+PASS roaming teacher exploration, pickups, combat, local perception and CPU/Vulkan supervision (294 assertions; 74 explored cells).
+PASS constant pleasure plus held pain randomness (7 assertions).
+PASS complete verification: 17669 total assertions.

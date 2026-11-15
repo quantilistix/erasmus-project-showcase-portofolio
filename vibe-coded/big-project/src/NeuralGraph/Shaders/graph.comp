@@ -1,0 +1,63 @@
+#version 450
+layout(local_size_x=64) in;
+layout(std430,binding=0) buffer Parameters { float p[]; };
+layout(std430,binding=1) readonly buffer Metadata { int m[]; };
+layout(std430,binding=2) readonly buffer Inputs { float x[]; };
+layout(std430,binding=3) readonly buffer Targets { float y[]; };
+layout(std430,binding=4) readonly buffer Weights { float w[]; };
+layout(std430,binding=5) buffer Activations { float a[]; };
+layout(std430,binding=6) buffer Deltas { float d[]; };
+layout(std430,binding=7) buffer Outputs { float o[]; };
+layout(push_constant) uniform Config { int mode; int batch; float rate; float gain; int start; int count; } c;
+float valueA(int i) { return a[2*i]-a[2*i+1]; }
+void main() {
+ int id=int(gl_GlobalInvocationID.x);
+ int N=m[0], I=m[1], E=m[2], O=m[3], T=m[4];
+ int offsets=5, incoming=offsets+N+1, sources=incoming+E, destinations=sources+E;
+ int outputMap=destinations+E, outputNodes=outputMap+N, outOffsets=outputNodes+O, outgoing=outOffsets+N+1;
+ int stride=(T+1)*N;
+ if(c.mode==2) {
+  if(id>=E+N-I) return;
+  float gradient=0;
+  for(int b=0;b<c.batch;b++) for(int t=1;t<=T;t++) {
+   int at=b*stride+t*N;
+   gradient+=id<E ? c.gain*d[at+m[destinations+id]]*valueA(at-N+m[sources+id]) : d[at+I+id-E];
+  }
+  p[id]-=c.rate*clamp(gradient/float(c.batch),-1.0,1.0)*(id<E ? p[E+N-I+id] : 1.0); return;
+ }
+ int lane=int(gl_LocalInvocationID.x); id=int(gl_WorkGroupID.x); if(id>=c.batch) return;
+ int start=id*stride;
+ if(c.mode==0) {
+  for(int t=0;t<=T;t++) for(int n=lane;n<N;n+=64) {
+   int at=2*(start+t*N+n);
+   if(n<I) { a[at]=x[2*(id*I+n)]; a[at+1]=x[2*(id*I+n)+1]; } else { a[at]=0; a[at+1]=0; }
+  }
+  memoryBarrierBuffer(); barrier();
+  for(int t=1;t<=T;t++) {
+   for(int n=I+lane;n<N;n+=64) {
+    float potential=p[E+n-I];
+    for(int k=m[offsets+n];k<m[offsets+n+1];k++) { int e=m[incoming+k]; potential+=c.gain*p[e]*valueA(start+(t-1)*N+m[sources+e]); }
+    int at=2*(start+t*N+n);
+    a[at]=m[outputMap+n]>=0 ? max(potential,0.0) : max(tanh(potential),0.0);
+    a[at+1]=m[outputMap+n]>=0 ? max(-potential,0.0) : max(tanh(-potential),0.0);
+   }
+   memoryBarrierBuffer(); barrier();
+  }
+  for(int j=lane;j<O;j+=64) { int at=2*(start+T*N+m[outputNodes+j]); o[2*(id*O+j)]=a[at]; o[2*(id*O+j)+1]=a[at+1]; }
+ } else {
+  for(int t=T;t>=1;t--) {
+   for(int n=I+lane;n<N;n+=64) {
+    int at=start+t*N+n; float delta=0; int j=m[outputMap+n];
+    if(t==T && j>=0) { int q=2*(id*O+j); delta=w[id*O+j]*(valueA(at)-(y[q]-y[q+1])); }
+    if(t<T) for(int k=m[outOffsets+n];k<m[outOffsets+n+1];k++) { int e=m[outgoing+k]; delta+=c.gain*p[e]*d[start+(t+1)*N+m[destinations+e]]; }
+    float value=valueA(at); d[at]=j>=0 ? delta : delta*(1.0-value*value);
+   }
+   memoryBarrierBuffer(); barrier();
+  }
+  if(lane==0) {
+   float loss=0;
+   for(int j=0;j<O;j++) { int q=2*(id*O+j); float error=(o[q]-o[q+1])-(y[q]-y[q+1]); loss+=0.5*w[id*O+j]*error*error; }
+   o[2*c.batch*O+id]=loss;
+  }
+ }
+}

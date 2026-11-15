@@ -1,0 +1,5 @@
+PLAY: frozen reward translator, realtime policy learning; primitive sensations remain active
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+frame 7380 PLAY (reward frozen) health=100 ammo=8/24 hits=9 kills=3 ammoPickups=8 healthPickups=8 exits=1 P=0.000 pain=0.001 primitiveP=0.000 primitivePain=0.000 R=-0.001 loss=0.00011 rewardLoss=0.00000 mainUpdates=7380 rewardUpdates=7200; mean 10.99 ms/frame (~91.0 compute fps), recent p95 14.71 ms
+180 learning frames in 1.98s; mean 10.99 ms/frame (~91.0 compute fps), recent p95 14.71 ms

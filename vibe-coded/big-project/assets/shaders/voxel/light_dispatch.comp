@@ -1,0 +1,10 @@
+#version 450
+layout(local_size_x=1) in;
+layout(std430,set=0,binding=5) buffer Work { uint work[]; };
+void main()
+{
+    // Two dimensions cover more than the portable 65,535 workgroups per axis.
+    work[0]=min(work[3],65535u);
+    work[1]=(work[3]+65534u)/65535u;
+    work[2]=1u;
+}

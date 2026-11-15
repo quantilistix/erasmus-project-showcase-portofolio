@@ -1,0 +1,35 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0, one thread per node: the stiffness of the interfaces to the next node along x, y
+// and z, two half cells in series, and of an anchored cell's springs to the ground, a
+// thousand times its stiffest interface (StressLattice.UpdateBond and UpdateSupport).
+
+layout(local_size_x = 64) in;
+
+#include "lattice_common.glsl"
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    ivec3 size = pass.size.xyz;
+    if (i >= nodeCount(size))
+        return;
+
+    vec4 cell = cells[i];
+    ivec3 c = nodeCoordinate(i, size);
+    float stiffest = 0.0;
+    for (int d = 0; d < 6; d++)
+    {
+        ivec3 n = c + DIRECTIONS[d];
+        vec4 other = inside(n, size) ? cells[nodeIndex(n, size)] : vec4(0.0);
+        vec4 k = cell.w > 0.0 && other.w > 0.0 ? bond(cell, other) : vec4(0.0);
+        stiffest = max(stiffest, k.x);
+        if ((d & 1) == 0)
+            bonds[i * 4 + (d >> 1)] = k;
+    }
+
+    float anchor = cell.w >= 2.0 ? ANCHOR_FACTOR * (stiffest > 0.0 ? stiffest : cell.x * cellSize()) : 0.0;
+    bonds[i * 4 + 3] = vec4(anchor, 0.0, 0.0, 0.0);
+}

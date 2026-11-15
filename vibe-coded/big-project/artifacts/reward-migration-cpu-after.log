@@ -1,0 +1,21 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/artifacts/predictive-maze
+Migrated checkpoint: cleared legacy accumulated error activity once; learned weights, normal activity and maze progress are retained.
+TRAIN: paired-error inference and local plasticity; reward network taught with clamped labels.
+CPU predictive coding; 7,200 normal neurons plus paired error populations, 4,214,784 shared w/-w connections. Eight nonnegative motor outputs.
+Integration: 8 steps/frame, activity h=0.04, weight h=0.02, eta=1E-05, reward eta=1E-05. One PC local weight update/frame; reward motor decisions every 12 frames.
+Main PC plasticity uses positive base eta. Reward/pain train a local motor actor/critic with eligibility traces; the PC graph supplies representation and receives the actual button clamps.
+Motor feedback = .1 * instantaneous normalized calculated pleasure - calculated pain + primitive event reward/cost + 4 on completion + .02 per new cell. Sensation traces are not repaid.
+Training uses calculated teacher labels; play uses the frozen reward network. Primitive signals and discovery remain available in both modes.
+Drive inputs retain constant pleasure plus held pain noise. Manual/bot control clears policy credit; it teaches PC associations without off-policy reinforcement.
+Total error = SUM(E^2), statistics only. Motor learning is a small local readout; no replay or backpropagation through the predictive networks.
+Level 11; maze geometry stage 3/5; corridor width 2; health drain, primitive pain and ideal training rewards retained. Checkpoint /home/vlad/Programming/artificial_brain/artifacts/predictive-maze.
+Start with no ammo. Level 1: no ammo pickups or enemies. Level 2: ammo pickups. Level 3+: ammo pickups and enemies.
+Tab manual, W/S A/D Q/E F fire X reload, Space pause, Escape save and quit.
+PC frame=904854 total_error_sum_e2=32842.594720 reward_error_sum_e2=3067.651947 teaching_error_sum_e2=3159.603708 total_pleasure=0.13767 total_pain=0.50876 sensation_balance=-0.37109 eta_effective=0.00001000 motor_td=0.15577 motor_updates=4 learning_reward=0.01374 main_ticks=7238832 reward_ticks=7238832 local_updates=904854/904854
+SENSE primitive_pain=0.0030 applied_pain=0.5000 applied_pleasure=35.2437 inferred_pain=0.0051 inferred_pleasure=0.4361 HP=99.00 ammo=0/0 controls=StrafeLeft, StrafeRight
+PC frame=904914 total_error_sum_e2=133382.140075 reward_error_sum_e2=13938.056204 teaching_error_sum_e2=14178.207394 total_pleasure=0.12500 total_pain=0.25886 sensation_balance=-0.13385 eta_effective=0.00001000 motor_td=-0.10601 motor_updates=9 learning_reward=-0.04135 main_ticks=7239312 reward_ticks=7239312 local_updates=904914/904914
+SENSE primitive_pain=0.0060 applied_pain=0.2500 applied_pleasure=31.7758 inferred_pain=0.0081 inferred_pleasure=3.8909 HP=98.00 ammo=0/0 controls=Forward, Backward, TurnRight, StrafeLeft, Fire
+PC frame=904914 total_error_sum_e2=133382.140075 reward_error_sum_e2=13938.056204 teaching_error_sum_e2=14178.207394 total_pleasure=0.12500 total_pain=0.25886 sensation_balance=-0.13385 eta_effective=0.00001000 motor_td=-0.10601 motor_updates=9 learning_reward=-0.04135 main_ticks=7239312 reward_ticks=7239312 local_updates=904914/904914
+SENSE primitive_pain=0.0060 applied_pain=0.2500 applied_pleasure=31.7758 inferred_pain=0.0081 inferred_pleasure=3.8909 HP=98.00 ammo=0/0 controls=Forward, Backward, TurnRight, StrafeLeft, Fire
+Level 11, geometry stage 3/5, completions 10, mean 311.59 ms/frame (~3.2 compute fps), recent p95 328.16 ms
+120 learning frames in 37.41s; mean 311.59 ms/frame (~3.2 compute fps), recent p95 328.16 ms

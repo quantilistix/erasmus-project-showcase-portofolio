@@ -1,0 +1,6 @@
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Checkpoint /tmp/maze-gpu-perf; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+frame 180 TRAIN health=100 ammo=7/24 hits=0 kills=0 ammoPickups=0 healthPickups=0 exits=0 P=0.005 pain=0.000 primitiveP=0.000 primitivePain=0.000 R=0.000 loss=0.00429 rewardLoss=0.00005 mainUpdates=180 rewardUpdates=180; mean 36.56 ms/frame (~27.4 compute fps), recent p95 37.11 ms
+Saved main.ngb, reward.json and maze.json in /tmp/maze-gpu-perf.
+180 learning frames in 6.97s; mean 36.56 ms/frame (~27.4 compute fps), recent p95 37.11 ms

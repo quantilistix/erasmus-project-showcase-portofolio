@@ -1,0 +1,67 @@
+#version 450
+layout(local_size_x=64) in;
+layout(std430,binding=0) buffer Parameters { float p[]; };
+layout(std430,binding=1) readonly buffer Metadata { int m[]; };
+layout(std430,binding=2) readonly buffer Inputs { float x[]; };
+layout(std430,binding=3) readonly buffer Targets { float y[]; };
+layout(std430,binding=4) readonly buffer Weights { float w[]; };
+layout(std430,binding=5) buffer Activations { float a[]; };
+layout(std430,binding=6) buffer Deltas { float d[]; };
+layout(std430,binding=7) buffer Outputs { float o[]; };
+layout(push_constant) uniform Config { int mode; int batch; float rate; float gain; int start; int count; } c;
+shared float partial[64];
+float valueA(int i) { return a[2*i]-a[2*i+1]; }
+float valueX(int i) { return x[2*i]-x[2*i+1]; }
+void main() {
+ int id=int(gl_GlobalInvocationID.x), lane=int(gl_LocalInvocationID.x);
+ int N=m[0], I=m[1], E=m[2], O=m[3];
+ int offsets=5, incoming=offsets+N+1, sources=incoming+E, destinations=sources+E;
+ int outputMap=destinations+E, outputNodes=outputMap+N, outOffsets=outputNodes+O, outgoing=outOffsets+N+1;
+ int schedule=outgoing+E;
+ if(c.mode==2) {
+  if(id>=E+N-I) return;
+  float gradient=0;
+  for(int b=0;b<c.batch;b++) {
+   if(id<E) {
+    int source=m[sources+id]; float sourceValue=source<I ? valueX(b*I+source) : valueA(b*N+source);
+    gradient+=c.gain*d[b*N+m[destinations+id]]*sourceValue;
+   } else gradient+=d[b*N+I+id-E];
+  }
+  p[id]-=c.rate*clamp(gradient/float(c.batch),-1.0,1.0)*(id<E ? p[E+N-I+id] : 1.0); return;
+ }
+ if(c.mode==3) {
+  if(id>=c.batch) return;
+  float loss=0;
+  for(int j=0;j<O;j++) {
+   int q=2*(id*O+j); float error=(o[q]-o[q+1])-(y[q]-y[q+1]); loss+=0.5*w[id*O+j]*error*error;
+  }
+  o[2*c.batch*O+id]=loss; return;
+ }
+ int task=int(gl_WorkGroupID.x);
+ if(task>=c.count*c.batch) return;
+ int b=task/c.count, node=m[schedule+c.start+task%c.count]; float sum=0;
+ if(c.mode==0) {
+  for(int k=m[offsets+node]+lane;k<m[offsets+node+1];k+=64) {
+   int edge=m[incoming+k], source=m[sources+edge]; sum+=p[edge]*(source<I ? valueX(b*I+source) : valueA(b*N+source));
+  }
+ } else {
+  for(int k=m[outOffsets+node]+lane;k<m[outOffsets+node+1];k+=64) {
+   int edge=m[outgoing+k]; sum+=p[edge]*d[b*N+m[destinations+edge]];
+  }
+ }
+ partial[lane]=sum; barrier();
+ for(int stride=32;stride>0;stride>>=1) { if(lane<stride) partial[lane]+=partial[lane+stride]; barrier(); }
+ if(lane==0) {
+  int j=m[outputMap+node], at=2*(b*N+node);
+  if(c.mode==0) {
+   float potential=c.gain*partial[0]+p[E+node-I];
+   a[at]=j>=0 ? max(potential,0.0) : max(tanh(potential),0.0);
+   a[at+1]=j>=0 ? max(-potential,0.0) : max(tanh(-potential),0.0);
+   if(j>=0) { o[2*(b*O+j)]=a[at]; o[2*(b*O+j)+1]=a[at+1]; }
+  } else {
+   float delta=c.gain*partial[0];
+   if(j>=0) { int q=2*(b*O+j); delta+=w[b*O+j]*(valueA(b*N+node)-(y[q]-y[q+1])); }
+   float value=valueA(b*N+node); d[b*N+node]=j>=0 ? delta : delta*(1.0-value*value);
+  }
+ }
+}

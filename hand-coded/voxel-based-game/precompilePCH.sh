@@ -1,0 +1,1 @@
+g++ -I./dependencies/include -x c++-header -o ./include/pch.hpp.gch ./include/pch.hpp

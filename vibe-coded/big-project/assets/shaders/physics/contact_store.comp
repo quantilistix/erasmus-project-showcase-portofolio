@@ -1,0 +1,27 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Saves each contact's final dual variables, stiffness and normal under its key, for the next
+// step to warm start from.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    if (index >= contactTotal())
+        return;
+
+    Contact c = contacts[index];
+    uint slot = c.header.w;
+    if (slot == NO_BLOCK)
+        return;
+
+    cacheCurrent[slot].lambda = c.lambda;
+    cacheCurrent[slot].penalty = c.penalty;
+    cacheCurrent[slot].normal = c.normal;
+}

@@ -1,0 +1,60 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Snapshot-based greedy refinement, followed by conflict removal. Higher-indexed
+// endpoints of remaining same-color edges enter the serial overflow queue. Every
+// ordinary color is consequently an independent set, including graphs needing >8 colors.
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint GROUP = 64u;
+
+shared uint used;
+
+void main()
+{
+    uint r = gl_WorkGroupID.x;
+    if (r >= counts.y)
+        return;
+
+    uint source = flags >= 4u ? (flags - 4u) * counts.y : (flags % 2u) * counts.y;
+    uint target = flags >= 4u ? (5u - flags) * counts.y : (1u - flags % 2u) * counts.y;
+    uint color = flags == 0u ? uint(rigids[r].inertia1.w) : rigidColors[source + r];
+    uint thread = gl_LocalInvocationID.x;
+    uint block = counts.x + r;
+    if (thread == 0u)
+        used = 0u;
+
+    barrier();
+
+    for (uint i = blockContactBegin(block) + thread; i < blockContactEnd(block); i += GROUP)
+    {
+        uvec4 header = contacts[blockContactRefs[i]].header;
+        uint other = header.y == block ? header.z : header.y;
+        if (other == NO_BLOCK || other == block)
+            continue;
+
+        uint o = other - counts.x;
+        if (o < r)
+        {
+            uint otherColor = flags == 0u ? uint(rigids[o].inertia1.w) : rigidColors[source + o];
+            if (flags >= 4u)
+            {
+                if (otherColor == color)
+                    atomicOr(used, 1u);
+            }
+            else
+                atomicOr(used, 1u << min(otherColor, 31u));
+        }
+    }
+
+    barrier();
+
+    if (thread == 0u)
+        rigidColors[target + r] = flags >= 4u
+            ? (used != 0u ? 8u : color)
+            : min(uint(findLSB(~used)), bodyCounts.z - 1u);
+}

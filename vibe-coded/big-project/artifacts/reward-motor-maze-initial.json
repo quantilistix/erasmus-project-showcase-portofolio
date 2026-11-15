@@ -1,0 +1,41 @@
+[
+  {
+    "seed": 1,
+    "trainingFrames": 12000,
+    "trainingCompletions": 14,
+    "timeLimitResets": 41,
+    "trainingWallPain": 496.21155,
+    "evaluationEpisodes": 30,
+    "untrainedCompletions": 17,
+    "trainedCompletions": 15,
+    "untrainedWallPain": 214.6902,
+    "trainedWallPain": 307.08502,
+    "motorUpdates": 964
+  },
+  {
+    "seed": 7,
+    "trainingFrames": 12000,
+    "trainingCompletions": 9,
+    "timeLimitResets": 44,
+    "trainingWallPain": 412.62247,
+    "evaluationEpisodes": 30,
+    "untrainedCompletions": 13,
+    "trainedCompletions": 9,
+    "untrainedWallPain": 208.17096,
+    "trainedWallPain": 191.08676,
+    "motorUpdates": 960
+  },
+  {
+    "seed": 42,
+    "trainingFrames": 12000,
+    "trainingCompletions": 21,
+    "timeLimitResets": 37,
+    "trainingWallPain": 486.12354,
+    "evaluationEpisodes": 30,
+    "untrainedCompletions": 9,
+    "trainedCompletions": 10,
+    "untrainedWallPain": 227.14041,
+    "trainedWallPain": 308.164,
+    "motorUpdates": 971
+  }
+]

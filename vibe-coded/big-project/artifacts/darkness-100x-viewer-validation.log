@@ -1,0 +1,16 @@
+Checkpoint: /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze
+Two historical checkpoints exist. Resuming the IDE checkpoint; the separate copy at /home/vlad/Programming/artificial_brain/artifacts/maze is not loaded. Use --checkpoint to select it explicitly.
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 14,052 nonnegative rate neurons, 4,133,376 stored connections; 0.50x physics, 60 updates/s target.
+Procedural maze 41×41; 7 enemies; exit route 117 tiles. Missed-shot teacher penalty 0.65 per projectile; exploration +24.00 per new cell and +8.00 per new region; stationary pain after 45 physics ticks. Stereo PCM/FFT enabled. Vision: 384 RGB first-person rays over 120 degrees, with distance shading.
+Error diagnostics print every 60 updates and on damage, death or initial wall contact. No-pain value loss removes only the sampled penalty from its target; it is not a new inference without pain inputs.
+Low-brightness teaching bonus: up to 100.00 × game speed per frame, derived from current world RGB only. Play uses the frozen reward head, not this ideal bonus.
+Main vitals: health/100, total rounds/104 (loaded + reserve), loaded rounds/8. Existing checkpoint ports reused.
+Maze stage 1/5: corridors 3 tiles, rooms 9–13 tiles; advances every 5 completions. Visual readout weight 1.000, supervised samples 2400. Train once to calibrate an old checkpoint’s visual branch.
+Passive health drain: 2.0 per simulated second; health pickups restore up to 40. Active in both modes.
+Persistent neural state: 2 synchronous connection hops per frame; current view only. Training buffers are separate.
+Eight independent buttons press above 0.50; no wait control. Move/turn/fire can be held together.
+Checkpoint /home/vlad/Programming/artificial_brain/src/ArcadeLab/artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+ERROR frame=490107 sample=current loss=0.896804 td_error=-1.330666 button_rmse=0.217353 vision_rmse=0.129617 value_loss=0.885335 value_loss_without_pain_target=0.885295 sample_pain_cost=0.000030 visual_darkness=0.6178 predicted_visual_reward=30.88798 event_pleasure=0.00000 ideal_variety_bonus=30.88798
+PAIN primitive_signal=0.0030 applied_learned=0.0000 damage_cost=0.0000 wall_cost=0.0000 death_cost=0.0000 low_health_cost=0.000030 total_current_cost=0.000030 reward=30.887949 HP=99.00 ammo_total=31 ammo_loaded=7
+90 learning frames in 4.70s; mean 30.36 ms/frame (~32.9 compute fps), recent p95 43.56 ms

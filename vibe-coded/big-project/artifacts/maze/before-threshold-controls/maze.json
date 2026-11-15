@@ -1,0 +1,24 @@
+{
+  "Version": 2,
+  "Config": {
+    "Layers": 8,
+    "Width": 512,
+    "Seed": 42,
+    "Speed": 0.5,
+    "Rate": 0.001,
+    "RewardRate": 0.003,
+    "Discount": 0.985,
+    "RewardHidden": 128
+  },
+  "Frames": 21120,
+  "MainUpdates": 16800,
+  "RewardUpdates": 21120,
+  "CompletedMazes": 1,
+  "Hits": 9,
+  "Kills": 3,
+  "Ammo": 9,
+  "Healing": 9,
+  "Misses": 98,
+  "Exploration": 43,
+  "StationaryFrames": 1997
+}

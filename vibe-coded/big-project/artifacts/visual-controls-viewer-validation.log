@@ -1,0 +1,7 @@
+Continuing saved realtime session: artifacts/realtime/catch
+Intel(R) Arc(tm) Graphics (MTL); 5,107 neurons; 3,147,264 edges; reward head 995→32→2 (128 hidden probes + 864 raw pixels + 3 executed controls).
+Calibration: 6000 frames. Then freeze reward weights, biases and plasticity; continue main learning every active frame.
+Noise ONLY in 16 learned-pain and 16 primitive-pain input neurons. Raw senses and controls unchanged.
+Realtime viewer: Tab AI/manual; arrows move; Space pause learning; R reset game; Escape quit and save. Right: hidden activation heatmap; bars: pleasure, learned pain, primitive pain.
+Completed 60 learning frames in 1.22s. mean 11.66 ms/frame (~85.8 compute fps), recent p95 12.91 ms
+Frozen-head realtime (60 frames): mean 11.66 ms/frame (~85.8 compute fps), recent p95 12.91 ms

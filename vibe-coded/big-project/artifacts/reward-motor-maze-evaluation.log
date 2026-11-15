@@ -1,0 +1,7 @@
+Initial-state motor probabilities: [0.5696423,0.037572075,0.7188641,0.15948406,0.2242851,0.90771574,0.5518599,0.04558965]
+{"seed":1,"trainingFrames":30000,"trainingCompletions":110,"timeLimitResets":76,"trainingWallPain":1227.264,"evaluationEpisodes":30,"untrainedCompletions":17,"trainedCompletions":19,"untrainedWallPain":214.6902,"trainedWallPain":239.49185,"motorUpdates":2475}
+Initial-state motor probabilities: [0.9697259,0.095765844,0.9772211,0.96920335,0.0404892,0.049147584,0.077956066,0.06869832]
+{"seed":7,"trainingFrames":30000,"trainingCompletions":398,"timeLimitResets":35,"trainingWallPain":1013.4601,"evaluationEpisodes":30,"untrainedCompletions":13,"trainedCompletions":29,"untrainedWallPain":208.17096,"trainedWallPain":49.044205,"motorUpdates":2600}
+Initial-state motor probabilities: [0.42110124,0.76124316,0.9630649,0.14624538,0.03866239,0.9374286,0.34431186,0.92465115]
+{"seed":42,"trainingFrames":30000,"trainingCompletions":80,"timeLimitResets":85,"trainingWallPain":1353.7512,"evaluationEpisodes":30,"untrainedCompletions":9,"trainedCompletions":17,"untrainedWallPain":227.14041,"trainedWallPain":275.14468,"motorUpdates":2450}
+Saved /home/vlad/Programming/artificial_brain/artifacts/reward-motor-maze-evaluation.json

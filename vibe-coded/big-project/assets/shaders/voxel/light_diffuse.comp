@@ -1,0 +1,171 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "light_grid.glsl"
+#include "light_rgb.glsl"
+layout(local_size_x=512) in;
+layout(std430,set=0,binding=1) buffer LightA { uint lightA[]; };
+layout(std430,set=0,binding=2) buffer LightB { uint lightB[]; };
+layout(std430,set=0,binding=4) buffer Activity { uint activity[]; };
+layout(std430,set=0,binding=5) readonly buffer Work { uint work[]; };
+layout(push_constant) uniform Parameters { vec4 sky; uint iteration; uint blocks; uint sun; uint count; vec4 solarDirection; vec4 solarColor; vec4 focus; uvec4 schedule; };
+shared uint tileLight[1000];
+shared uint tileMaterial[1000];
+shared float tileExposure[1000];
+shared uint tileChanged;
+uint currentTile;
+uint loadLight(uint cell)
+{
+    if((iteration&1u)==0u) return lightA[cell];
+    if(schedule.x!=0u)
+    {
+        uint tile=(cell>>12)*8u+((cell>>3)&1u)+(((cell>>7)&1u)<<1)+(((cell>>11)&1u)<<2);
+        // Unselected cells retain A. Read their current value directly rather
+        // than an old ping-pong copy; selected neighbours read the first step's B.
+        if(work[schedule.w+tile]==0u) return lightA[cell];
+    }
+    return lightB[cell];
+}
+void storePackedLight(uint cell,uint packed)
+{
+    if(schedule.x!=0u)
+    {
+        if(packed!=lightA[cell] && atomicExchange(tileChanged,1u)==0u)
+        {
+            atomicOr(activity[currentTile],1u);
+            uint slot=currentTile>>3, tile=currentTile&7u, r=gridRecord(slot);
+            for(int d=0;d<6;d++)
+            {
+                uint bit=1u<<uint(d/2);
+                bool across=(tile&bit)==((d&1)==0 ? bit : 0u);
+                uint neighbor=across ? grid[r+5u+uint(d)] : slot+1u;
+                if(neighbor!=0u) atomicOr(activity[(neighbor-1u)*8u+(tile^bit)],1u);
+            }
+        }
+    }
+    else if(packed!=loadLight(cell) && atomicExchange(tileChanged,1u)==0u)
+        atomicOr(activity[(1u-(iteration&1u))*uint(activity.length()/2)+currentTile],1u);
+    if((iteration&1u)==0u) lightB[cell]=packed; else lightA[cell]=packed;
+}
+void storeLight(uint cell,vec3 light) { storePackedLight(cell,packLight(clamp(light,vec3(0),vec3(65000)))); }
+void main()
+{
+    bool compact=work[3]!=0xffffffffu;
+    uint index=gl_WorkGroupID.x+gl_WorkGroupID.y*65535u;
+    if(compact && index>=work[3]) return;
+    currentTile=compact ? work[4u+index] : (gl_WorkGroupID.y+gl_WorkGroupID.z*65535u)*8u+gl_WorkGroupID.x;
+    uint slot=currentTile>>3, r=gridRecord(slot);
+    if(slot>=count || grid[r+11u]==0u) return;
+    uint tile=currentTile&7u;
+    if(!compact)
+    {
+        uint inputFlags=(iteration&1u)*uint(activity.length()/2);
+        uint changed=activity[inputFlags+slot*8u+tile];
+        for(int d=0;d<6;d++)
+        {
+            uint axisBit=1u<<uint(d/2);
+            bool acrossChunk=(tile&axisBit)==((d&1)==0 ? axisBit : 0u);
+            uint neighbor=acrossChunk ? grid[r+5u+uint(d)] : slot+1u;
+            if(neighbor!=0u) changed|=activity[inputFlags+(neighbor-1u)*8u+(tile^axisBit)];
+        }
+        // Both ping-pong copies already match when all inputs are unchanged.
+        if(changed==0u) return;
+    }
+    if(gl_LocalInvocationIndex==0u) tileChanged=0u;
+    barrier();
+    ivec3 origin=ivec3(int(tile&1u),int((tile>>1)&1u),int(tile>>2))*8;
+    ivec3 world=ivec3(grid[r],grid[r+1u],grid[r+2u])*16;
+    // Fully opaque bricks cannot transport light through their interiors. Update all cells,
+    // evaluating incoming irradiance only on their six outer faces, even with mixed ores.
+    if(grid[r+14u]==2u)
+    {
+        uint i=gl_LocalInvocationIndex;
+        ivec3 p=origin+ivec3(int(i&7u),int((i>>3)&7u),int(i>>6));
+        vec3 incoming=vec3(0);
+        for(int d=0;d<6;d++)
+        {
+            ivec3 n=p+gridDirections[d];
+            if(all(greaterThanEqual(n,ivec3(0))) && all(lessThan(n,ivec3(16)))) continue;
+            uint neighbor=grid[r+5u+uint(d)]; uint cell=gridIndex(n);
+            uint material=neighbor==0u ? 0u : gridMaterial(neighbor-1u,cell);
+            if((material&255u)==255u && (material&512u)==0u) continue;
+            float exposed=neighbor==0u ? worldExposure(world+n) : gridExposure(neighbor-1u,cell);
+            vec3 value=neighbor==0u ? vec3(0) : unpackLight(loadLight((neighbor-1u)*4096u+cell));
+            value=max(value,sky.rgb*exposed);
+            if(blocks!=0u && (material&512u)!=0u) value=max(value,vec3(18,9.9,3.6));
+            incoming+=value;
+        }
+        if(all(equal(incoming,vec3(0))))
+        {
+            uint cell=slot*4096u+gridIndex(p);
+            storePackedLight(cell,0u);
+            return;
+        }
+        storeLight(slot*4096u+gridIndex(p),incoming*(.995/6.0)*gridReflectance(gridMaterial(slot,gridIndex(p))));
+        return;
+    }
+    for(uint i=gl_LocalInvocationIndex;i<1000u;i+=512u)
+    {
+        ivec3 p=origin+ivec3(int(i%10u),int((i/10u)%10u),int(i/100u))-1;
+        uint neighbor=slot+1u;
+        // The 10^3 halo crosses at most one face, except edge/corner entries that the
+        // six-point stencil never reads. Faces cross to the record's neighbor links.
+        ivec3 below=ivec3(lessThan(p,ivec3(0))), above=ivec3(greaterThan(p,ivec3(15)));
+        int crossed=below.x+below.y+below.z+above.x+above.y+above.z;
+        if(crossed>1) { tileMaterial[i]=0u; tileExposure[i]=0.0; tileLight[i]=0u; continue; }
+        if(crossed==1)
+        {
+            int axis=below.x+above.x!=0 ? 0 : below.y+above.y!=0 ? 1 : 2;
+            neighbor=grid[r+5u+uint(axis*2+below[axis])];
+        }
+        uint cell=gridIndex(p);
+        uint material=neighbor==0u ? 0u : gridMaterial(neighbor-1u,cell);
+        float exposed=neighbor==0u ? worldExposure(world+p) : gridExposure(neighbor-1u,cell);
+        tileMaterial[i]=material; tileExposure[i]=exposed;
+        // Sky and emitters are imposed immediately; no initialization wave through open air.
+        vec3 source=(material&255u)==255u ? vec3(0) : sky.rgb*exposed;
+        if(blocks!=0u && (material&512u)!=0u) source=max(source,vec3(18,9.9,3.6));
+        vec3 previous=neighbor==0u ? source : unpackLight(loadLight((neighbor-1u)*4096u+cell));
+        tileLight[i]=packLight(max(source,previous));
+    }
+    barrier();
+    const int offsets[6]=int[](1,-1,10,-10,100,-100);
+    vec3 sunlight=solarColor.rgb*solarDirection.w;
+    vec3 sunDirection=solarDirection.xyz;
+    for(uint i=gl_LocalInvocationIndex;i<512u;i+=512u)
+    {
+        ivec3 p=ivec3(int(i&7u),int((i>>3)&7u),int(i>>6));
+        uint t=uint(p.x+1+10*(p.y+1)+100*(p.z+1)), material=tileMaterial[t];
+        vec3 old=unpackLight(tileLight[t]), incoming=vec3(0);
+        bool opaque=(material&255u)==255u;
+        // The usual case is air surrounded by air. Diffuse without shape/palette work.
+        uint neighborMasks=0u;
+        for(int d=0;d<6;d++) neighborMasks|=tileMaterial[uint(int(t)+offsets[d])]&767u;
+        if((material&767u)==0u && neighborMasks==0u && grid[r+13u]==0u)
+        {
+            for(int d=0;d<6;d++) incoming+=unpackLight(tileLight[uint(int(t)+offsets[d])]);
+            storeLight(slot*4096u+gridIndex(origin+p),max(sky.rgb*tileExposure[t],incoming*(.995/6.0)));
+            continue;
+        }
+        for(int d=0;d<6;d++)
+        {
+            uint n=uint(int(t)+offsets[d]), m=tileMaterial[n];
+            bool emitter=blocks!=0u && (m&512u)!=0u;
+            if(emitter || gridOpen(material,m,d)) incoming+=unpackLight(tileLight[n]);
+            else if(!opaque && (m&255u)!=0u)
+            {
+                // Reflection returns to the same air side. A scalar stored in a wall must
+                // never transport illumination through to the opposite room.
+                float direct=sun!=0u ? max(dot(-vec3(gridDirections[d]),sunDirection),0.0)*tileExposure[t]*.75 : 0.0;
+                incoming+=(old*.8+sunlight*direct)*gridReflectance(m);
+            }
+            else if(opaque && (m&255u)!=255u) incoming+=unpackLight(tileLight[n]);
+        }
+        vec3 result=incoming*(.995/6.0);
+        if(opaque) result*=gridReflectance(material);
+        else result=max(result,sky.rgb*tileExposure[t]);
+        if(blocks!=0u && (material&512u)!=0u) result=max(result,vec3(18,9.9,3.6));
+        ivec3 local=origin+p;
+        if(blocks!=0u && grid[r+13u]!=0u && (objectMaterial(world+local)&512u)!=0u) result=max(result,vec3(18,9.9,3.6));
+        storeLight(slot*4096u+gridIndex(local),result);
+    }
+}

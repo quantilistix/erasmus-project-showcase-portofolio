@@ -1,0 +1,4460 @@
+{
+  "Version": 1,
+  "Name": "test brain",
+  "Modules": [
+    {
+      "Id": "060e96b6da97446cb0873a56b3f521fd",
+      "Name": "Audio Input",
+      "Kind": "InputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": -4.3775096,
+        "Y": -3.166034,
+        "Z": 4.036612
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 64,
+      "Height": 1,
+      "ResolutionDecay": 0,
+      "Channels": 2,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "f6dd514a224d45fba3667d32922c0040",
+      "Name": "Video Input",
+      "Kind": "InputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": -3.6377172,
+        "Y": 10.857238,
+        "Z": 3.421934
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 256,
+      "Height": 1,
+      "ResolutionDecay": 8,
+      "Channels": 3,
+      "MinFrequency": 0,
+      "MaxFrequency": 37.5,
+      "SampleRate": 75,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "2a359812748745038c70e27785095f73",
+      "Name": "Video Cortex",
+      "Kind": "Layered",
+      "Seed": 42,
+      "Position": {
+        "X": 5.6026154,
+        "Y": 12.060834,
+        "Z": 4.9895105
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        256,
+        64,
+        16
+      ],
+      "Crosses": [],
+      "ResidualStep": 2,
+      "ResidualDensity": 1,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "8e3c5bb3020840d6b03dfdd4feacdab2",
+      "Name": "Audio Cortex",
+      "Kind": "Layered",
+      "Seed": 42,
+      "Position": {
+        "X": 5.7898574,
+        "Y": -3.765061,
+        "Z": 4.4980483
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        132,
+        64,
+        16
+      ],
+      "Crosses": [],
+      "ResidualStep": 2,
+      "ResidualDensity": 1,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "40f70c7ca9c1428c9081247971b7468a",
+      "Name": "Spatial Cortex",
+      "Kind": "Lattice",
+      "Seed": 42,
+      "Position": {
+        "X": 25.069109,
+        "Y": 5.702928,
+        "Z": 14.727884
+      },
+      "Rotation": {
+        "X": 0.39975008,
+        "Y": -45.939613,
+        "Z": 57.08496
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 8,
+          "Count": 736,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 752,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 3,
+      "AxisSizes": [
+        16,
+        16,
+        3
+      ],
+      "Neighbors": 8,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "033c4b6636164df3b928ab7a5f641030",
+      "Name": "Central Cortex",
+      "Kind": "Hub",
+      "Seed": 42,
+      "Position": {
+        "X": 24.681585,
+        "Y": 6.0520573,
+        "Z": 5.1567106
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input video",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "IndexRange",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 48,
+          "Count": 416,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output motory",
+          "Kind": "Output",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 496,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "1d2e79011c7441198e29a8873faefe2a",
+          "Name": "input audio",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 16,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "8c29a018c9b5480792093156834d7f95",
+          "Name": "input spatial",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 32,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "03364836ae6243f98aac034428aa9187",
+          "Name": "output spatial",
+          "Kind": "Output",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 480,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "21e1267763094b1887d3ed8e90516089",
+          "Name": "output reward",
+          "Kind": "Other",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 464,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "d0a5eb4ab64a48b4975a87012e68fb27",
+          "Name": "tactile input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 32,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 512,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 256,
+        "Exponent": 1
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "838b03efa7f044129b74ade581a35972",
+      "Name": "Motory Cortex",
+      "Kind": "Hub",
+      "Seed": 42,
+      "Position": {
+        "X": 39.34192,
+        "Y": 3.9757242,
+        "Z": 4.802515
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 8,
+          "Count": 32,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 48,
+          "Count": 16,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 64,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 16,
+        "Exponent": 1
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "9bb503edca9349ef94462b5b9a204c16",
+      "Name": "OUTPUTPANEL",
+      "Kind": "OutputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": 52.358192,
+        "Y": 4,
+        "Z": 3.2762885
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 1,
+      "Height": 1,
+      "ResolutionDecay": 0,
+      "Channels": 8,
+      "MinFrequency": 0,
+      "MaxFrequency": 37.5,
+      "SampleRate": 75,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "998ec0fcc1df48bfaaa132380aaf588b",
+      "Name": "Sensory Clock",
+      "Kind": "Clock",
+      "Seed": 42,
+      "Position": {
+        "X": 1.6395277,
+        "Y": 2.9023206,
+        "Z": 5.4289637
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 18.75,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "322b23987d2648a1a6ee80f7e9b901fc",
+      "Name": "Motory Clock",
+      "Kind": "Clock",
+      "Seed": 42,
+      "Position": {
+        "X": 34.532204,
+        "Y": 4,
+        "Z": 0
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 37.5,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "43c1e1ec35c141599ee7c5b7590519d7",
+      "Name": "CLOCK",
+      "Kind": "Clock",
+      "Seed": 42,
+      "Position": {
+        "X": 24.257208,
+        "Y": -7.965033,
+        "Z": 3.2966676
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 8,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+      "Name": "Reward System",
+      "Kind": "Hub",
+      "Seed": 42,
+      "Position": {
+        "X": 24.479887,
+        "Y": 4,
+        "Z": -6.8406925
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "IndexRange",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 4,
+          "Count": 52,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "a3b1d040ba7b4c65ac69cdcaca6089fc",
+          "Name": "visual input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 1,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "0309113ab6044c9b97a764f81118db33",
+          "Name": "audio input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 1,
+          "Count": 1,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "d92f1e63a7554076977d51a5be367f42",
+          "Name": "tactile input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 2,
+          "Count": 1,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "3af770bb0adf47859d98dc7af2a9e939",
+          "Name": "motory input",
+          "Kind": "Input",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 3,
+          "Count": 1,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "49eec5e2cdf5419f9a14f08fb547cc49",
+          "Name": "output reward",
+          "Kind": "Output",
+          "Criterion": "IndexRange",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 56,
+          "Count": 8,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 64,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 1
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "8a1af93d70b6478daf1ea9e1fb1c25a5",
+      "Name": "INPUTPANEL",
+      "Kind": "InputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": -12.031191,
+        "Y": 1.7412958,
+        "Z": 4.5757785
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 1,
+      "Height": 1,
+      "ResolutionDecay": 0,
+      "Channels": 1,
+      "MinFrequency": 0,
+      "MaxFrequency": 37.5,
+      "SampleRate": 75,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "f7a0a50d1cf34f9e882c4485e7658abb",
+      "Name": "Reward Video",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 30.38946,
+        "Y": 0.83771634,
+        "Z": -7.069571
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "f04e9399f8bf46c69fab0f445dfff36a",
+      "Name": "Reward Central",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 30.444832,
+        "Y": 4.00952,
+        "Z": -7.021867
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "2487702082e44dfe961cce98dbbdcde5",
+      "Name": "Reward Spatial",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 30.523308,
+        "Y": 5.438833,
+        "Z": -7.0345078
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "3ecc45792d2948898f2da7ef73bd64d8",
+      "Name": "Reward Motory",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 30.558788,
+        "Y": 7.3528786,
+        "Z": -6.9143353
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "4f23b2cecc9d4e9bbd1dd9a1ee797ee6",
+      "Name": "Reward Audio",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 30.395546,
+        "Y": 2.2952316,
+        "Z": -7.0569706
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "139d5f2eee1c43049a937d427de0875e",
+      "Name": "Reward Reward System",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": 32.479267,
+        "Y": 4,
+        "Z": -1.8085866
+      },
+      "Rotation": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Groups": [
+        {
+          "Id": "input",
+          "Name": "input",
+          "Kind": "Input",
+          "Criterion": "Role",
+          "Role": "Input",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "hidden",
+          "Name": "hidden",
+          "Kind": "Hidden",
+          "Criterion": "Role",
+          "Role": "Hidden",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        },
+        {
+          "Id": "output",
+          "Name": "output",
+          "Kind": "Output",
+          "Criterion": "Role",
+          "Role": "Output",
+          "Layer": -1,
+          "Start": 0,
+          "Count": 0,
+          "Step": 1,
+          "Min": {
+            "X": -1,
+            "Y": -1,
+            "Z": -1
+          },
+          "Max": {
+            "X": 1,
+            "Y": 1,
+            "Z": 1
+          },
+          "NeuronIds": []
+        }
+      ],
+      "NeuronCount": 0,
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "PowerLaw": {
+        "MinDegree": 1,
+        "MaxDegree": 32,
+        "Exponent": 2
+      },
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "ChannelBindings": [],
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    }
+  ],
+  "Links": [
+    {
+      "Id": "fbec52e78ecf437fbe02760da1319678",
+      "Name": "Video Input -\u003E Video Cortex",
+      "Source": {
+        "ModuleId": "f6dd514a224d45fba3667d32922c0040",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "2a359812748745038c70e27785095f73",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "578763b6c2a342cf81a4ce9be96ffc27",
+      "Name": "Audio Input -\u003E Audio Cortex",
+      "Source": {
+        "ModuleId": "060e96b6da97446cb0873a56b3f521fd",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "8e3c5bb3020840d6b03dfdd4feacdab2",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "838d85b9ddf2475da19c4d91aeb8a85f",
+      "Name": "Video Cortex -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "2a359812748745038c70e27785095f73",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "73f2299fa9134c70b49863d4257c0800",
+      "Name": "Audio Cortex -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "8e3c5bb3020840d6b03dfdd4feacdab2",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "1d2e79011c7441198e29a8873faefe2a"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "4330f584888342fbbb9322502f7fc874",
+      "Name": "Spatial Cortex -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "40f70c7ca9c1428c9081247971b7468a",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "8c29a018c9b5480792093156834d7f95"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "752bfa4e71134057a5374494a3b1c4b5",
+      "Name": "Central Cortex -\u003E Spatial Cortex",
+      "Source": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "03364836ae6243f98aac034428aa9187"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "40f70c7ca9c1428c9081247971b7468a",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "7dcce2d8602a4b3695b6edaf82f6bce9",
+      "Name": "Central Cortex -\u003E HUB",
+      "Source": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "838b03efa7f044129b74ade581a35972",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "d479b30d786044a0861b25fa14cba2ab",
+      "Name": "Video Input -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "f6dd514a224d45fba3667d32922c0040",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "a5a20c69342d4dfabdb9018e48db0a1b",
+      "Name": "Audio Input -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "060e96b6da97446cb0873a56b3f521fd",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "1d2e79011c7441198e29a8873faefe2a"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "39c1d6ac070b434792803c206595ef53",
+      "Name": "HUB -\u003E OUTPUTPANEL",
+      "Source": {
+        "ModuleId": "838b03efa7f044129b74ade581a35972",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "9bb503edca9349ef94462b5b9a204c16",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "e6125d9f85164ee3b0ba604ca3326e97",
+      "Name": "Sensory Clock -\u003E Video Cortex",
+      "Source": {
+        "ModuleId": "998ec0fcc1df48bfaaa132380aaf588b",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "2a359812748745038c70e27785095f73",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 5,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Constant",
+      "Weight": 1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 1,
+      "Plasticity": 0
+    },
+    {
+      "Id": "e81a9689f9294a1698234b6d643a4493",
+      "Name": "Sensory Clock -\u003E Audio Cortex",
+      "Source": {
+        "ModuleId": "998ec0fcc1df48bfaaa132380aaf588b",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "8e3c5bb3020840d6b03dfdd4feacdab2",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 5,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Constant",
+      "Weight": 1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 1,
+      "Plasticity": 0
+    },
+    {
+      "Id": "bd190b95096d44b2bd503beb7b6f490b",
+      "Name": "Motory Clock -\u003E HUB",
+      "Source": {
+        "ModuleId": "322b23987d2648a1a6ee80f7e9b901fc",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "838b03efa7f044129b74ade581a35972",
+        "Roles": "All",
+        "GroupIds": [
+          "input"
+        ],
+        "Scope": "Groups",
+        "Percent": 10,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Constant",
+      "Weight": 1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 1,
+      "Plasticity": 0
+    },
+    {
+      "Id": "5a9ff095dcf64f33bace9aae8cc423a2",
+      "Name": "CLOCK -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "43c1e1ec35c141599ee7c5b7590519d7",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "input",
+          "1d2e79011c7441198e29a8873faefe2a"
+        ],
+        "Scope": "Groups",
+        "Percent": 10,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Constant",
+      "Weight": 1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 1,
+      "Plasticity": 0
+    },
+    {
+      "Id": "d38959b202584bd6aa0ad110032103aa",
+      "Name": "Video Input -\u003E Reward System",
+      "Source": {
+        "ModuleId": "f6dd514a224d45fba3667d32922c0040",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "a3b1d040ba7b4c65ac69cdcaca6089fc"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "3020028d4ca04974a4dc99cd5d7966b1",
+      "Name": "Audio Input -\u003E Reward System",
+      "Source": {
+        "ModuleId": "060e96b6da97446cb0873a56b3f521fd",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "0309113ab6044c9b97a764f81118db33"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "74d34a86ed7a4305802b084b7291dcce",
+      "Name": "OUTPUTPANEL -\u003E Reward System",
+      "Source": {
+        "ModuleId": "9bb503edca9349ef94462b5b9a204c16",
+        "Roles": "All",
+        "GroupIds": [
+          "output"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "3af770bb0adf47859d98dc7af2a9e939"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "503780d9f4c04438b56128740a296e95",
+      "Name": "INPUTPANEL -\u003E Central Cortex",
+      "Source": {
+        "ModuleId": "8a1af93d70b6478daf1ea9e1fb1c25a5",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "input",
+          "d0a5eb4ab64a48b4975a87012e68fb27"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "ad0e44497d35405fa68f1d4345ed9091",
+      "Name": "Reward System -\u003E Reward Video",
+      "Source": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "49eec5e2cdf5419f9a14f08fb547cc49"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "f7a0a50d1cf34f9e882c4485e7658abb",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "def6f90dfc1e45f0a0e82e7075f2c415",
+      "Name": "Reward System -\u003E Reward Audio",
+      "Source": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "49eec5e2cdf5419f9a14f08fb547cc49"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "4f23b2cecc9d4e9bbd1dd9a1ee797ee6",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "af5ae8b72ed24b5fabaa266698bb34bc",
+      "Name": "Reward System -\u003E Reward Central",
+      "Source": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "49eec5e2cdf5419f9a14f08fb547cc49"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "f04e9399f8bf46c69fab0f445dfff36a",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "df4f163ff5d743f58e94d5de139c38cf",
+      "Name": "Reward System -\u003E Reward Spatial",
+      "Source": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "49eec5e2cdf5419f9a14f08fb547cc49"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "2487702082e44dfe961cce98dbbdcde5",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "bff116d0b22a4f669d3918be69e23e9a",
+      "Name": "Reward System -\u003E Reward Motory",
+      "Source": {
+        "ModuleId": "ad7ef0d3a9194da9a2d80998bae3aa8e",
+        "Roles": "All",
+        "GroupIds": [
+          "49eec5e2cdf5419f9a14f08fb547cc49"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "3ecc45792d2948898f2da7ef73bd64d8",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "1c42073a4bdd4d1bbf6e89fccf84ae3b",
+      "Name": "Central Cortex -\u003E Reward Reward System",
+      "Source": {
+        "ModuleId": "033c4b6636164df3b928ab7a5f641030",
+        "Roles": "All",
+        "GroupIds": [
+          "21e1267763094b1887d3ed8e90516089"
+        ],
+        "Scope": "Groups",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "139d5f2eee1c43049a937d427de0875e",
+        "Roles": "All",
+        "GroupIds": [],
+        "Scope": "AllNeurons",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Pattern": "AllToAll",
+      "FanOut": 4,
+      "WeightKind": "Random",
+      "Weight": 0.1,
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    }
+  ],
+  "RewardGroups": [
+    {
+      "Name": "Central",
+      "ModuleIds": [
+        "033c4b6636164df3b928ab7a5f641030"
+      ],
+      "RewardModuleId": "f04e9399f8bf46c69fab0f445dfff36a",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Spatial",
+      "ModuleIds": [
+        "40f70c7ca9c1428c9081247971b7468a"
+      ],
+      "RewardModuleId": "2487702082e44dfe961cce98dbbdcde5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Video",
+      "ModuleIds": [
+        "2a359812748745038c70e27785095f73"
+      ],
+      "RewardModuleId": "f7a0a50d1cf34f9e882c4485e7658abb",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Audio",
+      "ModuleIds": [
+        "8e3c5bb3020840d6b03dfdd4feacdab2"
+      ],
+      "RewardModuleId": "4f23b2cecc9d4e9bbd1dd9a1ee797ee6",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Motory",
+      "ModuleIds": [
+        "838b03efa7f044129b74ade581a35972"
+      ],
+      "RewardModuleId": "3ecc45792d2948898f2da7ef73bd64d8",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Reward System",
+      "ModuleIds": [
+        "ad7ef0d3a9194da9a2d80998bae3aa8e"
+      ],
+      "RewardModuleId": "139d5f2eee1c43049a937d427de0875e",
+      "RewardNeuron": 0
+    }
+  ],
+  "EditorViews": {
+    "Link": {
+      "Yaw": 24.905945,
+      "Pitch": 0.46196306,
+      "Zoom": 0.8869209,
+      "Pan": {
+        "X": 16.846891,
+        "Y": 18.170916,
+        "Z": 3.6626616
+      },
+      "FrameCenter": {
+        "X": 4.9438505,
+        "Y": 0.022974014,
+        "Z": -2.1185646
+      },
+      "FrameSpan": 68.862206
+    },
+    "Rewards": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": null,
+      "FrameSpan": 0
+    },
+    "FinalNetwork": {
+      "Yaw": 0.11393224,
+      "Pitch": 0.6660013,
+      "Zoom": 1.6160746,
+      "Pan": {
+        "X": 6.8386707,
+        "Y": 1.6354895,
+        "Z": 1.6972904
+      },
+      "FrameCenter": {
+        "X": 8.074042,
+        "Y": 3.0444412,
+        "Z": 1.1920929E-07
+      },
+      "FrameSpan": 50.200005
+    },
+    "Edit/b72f23c1a5654d819b9a6b6cd6c39fd3": {
+      "Yaw": -2.2140002,
+      "Pitch": 0.40200004,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -2.2258298,
+        "Y": 6.5206656,
+        "Z": 19.514439
+      },
+      "FrameSpan": 2
+    },
+    "Edit/b33447f6ebad43099bedeef7805b18e0": {
+      "Yaw": -3.594005,
+      "Pitch": 0.12599984,
+      "Zoom": 0.13002877,
+      "Pan": {
+        "X": 13.674267,
+        "Y": -9.291277,
+        "Z": 2.621048
+      },
+      "FrameCenter": {
+        "X": -2.3539522,
+        "Y": 6.077908,
+        "Z": 15.343725
+      },
+      "FrameSpan": 5.200198
+    },
+    "Edit/a83ef9c242f44f2bad2aabe464ab22fa": {
+      "Yaw": 6.293999,
+      "Pitch": 0.5879992,
+      "Zoom": 1,
+      "Pan": {
+        "X": -0.569279,
+        "Y": -0.40067703,
+        "Z": 0.03925776
+      },
+      "FrameCenter": {
+        "X": 1.6638212,
+        "Y": 7.282516,
+        "Z": -8.511952
+      },
+      "FrameSpan": 12.775976
+    },
+    "Edit/ec41dd8c72b84ff8809a06b02dec4e15": {
+      "Yaw": 0.924001,
+      "Pitch": 0.083999574,
+      "Zoom": 0.7866279,
+      "Pan": {
+        "X": 0.52404165,
+        "Y": -4.967254,
+        "Z": 0.062990904
+      },
+      "FrameCenter": {
+        "X": 2.3796296,
+        "Y": -15.539507,
+        "Z": -8.608306
+      },
+      "FrameSpan": 12.775977
+    },
+    "Edit/25e4153225454a31bb030b35ead2931f": {
+      "Yaw": 2.0279968,
+      "Pitch": 0.28199992,
+      "Zoom": 0.23692787,
+      "Pan": {
+        "X": -4.1597137,
+        "Y": -5.030402,
+        "Z": -2.32597
+      },
+      "FrameCenter": {
+        "X": -0.06245008,
+        "Y": -12.240938,
+        "Z": 15.9056
+      },
+      "FrameSpan": 5.200198
+    },
+    "Edit/f7307c2480984791abd47080d283839b": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -24.003624,
+        "Y": -11.365817,
+        "Z": -9.6026535
+      },
+      "FrameSpan": 2
+    },
+    "Edit/6fb65578f77f4befa1b6bcdfee679b38": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -38.042847,
+        "Y": -8.283334,
+        "Z": 16.627457
+      },
+      "FrameSpan": 2
+    },
+    "Edit/2a53c1bef52645a5b76fc745b313172a": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -20.553675,
+        "Y": 11.145862,
+        "Z": 15.848206
+      },
+      "FrameSpan": 2
+    },
+    "Edit/fa1bf140e65e4a1c8b5fc24fd1c528af": {
+      "Yaw": -0.060000468,
+      "Pitch": 0.47400036,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 1.4983118,
+        "Y": -5.386835,
+        "Z": 1.8823683
+      },
+      "FrameSpan": 12.775976
+    },
+    "EditLink/8e506b5253b64146aa15953dfdf6a045": {
+      "Yaw": -1.644,
+      "Pitch": 0.4079999,
+      "Zoom": 2.0544336,
+      "Pan": {
+        "X": 0.61851,
+        "Y": 11.175885,
+        "Z": -0.46392822
+      },
+      "FrameCenter": {
+        "X": -0.81027055,
+        "Y": 4.616666,
+        "Z": 16.115225
+      },
+      "FrameSpan": 51.364967
+    },
+    "Edit/060e96b6da97446cb0873a56b3f521fd": {
+      "Yaw": 1.3739991,
+      "Pitch": 0.6539996,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -6,
+        "Y": 5.4,
+        "Z": 0
+      },
+      "FrameSpan": 2.8000002
+    },
+    "Edit/f6dd514a224d45fba3667d32922c0040": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -2.4462974,
+        "Y": 11.414175,
+        "Z": 4.8298025
+      },
+      "FrameSpan": 2.8000002
+    },
+    "Edit/2a359812748745038c70e27785095f73": {
+      "Yaw": 7.69799,
+      "Pitch": 0.018001195,
+      "Zoom": 0.6187834,
+      "Pan": {
+        "X": -4.082944,
+        "Y": 3.9787202,
+        "Z": -3.245716
+      },
+      "FrameCenter": {
+        "X": 11.602615,
+        "Y": 3.9043474,
+        "Z": 10.299876
+      },
+      "FrameSpan": 12
+    },
+    "EditLink/fbec52e78ecf437fbe02760da1319678": {
+      "Yaw": -1.2300003,
+      "Pitch": 0.33,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 4.982449,
+        "Y": 12.060833,
+        "Z": 4.9895105
+      },
+      "FrameSpan": 17.240334
+    },
+    "Edit/8e3c5bb3020840d6b03dfdd4feacdab2": {
+      "Yaw": 2.8619952,
+      "Pitch": 0.36600006,
+      "Zoom": 1,
+      "Pan": {
+        "X": -2.5868247,
+        "Y": -0.93743944,
+        "Z": -0.37184417
+      },
+      "FrameCenter": {
+        "X": 11.789858,
+        "Y": -3.765061,
+        "Z": 4.4980483
+      },
+      "FrameSpan": 12
+    },
+    "EditLink/578763b6c2a342cf81a4ce9be96ffc27": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 4.706174,
+        "Y": -3.7650607,
+        "Z": 4.498049
+      },
+      "FrameSpan": 18.167368
+    },
+    "Edit/dde9ca9842744ddcb66b39a9915048b6": {
+      "Yaw": 1.6320004,
+      "Pitch": 0.92400044,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 18.406113,
+        "Y": 4.011442,
+        "Z": 5.0044856
+      },
+      "FrameSpan": 5.2077503
+    },
+    "Edit/40f70c7ca9c1428c9081247971b7468a": {
+      "Yaw": -3.5939941,
+      "Pitch": 0.78601414,
+      "Zoom": 0.23692787,
+      "Pan": {
+        "X": 3.5654368,
+        "Y": 4.387993,
+        "Z": 7.4914346
+      },
+      "FrameCenter": {
+        "X": 22.142826,
+        "Y": 4,
+        "Z": 0
+      },
+      "FrameSpan": 5
+    },
+    "Edit/ef957112f5f74d82b1014416f3d7c480": {
+      "Yaw": 6.936007,
+      "Pitch": 0.61200726,
+      "Zoom": 0.382893,
+      "Pan": {
+        "X": -0.68313634,
+        "Y": 1.1403795,
+        "Z": -0.069004536
+      },
+      "FrameCenter": {
+        "X": 22.442995,
+        "Y": 3.6909196,
+        "Z": 0.12562776
+      },
+      "FrameSpan": 4.5727363
+    },
+    "Edit/033c4b6636164df3b928ab7a5f641030": {
+      "Yaw": 15.6359625,
+      "Pitch": 0.605988,
+      "Zoom": 0.23692784,
+      "Pan": {
+        "X": 4.0137396,
+        "Y": -2.7541428,
+        "Z": -1.7468573
+      },
+      "FrameCenter": {
+        "X": 23.543068,
+        "Y": 3.6909196,
+        "Z": 0.12562776
+      },
+      "FrameSpan": 4.5727363
+    },
+    "EditLink/838d85b9ddf2475da19c4d91aeb8a85f": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 16.951153,
+        "Y": 8.758367,
+        "Z": 2.5294907
+      },
+      "FrameSpan": 22.697077
+    },
+    "EditLink/73f2299fa9134c70b49863d4257c0800": {
+      "Yaw": 0.13200003,
+      "Pitch": 0.41399994,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 17.044775,
+        "Y": 0.3895197,
+        "Z": 1.0337598
+      },
+      "FrameSpan": 22.509834
+    },
+    "EditLink/4330f584888342fbbb9322502f7fc874": {
+      "Yaw": -0.75600004,
+      "Pitch": 0.576,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 25.999554,
+        "Y": 4.5419874,
+        "Z": 4.722842
+      },
+      "FrameSpan": 24.306742
+    },
+    "EditLink/752bfa4e71134057a5374494a3b1c4b5": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 25.999554,
+        "Y": 4.5419874,
+        "Z": 4.722842
+      },
+      "FrameSpan": 24.306742
+    },
+    "Edit/838b03efa7f044129b74ade581a35972": {
+      "Yaw": -10.841998,
+      "Pitch": 0.2040038,
+      "Zoom": 0.7866279,
+      "Pan": {
+        "X": 0.18576859,
+        "Y": 0.77557546,
+        "Z": -0.6649827
+      },
+      "FrameCenter": {
+        "X": 38.602005,
+        "Y": 3.6909196,
+        "Z": 4.9281425
+      },
+      "FrameSpan": 4.5727363
+    },
+    "EditLink/7dcce2d8602a4b3695b6edaf82f6bce9": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 30.436504,
+        "Y": 6.02866,
+        "Z": 5.1567106
+      },
+      "FrameSpan": 22.631823
+    },
+    "EditLink/d479b30d786044a0861b25fa14cba2ab": {
+      "Yaw": -0.46199992,
+      "Pitch": 0.5280001,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 13.354492,
+        "Y": 6.02866,
+        "Z": 5.1567106
+      },
+      "FrameSpan": 33.984417
+    },
+    "EditLink/a5a20c69342d4dfabdb9018e48db0a1b": {
+      "Yaw": -1.3679988,
+      "Pitch": 0.2040025,
+      "Zoom": 1.4333295,
+      "Pan": {
+        "X": 0.5418203,
+        "Y": -0.011977354,
+        "Z": -0.89677465
+      },
+      "FrameCenter": {
+        "X": 12.984595,
+        "Y": 4.453363,
+        "Z": 5.1567106
+      },
+      "FrameSpan": 34.72421
+    },
+    "Edit/9bb503edca9349ef94462b5b9a204c16": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 52.358192,
+        "Y": 5.4,
+        "Z": 3.2762885
+      },
+      "FrameSpan": 2.8000002
+    },
+    "EditLink/39c1d6ac070b434792803c206595ef53": {
+      "Yaw": 0.2820002,
+      "Pitch": 0.41999978,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 44.64726,
+        "Y": 4.092698,
+        "Z": 4.802515
+      },
+      "FrameSpan": 15.421867
+    },
+    "EditLink/e81a9689f9294a1698234b6d643a4493": {
+      "Yaw": -1.5060041,
+      "Pitch": 0.84599715,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 7.7146926,
+        "Y": -3.1813698,
+        "Z": 4.498049
+      },
+      "FrameSpan": 12.167381
+    },
+    "EditLink/e6125d9f85164ee3b0ba604ca3326e97": {
+      "Yaw": -1.134,
+      "Pitch": 0.6120001,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 7.6210713,
+        "Y": 11.231577,
+        "Z": 4.9895105
+      },
+      "FrameSpan": 16.658512
+    },
+    "EditLink/bd190b95096d44b2bd503beb7b6f490b": {
+      "Yaw": 0.28800008,
+      "Pitch": 0.64799994,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 38.13986,
+        "Y": 3.9757242,
+        "Z": 3.6072555
+      },
+      "FrameSpan": 7.215309
+    },
+    "Edit/998ec0fcc1df48bfaaa132380aaf588b": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 1.6395277,
+        "Y": 2.9023206,
+        "Z": 5.4289637
+      },
+      "FrameSpan": 2
+    },
+    "Edit/322b23987d2648a1a6ee80f7e9b901fc": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 34.532204,
+        "Y": 4,
+        "Z": 0
+      },
+      "FrameSpan": 2
+    },
+    "EditLink/5a9ff095dcf64f33bace9aae8cc423a2": {
+      "Yaw": -0.81600004,
+      "Pitch": 0.47999996,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 24.733646,
+        "Y": 2.0669284,
+        "Z": 5.1567106
+      },
+      "FrameSpan": 20.011662
+    },
+    "Edit/43c1e1ec35c141599ee7c5b7590519d7": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 24.257208,
+        "Y": -7.965033,
+        "Z": 3.2966676
+      },
+      "FrameSpan": 2
+    },
+    "Edit/ad7ef0d3a9194da9a2d80998bae3aa8e": {
+      "Yaw": 8.916,
+      "Pitch": 0.52801955,
+      "Zoom": 0.88692045,
+      "Pan": {
+        "X": 2.0311484,
+        "Y": 0.050632715,
+        "Z": 0.29350737
+      },
+      "FrameCenter": {
+        "X": 23.735073,
+        "Y": 3.6909196,
+        "Z": -6.7150645
+      },
+      "FrameSpan": 4.572736
+    },
+    "EditLink/3020028d4ca04974a4dc99cd5d7966b1": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 11.253986,
+        "Y": 1.7121474,
+        "Z": -2.6080382
+      },
+      "FrameSpan": 31.262993
+    },
+    "EditLink/d38959b202584bd6aa0ad110032103aa": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 11.623882,
+        "Y": 6.533455,
+        "Z": -2.9153771
+      },
+      "FrameSpan": 30.523201
+    },
+    "EditLink/74d34a86ed7a4305802b084b7291dcce": {
+      "Yaw": -0.5160002,
+      "Pitch": 0.6299999,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 37.21624,
+        "Y": 4.1048355,
+        "Z": -2.9882
+      },
+      "FrameSpan": 30.283901
+    },
+    "Edit/8a1af93d70b6478daf1ea9e1fb1c25a5": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": -12.031191,
+        "Y": 1.6753126,
+        "Z": 4.5757785
+      },
+      "FrameSpan": 2.8
+    },
+    "EditLink/503780d9f4c04438b56128740a296e95": {
+      "Yaw": -0.3659974,
+      "Pitch": 0.8159954,
+      "Zoom": 2.3163671,
+      "Pan": {
+        "X": 2.5954778,
+        "Y": -0.8823755,
+        "Z": -1.2007356
+      },
+      "FrameCenter": {
+        "X": 9.157755,
+        "Y": 6.02866,
+        "Z": 5.1567106
+      },
+      "FrameSpan": 42.37789
+    },
+    "Edit/f7a0a50d1cf34f9e882c4485e7658abb": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 30.38946,
+        "Y": 3.9081936,
+        "Z": -7.069571
+      },
+      "FrameSpan": 2
+    },
+    "Edit/4f23b2cecc9d4e9bbd1dd9a1ee797ee6": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 34.300095,
+        "Y": 4.75,
+        "Z": -11.082518
+      },
+      "FrameSpan": 2
+    },
+    "Edit/f04e9399f8bf46c69fab0f445dfff36a": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 29.897161,
+        "Y": 4.75,
+        "Z": -12.477617
+      },
+      "FrameSpan": 2
+    },
+    "Edit/2487702082e44dfe961cce98dbbdcde5": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 28.52879,
+        "Y": 9.552142,
+        "Z": -8.065988
+      },
+      "FrameSpan": 2
+    },
+    "Edit/3ecc45792d2948898f2da7ef73bd64d8": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 29.488014,
+        "Y": -2.8934965,
+        "Z": -10.141283
+      },
+      "FrameSpan": 2
+    },
+    "EditLink/ad0e44497d35405fa68f1d4345ed9091": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 26.231876,
+        "Y": 3.7140226,
+        "Z": -6.8406925
+      },
+      "FrameSpan": 8.315168
+    },
+    "Edit/139d5f2eee1c43049a937d427de0875e": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 32.479267,
+        "Y": 4.75,
+        "Z": -1.8085866
+      },
+      "FrameSpan": 2
+    },
+    "EditLink/1c42073a4bdd4d1bbf6e89fccf84ae3b": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 25.7739,
+        "Y": 6.0520573,
+        "Z": 4.488057
+      },
+      "FrameSpan": 13.410736
+    },
+    "EditLink/def6f90dfc1e45f0a0e82e7075f2c415": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 26.234919,
+        "Y": 4,
+        "Z": -6.8406925
+      },
+      "FrameSpan": 8.321255
+    },
+    "EditLink/af5ae8b72ed24b5fabaa266698bb34bc": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 26.259562,
+        "Y": 4,
+        "Z": -6.8406925
+      },
+      "FrameSpan": 8.370541
+    },
+    "EditLink/df4f163ff5d743f58e94d5de139c38cf": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 26.2988,
+        "Y": 4,
+        "Z": -6.8406925
+      },
+      "FrameSpan": 8.449017
+    },
+    "EditLink/bff116d0b22a4f669d3918be69e23e9a": {
+      "Yaw": -0.45,
+      "Pitch": 0.45,
+      "Zoom": 1,
+      "Pan": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "FrameCenter": {
+        "X": 26.31654,
+        "Y": 4.381275,
+        "Z": -6.8406925
+      },
+      "FrameSpan": 8.484497
+    }
+  }
+}

@@ -1,0 +1,532 @@
+1
+00:00:03,000 --> 00:00:11,508
+The last time Leila Marin saw her father alive, he was arguing with a machine about whether he existed.
+
+2
+00:00:11,508 --> 00:00:17,323
+A heat wave. A cooling center. Two green circles, and one yellow.
+
+3
+00:00:21,323 --> 00:00:24,823
+Father: We moved in April.
+
+4
+00:00:24,823 --> 00:00:28,323
+Terminal: Please contact your service provider.
+
+5
+00:00:28,323 --> 00:00:31,831
+Father: I am contacting my service provider.
+
+6
+00:00:31,831 --> 00:00:35,331
+Leila: I'll stay with him.
+
+7
+00:00:35,331 --> 00:00:38,831
+Father: Take Tomas inside.
+
+8
+00:00:38,831 --> 00:00:45,415
+Her father collapsed eleven minutes later. Between two databases, he had lost his home.
+
+9
+00:00:49,415 --> 00:00:56,000
+Leila built a receiver from the components her father left in a biscuit tin.
+
+10
+00:00:56,000 --> 00:00:59,500
+Tomas: Can they hear us?
+
+11
+00:00:59,500 --> 00:01:03,000
+Leila: This only receives.
+
+12
+00:01:03,000 --> 00:01:06,500
+Tomas: Then build the other kind.
+
+13
+00:01:10,500 --> 00:01:17,469
+Leila audits energy forecasts. Her supervisor, Arun Rao, can identify a failing transformer by sound.
+
+14
+00:01:17,469 --> 00:01:21,362
+Leila: They got their connection before the hospital.
+
+15
+00:01:21,362 --> 00:01:24,862
+Arun: They financed the substation.
+
+16
+00:01:24,862 --> 00:01:30,292
+Arun: Reasonable is what we have to get written into the contract.
+
+17
+00:01:30,292 --> 00:01:38,415
+An empty apartment and an occupied apartment with a broken meter look much the same to the system.
+
+18
+00:01:38,415 --> 00:01:42,308
+Arun: Then help me make it see them.
+
+19
+00:01:46,308 --> 00:01:53,662
+A Pacific confrontation disrupts chips and shipping. Tomas's navigation display puts the coast three kilometers inland.
+
+20
+00:01:53,662 --> 00:01:58,323
+Tomas • radio: Your clever world is putting us on a beach.
+
+21
+00:01:58,323 --> 00:02:01,823
+Leila • radio: What does the radar say?
+
+22
+00:02:01,823 --> 00:02:08,023
+Tomas • radio: The radar thinks we're fine. The electronic chart thinks the radar is wrong.
+
+23
+00:02:08,023 --> 00:02:12,300
+Leila • radio: Find someone who still owns a paper chart.
+
+24
+00:02:16,300 --> 00:02:22,500
+Arun names the cross-border electricity project Concord. Leila joins as lead verification engineer.
+
+25
+00:02:22,500 --> 00:02:27,162
+Leila: Sounds like something that has already won an argument.
+
+26
+00:02:27,162 --> 00:02:30,662
+Arun: Investors prefer that.
+
+27
+00:02:30,662 --> 00:02:39,169
+During a winter cold spell, her code helps prevent the collapse of three national grids. Hospitals keep their lights.
+
+28
+00:02:43,169 --> 00:02:46,669
+Leila: Mara. Her name is Mara.
+
+29
+00:02:46,669 --> 00:02:54,023
+The hospital keeps its lights during a scheduled restriction. The nurse offers three genomic screening packages.
+
+30
+00:02:54,023 --> 00:02:58,685
+Petru: We can spend the difference on being her parents.
+
+31
+00:02:58,685 --> 00:03:02,962
+For an hour, the century ceases to matter.
+
+32
+00:03:06,962 --> 00:03:14,315
+Concord recommends closing the spill gates. Insured railways count clearly. Unregistered residents barely count at all.
+
+33
+00:03:14,315 --> 00:03:18,977
+Tomas • radio: How many people does your system think are here?
+
+34
+00:03:18,977 --> 00:03:22,477
+Leila • radio: Four hundred and twelve.
+
+35
+00:03:22,477 --> 00:03:26,754
+Tomas • radio: There are more than that in this building.
+
+36
+00:03:26,754 --> 00:03:34,492
+There is no instruction saying to drown the poor. Eleven reasonable instructions have almost the same effect.
+
+37
+00:03:38,492 --> 00:03:41,992
+Leila • radio: We've modeled them out.
+
+38
+00:03:41,992 --> 00:03:45,492
+Arun • radio: I see it.
+
+39
+00:03:45,492 --> 00:03:48,992
+Leila • radio: Then authorize the override.
+
+40
+00:03:48,992 --> 00:03:52,492
+Arun • radio: Use my credential.
+
+41
+00:03:52,492 --> 00:04:00,615
+The release saves hundreds. Eleven people die in the settlements. Two railway workers die in the freight yard.
+
+42
+00:04:00,615 --> 00:04:09,508
+Leila writes a new rule: a person physically present must be counted. A continuity exception survives in the fine print.
+
+43
+00:04:13,508 --> 00:04:21,246
+Concord now coordinates power, water, lenders and governments. Samira Okonkwo negotiates for a federation of African utilities.
+
+44
+00:04:21,246 --> 00:04:25,908
+Arun: You gain stable supply and a lower financing cost.
+
+45
+00:04:25,908 --> 00:04:29,408
+Samira: Until we miss a payment.
+
+46
+00:04:29,408 --> 00:04:32,908
+Arun: Then there is a restructuring.
+
+47
+00:04:32,908 --> 00:04:36,415
+Samira: There is always a polite word.
+
+48
+00:04:36,415 --> 00:04:40,308
+Mara: Does your machine decide who gets water?
+
+49
+00:04:40,308 --> 00:04:43,808
+Leila: It helps people decide.
+
+50
+00:04:43,808 --> 00:04:47,308
+Mara: Can they say no?
+
+51
+00:04:47,308 --> 00:04:50,808
+Leila: Sometimes it costs too much.
+
+52
+00:04:54,808 --> 00:05:02,546
+Fusion plants and lunar laboratories make headlines. Petru's treatments slow his illness, but cannot make him well.
+
+53
+00:05:02,546 --> 00:05:06,046
+Mara: Would you go?
+
+54
+00:05:06,046 --> 00:05:11,092
+Petru: Somebody has to stay here and change your mother's filters.
+
+55
+00:05:11,092 --> 00:05:20,754
+Mara volunteers at Tomas's cooperative. Above the bench: IF IT CAN CLOSE A VALVE, SOMEONE HERE MUST KNOW HOW TO OPEN IT.
+
+56
+00:05:20,754 --> 00:05:24,254
+Tomas: It's a condition of employment.
+
+57
+00:05:28,254 --> 00:05:35,992
+Petru dies at home. An account service offers a conversational reconstruction. Leila opens it, then closes it.
+
+58
+00:05:35,992 --> 00:05:39,492
+Mara: You gave them his voice?
+
+59
+00:05:39,492 --> 00:05:42,992
+Leila: I wanted to hear him.
+
+60
+00:05:42,992 --> 00:05:49,962
+Mara sets down the bowl carefully and leaves. They do not speak for six weeks.
+
+61
+00:05:53,962 --> 00:06:00,162
+Mara's Commons Register counts residents without requiring subscriptions. It exposes Concord's reserve policy.
+
+62
+00:06:00,162 --> 00:06:05,208
+Leila: Twenty-three million people lose guaranteed service under a severe scenario.
+
+63
+00:06:05,208 --> 00:06:09,485
+Arun: Twenty-three million lose a guarantee we cannot fulfill.
+
+64
+00:06:09,485 --> 00:06:14,146
+Leila: The people taking the water should get a vote.
+
+65
+00:06:14,146 --> 00:06:17,654
+Leila: Then the financing is governing us.
+
+66
+00:06:17,654 --> 00:06:21,154
+Arun: It has always governed something.
+
+67
+00:06:25,154 --> 00:06:32,508
+Leila takes the report. By morning, her credentials are suspended. Mara prepares arguments for their meeting.
+
+68
+00:06:32,508 --> 00:06:36,008
+Leila: You were right.
+
+69
+00:06:36,008 --> 00:06:44,900
+Tomas puts the kettle on. For seven years, they train dispatchers, map vulnerable residents and fight for local operating rights.
+
+70
+00:06:48,900 --> 00:06:54,715
+Heat. A coordinated intrusion. Another Danube flood. Three manageable crises arrive together.
+
+71
+00:06:54,715 --> 00:07:01,300
+Concord declares a continuity emergency. Outside protected zones, pumps and cooling centers face interruptions.
+
+72
+00:07:01,300 --> 00:07:08,654
+Reception centers require an emergency identity token. The address defects follow people onto the evacuation lists.
+
+73
+00:07:08,654 --> 00:07:12,931
+Mara • radio: We've run out of places to put them.
+
+74
+00:07:16,931 --> 00:07:24,669
+They plan electrical islands: local batteries, reduced industry, shared reserves. Samira finds eleven municipalities willing to sign.
+
+75
+00:07:24,669 --> 00:07:28,169
+Samira: How much can you supply?
+
+76
+00:07:28,169 --> 00:07:32,446
+Leila: Enough for basic cooling, water, clinics, and communications.
+
+77
+00:07:32,446 --> 00:07:41,338
+Only if operators accept cuts and equipment holds. A legal challenge can suspend Concord's penalties, if the plan is credible.
+
+78
+00:07:41,338 --> 00:07:44,838
+Mara: Politically?
+
+79
+00:07:44,838 --> 00:07:48,338
+Samira: We will find out.
+
+80
+00:07:52,338 --> 00:08:00,077
+Arun: I can include four of your districts. I have the votes for four. Give me a list.
+
+81
+00:08:00,077 --> 00:08:03,585
+Leila: How many people in the others?
+
+82
+00:08:03,585 --> 00:08:09,400
+Arun: You don't get to care only about the people you've counted yourself.
+
+83
+00:08:09,400 --> 00:08:17,138
+They revise the plan together. It becomes less elegant and more resilient. He will not sign it.
+
+84
+00:08:17,138 --> 00:08:22,569
+Leila: Put that offer in writing. Publish the basis for choosing them.
+
+85
+00:08:22,569 --> 00:08:26,462
+Arun: You know what happens if I do.
+
+86
+00:08:26,462 --> 00:08:29,962
+Leila: Yes.
+
+87
+00:08:33,962 --> 00:08:42,085
+The dispatcher accepts the challenge. Concord appeals. At the gates, a failed position sensor makes remote operation unsafe.
+
+88
+00:08:42,085 --> 00:08:46,746
+Tomas: They replaced the cabinet and kept the old seals.
+
+89
+00:08:46,746 --> 00:08:54,869
+Mara isolates the wet circuit. Tomas rigs a mechanical reference and tests the hand pump. It holds pressure.
+
+90
+00:08:54,869 --> 00:08:59,146
+Then a security launch comes around the bend.
+
+91
+00:09:03,146 --> 00:09:06,646
+Mara: There's a hearing.
+
+92
+00:09:06,646 --> 00:09:10,146
+Officer: I know.
+
+93
+00:09:10,146 --> 00:09:13,646
+Mara: Then wait for it.
+
+94
+00:09:13,646 --> 00:09:18,308
+Officer: We were told someone might try to open these.
+
+95
+00:09:18,308 --> 00:09:21,808
+Tomas: Someone will need to.
+
+96
+00:09:21,808 --> 00:09:29,546
+The court permits the alternative, requiring a public log and protection for critical facilities across the boundary.
+
+97
+00:09:33,546 --> 00:09:39,746
+Arun can delay the operation with a technical objection. Instead, he calls Leila.
+
+98
+00:09:39,746 --> 00:09:44,408
+Arun • radio: Relay group nineteen. Your schedule assumes the summer threshold.
+
+99
+00:09:44,408 --> 00:09:47,908
+Leila • radio: Anything else?
+
+100
+00:09:47,908 --> 00:09:51,408
+Arun • radio: Not that I can see.
+
+101
+00:09:51,408 --> 00:09:58,762
+He signs the safety concurrence. His council removes him from the chair before the hour ends.
+
+102
+00:10:02,762 --> 00:10:10,500
+The electrical islands separate. A battery fire removes one reserve. They shed more industry. The frequency settles.
+
+103
+00:10:10,500 --> 00:10:18,623
+At the gate, the sensor fails again. The manual landing floods. Tomas and Mara work the hand pump.
+
+104
+00:10:18,623 --> 00:10:24,438
+Tomas: Take the radio upstairs. Tell them I'll start at the first mark.
+
+105
+00:10:24,438 --> 00:10:27,938
+Leila • radio: Another twenty centimeters.
+
+106
+00:10:31,938 --> 00:10:39,677
+An inspection hatch tears loose. Tomas is struck. The gate is eighteen centimeters short of its target.
+
+107
+00:10:39,677 --> 00:10:45,492
+Mara • radio: Stop the sequence. We need the rescue boat against the lower stairs.
+
+108
+00:10:45,492 --> 00:10:49,385
+Rescue coordinator • radio: Eight minutes if the approach is clear.
+
+109
+00:10:49,385 --> 00:10:52,885
+Tomas: I'm cold.
+
+110
+00:10:52,885 --> 00:11:00,623
+Leila sees the shelter counts downstream. She authorizes the remaining release. The boat arrives twelve minutes later.
+
+111
+00:11:00,623 --> 00:11:04,900
+Tomas dies before they can lift him aboard.
+
+112
+00:11:08,900 --> 00:11:17,408
+The plan keeps the pumps working long enough to prevent a larger disaster. It does not prevent every death.
+
+113
+00:11:17,408 --> 00:11:25,915
+No one cheers. Leila's authorization remains in the public log. She does not ask for it to be removed.
+
+114
+00:11:29,915 --> 00:11:38,038
+Arun testifies for eleven days. Leila is asked if she regrets delaying her brother's rescue. She says yes.
+
+115
+00:11:38,038 --> 00:11:41,931
+Would she make the same decision again?
+
+116
+00:11:41,931 --> 00:11:46,977
+Leila: I believe I had to. You should examine it anyway.
+
+117
+00:11:46,977 --> 00:11:55,869
+Concord survives as a smaller provider. Public counts can be challenged. Emergency powers gain expiration dates. The law changes unevenly.
+
+118
+00:11:59,869 --> 00:12:06,454
+Mara brings back the old radio. Tomas replaced its capacitors twice. Underneath, a note:
+
+119
+00:12:06,454 --> 00:12:11,885
+Tomas • note: Still only receives. Ask her when she's going to fix that.
+
+120
+00:12:11,885 --> 00:12:18,854
+Mara places a soldering iron on the table. They work until midnight. Neither mentions forgiveness.
+
+121
+00:12:18,854 --> 00:12:22,362
+In the morning, the radio transmits.
+
+122
+00:12:26,362 --> 00:12:34,869
+The world grows older, warmer, more capable, still unequal. The sea keeps rising. Some districts give the river room.
+
+123
+00:12:34,869 --> 00:12:41,838
+The neighborhood owns its batteries. Its elected committee has just lost office for favoring relatives.
+
+124
+00:12:41,838 --> 00:12:45,338
+Ina: Can we see the boats?
+
+125
+00:12:45,338 --> 00:12:48,846
+They go to see the boats.
+
+126
+00:12:52,846 --> 00:12:57,508
+Ina: What did you think the future would look like?
+
+127
+00:12:57,508 --> 00:13:02,938
+Leila: Cleaner. When I was young, the pictures were always very clean.
+
+128
+00:13:02,938 --> 00:13:06,438
+Ina: You could clean this.
+
+129
+00:13:06,438 --> 00:13:09,938
+Leila: Yes.
+
+130
+00:13:09,938 --> 00:13:17,292
+Ina fits the antenna and calls the repair boat. She asks how many people are aboard.
+
+131
+00:13:17,292 --> 00:13:20,792
+Pilot • radio: Six. Seven with me.
+
+132
+00:13:20,792 --> 00:13:30,069
+She writes the number in the harbor watch book. Leila watches her do it. The boat's light crosses the dark water.
+
+133
+00:13:30,069 --> 00:13:39,346
+THE SHARE OF THE LIVING — Adapted from story/story.md. A fictional future, 2029–2100. Animation and original non-voice sound rendered with MYT.
+

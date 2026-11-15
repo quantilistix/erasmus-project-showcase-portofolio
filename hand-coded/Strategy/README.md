@@ -1,0 +1,1 @@
+This is a first person shooter sprite game where you have to shoot your enemy down before they shoot you. It has a bit of lighting and collision with the trees. All sprites are ordered before rendering to make sure none is drawn over another.

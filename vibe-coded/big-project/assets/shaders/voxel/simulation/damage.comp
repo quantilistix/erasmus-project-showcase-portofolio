@@ -1,0 +1,31 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "common.glsl"
+layout(local_size_x=64) in;
+void main() {
+    uint i=invocation();
+    if(i>=p.counts.w*4096u) return;
+    uint slot=work[i>>12], index=slot*4096u+(i&4095u), voxel=voxels[index], type=voxel&65535u;
+    if(type==0u) return;
+    ivec4 record=slots[slot];
+    Body body=bodies[record.w];
+    vec3 point=(body.model*vec4(vec3(record.xyz*16+localCell(i))+0.5,1)).xyz;
+    vec4 load=sampleLoad(point);
+    if(load.x<p.physics.w) return;
+    vec4 material=materials[type*2u], properties=materials[type*2u+1u];
+    bool ignite=properties.z>0.5;
+    if(!ignite&&properties.w>0.5) return;
+    float health=1.0-float(voxel>>16)/65535.0;
+    float ratio=max(96e6*load.x/material.x,48e6*load.x/material.y)/max(material.z*health,1e-10);
+    if(!ignite&&ratio<=1.0) return;
+    float damage=properties.x*(24.0*load.x)*(1.0-1.0/(ratio*ratio))*p.physics.x/0.05;
+    float nextHealth=sqrt(max(0.0,health*health-2.0*damage/(material.z*material.w)));
+    uint wear=ignite ? 65535u : uint(clamp(roundEven((1.0-nextHealth)*65535.0),0.0,65535.0));
+    if(wear<=voxel>>16) return;
+    uint next=wear==65535u ? 0u : type|(wear<<16);
+    // Capacity is at least the dispatched voxel count, so no change is dropped.
+    uint event=atomicAdd(events[0].x,1u);
+    events[1u+event*2u]=uvec4(index,voxel,next,ignite ? 1u : 0u);
+    events[2u+event*2u]=floatBitsToUint(load);
+    voxels[index]=next;
+}

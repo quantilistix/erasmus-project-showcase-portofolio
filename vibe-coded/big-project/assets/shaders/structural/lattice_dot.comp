@@ -1,0 +1,49 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Level 0: one partial sum per workgroup of the dot products the conjugate gradient needs.
+// Mode 0: p·q. Mode 1: r·z and r·r (scaled). Mode 2: r·z, r·r and b·b (scaled). Mode 3: r·r
+// alone, the same sum as mode 1's, for results that end before the next preconditioning.
+
+layout(local_size_x = 256) in;
+
+#include "lattice_common.glsl"
+
+shared vec3 sums[256];
+
+void main()
+{
+    int i = int(gl_GlobalInvocationID.x);
+    uint local = gl_LocalInvocationID.x;
+    vec3 value = vec3(0.0);
+    if (i < nodeCount(pass.size.xyz) && cells[i].w > 0.0)
+    {
+        double h2 = double(cellSize() * cellSize());
+        if (pass.coarseSize.w == 0)
+        {
+            value.x = float(dot(p[i].u.xyz, q[i].u.xyz) + dot(p[i].t.xyz, q[i].t.xyz));
+        }
+        else
+        {
+            WideSix ri = r[i];
+            if (pass.coarseSize.w != 3)
+                value.x = float(dot(ri.u.xyz, dvec3(correction[i].u.xyz)) + dot(ri.t.xyz, dvec3(correction[i].t.xyz)));
+            value.y = float(dot(ri.u.xyz, ri.u.xyz) + dot(ri.t.xyz, ri.t.xyz) / h2);
+            if (pass.coarseSize.w == 2)
+                value.z = scaledDot(b[i], b[i]);
+        }
+    }
+
+    sums[local] = value;
+    barrier();
+    for (uint stride = 128u; stride > 0u; stride >>= 1u)
+    {
+        if (local < stride)
+            sums[local] += sums[local + stride];
+        barrier();
+    }
+
+    if (local == 0u)
+        partials[gl_WorkGroupID.x] = vec4(sums[0], 0.0);
+}

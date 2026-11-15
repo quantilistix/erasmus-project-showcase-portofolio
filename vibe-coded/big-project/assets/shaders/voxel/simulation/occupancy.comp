@@ -1,0 +1,19 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "common.glsl"
+layout(local_size_x=64) in;
+void main() {
+    uint i=invocation();
+    if(i>=p.counts.x*4096u) return;
+    ivec3 cell=tiles[i>>12].coordinate.xyz*16+localCell(i);
+    bool solid=solidVoxel(voxelAt(int(p.batch.w),cell));
+    vec3 point=vec3(cell)+0.5;
+    Tile tile=tiles[i>>12];
+    for(int candidate=0;!solid&&candidate<tile.nearZ.z;candidate++) {
+        Body body=bodies[bodyCandidates[tile.coordinate.w+candidate]];
+        if(distance(point,body.bounds.xyz)>body.bounds.w) continue;
+        ivec3 local=ivec3(floor((body.inverseModel*vec4(point,1)).xyz));
+        solid=solidVoxel(voxelAt(body.identity.x,local));
+    }
+    occupied[i]=solid ? 1u : 0u;
+}

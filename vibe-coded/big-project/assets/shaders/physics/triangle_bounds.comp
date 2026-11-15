@@ -1,0 +1,126 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Swept world bounds of every dynamic triangle for this detection pass, which the broad phase
+// (contact_pairs.comp) tests against, and their union per body. One thread per triangle. A
+// body's triangles are contiguous, so nearly every workgroup belongs to one body and merges its
+// bounds in shared memory before a single atomic update of the body's running bounds;
+// body_bounds.comp then turns those into the body's bounds.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint GROUP = 64u;
+
+shared uint groupBodies[GROUP];
+shared uint lowerKeys[3 * GROUP];
+shared uint upperKeys[3 * GROUP];
+
+// One float step toward -infinity. Rounding a double to float moves it by at most half a step,
+// so stepping the rounded bounds outward keeps them around the double-precision geometry
+// however far from the origin it is.
+vec3 stepDown(vec3 v)
+{
+    uvec3 bits = floatBitsToUint(v);
+    bits = mix(bits, uvec3(0x80000000u), equal(bits, uvec3(0u)));
+    return uintBitsToFloat(mix(bits + 1u, bits - 1u, greaterThan(v, vec3(0.0))));
+}
+
+// One float step toward +infinity.
+vec3 stepUp(vec3 v)
+{
+    uvec3 bits = floatBitsToUint(v);
+    bits = mix(bits, uvec3(0u), equal(bits, uvec3(0x80000000u)));
+    return uintBitsToFloat(mix(bits - 1u, bits + 1u, greaterThanEqual(v, vec3(0.0))));
+}
+
+void mergeIntoBody(uint body, uvec3 lowerKey, uvec3 upperKey)
+{
+    atomicMin(bodies[body].sweepMin.x, lowerKey.x);
+    atomicMin(bodies[body].sweepMin.y, lowerKey.y);
+    atomicMin(bodies[body].sweepMin.z, lowerKey.z);
+    atomicMax(bodies[body].sweepMax.x, upperKey.x);
+    atomicMax(bodies[body].sweepMax.y, upperKey.y);
+    atomicMax(bodies[body].sweepMax.z, upperKey.z);
+}
+
+void main()
+{
+    uint thread = gl_LocalInvocationID.x;
+    uint t = gl_GlobalInvocationID.x;
+    bool valid = t < rangeCount;
+
+    uint body = NO_BLOCK;
+    uvec3 lowerKey = uvec3(KEY_POSITIVE_INFINITY);
+    uvec3 upperKey = uvec3(KEY_NEGATIVE_INFINITY);
+
+    if (valid)
+    {
+        uvec4 v = triangles[t].vertices;
+        vec3 lower = vec3(3.0e38);
+        vec3 upper = vec3(-3.0e38);
+        for (int k = 0; k < 3; k++)
+        {
+            vec3 start = vec3(vertexStart[v[k]].xyz);
+            vec3 end = vec3(vertexEnd[v[k]].xyz);
+            lower = min(lower, min(start, end));
+            upper = max(upper, max(start, end));
+        }
+
+        lower = stepDown(lower);
+        upper = stepUp(upper);
+        triangleBounds[2u * t] = vec4(lower, 0.0);
+        triangleBounds[2u * t + 1u] = vec4(upper, 0.0);
+
+        body = v.w;
+        lowerKey = uvec3(orderedKey(lower.x), orderedKey(lower.y), orderedKey(lower.z));
+        upperKey = uvec3(orderedKey(upper.x), orderedKey(upper.y), orderedKey(upper.z));
+    }
+
+    groupBodies[thread] = body;
+    for (uint k = 0u; k < 3u; k++)
+    {
+        lowerKeys[k * GROUP + thread] = lowerKey[k];
+        upperKeys[k * GROUP + thread] = upperKey[k];
+    }
+
+    barrier();
+
+    // The same for the whole workgroup. Only a workgroup on a boundary between bodies, at most
+    // one per body, skips the merge.
+    uint last = min(rangeCount - gl_WorkGroupID.x * GROUP, GROUP) - 1u;
+    if (groupBodies[0] != groupBodies[last])
+    {
+        if (valid)
+            mergeIntoBody(body, lowerKey, upperKey);
+        return;
+    }
+
+    for (uint stride = GROUP / 2u; stride > 0u; stride >>= 1u)
+    {
+        if (thread < stride)
+        {
+            for (uint k = 0u; k < 3u; k++)
+            {
+                uint i = k * GROUP + thread;
+                lowerKeys[i] = min(lowerKeys[i], lowerKeys[i + stride]);
+                upperKeys[i] = max(upperKeys[i], upperKeys[i + stride]);
+            }
+        }
+
+        barrier();
+    }
+
+    if (thread == 0u)
+    {
+        mergeIntoBody
+        (
+            groupBodies[0],
+            uvec3(lowerKeys[0], lowerKeys[GROUP], lowerKeys[2u * GROUP]),
+            uvec3(upperKeys[0], upperKeys[GROUP], upperKeys[2u * GROUP])
+        );
+    }
+}

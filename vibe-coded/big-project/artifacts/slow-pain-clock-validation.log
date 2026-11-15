@@ -1,0 +1,10 @@
+PASS layered topology with additional odd-to-odd connections.
+PASS finite-difference gradients: cycles, self edges, skips and output feedback.
+PASS fixed plasticity scaling, frozen connections and checkpoint round trip.
+PASS Vulkan forward/loss/updates/plasticity/upload parity on Intel(R) Arc(tm) Graphics (MTL) (IntegratedGpu).
+PASS single-pass layered execution, pleasure gain, activation readback, frozen biases and binary checkpoints.
+PASS FFT, deterministic games, raw vision/audio contracts. 7700 assertions passed.
+PASS isolated learned/primitive pain banks, calibration/freeze, per-frame learning and realtime checkpoint round trip. 7736 total assertions passed.
+PASS catch proximity supervision, outcome overrides and resumable reward-only calibration. 7825 total assertions passed.
+PASS direct raw vision/executed controls, preserved legacy reward function and resumable input migration. 7837 total assertions passed.
+PASS slow sample-and-hold pain, sine clock, function-preserving input migration and timing persistence. 7886 total assertions passed.

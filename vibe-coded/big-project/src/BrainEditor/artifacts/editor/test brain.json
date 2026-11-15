@@ -1,0 +1,1276 @@
+{
+  "Version": 1,
+  "Name": "test brain",
+  "Modules": [
+    {
+      "Id": "90ed572693d34764823d18f9288f36fc",
+      "Name": "SENSORY",
+      "Kind": "InputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": -92.605705,
+        "Y": -17.382082,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 1024,
+      "Height": 512,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "a83ef9c242f44f2bad2aabe464ab22fa",
+      "Name": "Visual",
+      "Kind": "Layered",
+      "Seed": 42,
+      "Position": {
+        "X": -58.151703,
+        "Y": 15.6124525,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 3,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        256,
+        256,
+        64,
+        8
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "0d54a8635fd84c6c901fe9be156d68f5",
+      "Name": "MOTOR",
+      "Kind": "OutputPanel",
+      "Seed": 42,
+      "Position": {
+        "X": 67.90797,
+        "Y": 12.133431,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 1,
+      "Height": 1,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+      "Name": "Reward system",
+      "Kind": "Layered",
+      "Seed": 42,
+      "Position": {
+        "X": -27.126543,
+        "Y": -15.373874,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "Name": "REWARD motory",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -4.126263,
+        "Y": -12.670379,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "d9e8a5ab5643420b8c0139ac7d63e19d",
+      "Name": "REWARD spatial",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -4.3157115,
+        "Y": -32.57445,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "b72f23c1a5654d819b9a6b6cd6c39fd3",
+      "Name": "REWARD central",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -5.2405925,
+        "Y": -38.64377,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "b33447f6ebad43099bedeef7805b18e0",
+      "Name": "Central",
+      "Kind": "Hub",
+      "Seed": 42,
+      "Position": {
+        "X": -24.585592,
+        "Y": 4.1479926,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 8,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "25e4153225454a31bb030b35ead2931f",
+      "Name": "Spatial",
+      "Kind": "Lattice",
+      "Seed": 42,
+      "Position": {
+        "X": -23.592396,
+        "Y": 24.301872,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 64,
+      "Outputs": 8,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 3,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "859a79a70bc94de0be52e0bc259b4fb1",
+      "Name": "Motory",
+      "Kind": "Hub",
+      "Seed": 42,
+      "Position": {
+        "X": 43.04311,
+        "Y": 11.082498,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 64,
+      "Outputs": 32,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "ec41dd8c72b84ff8809a06b02dec4e15",
+      "Name": "Audio",
+      "Kind": "Layered",
+      "Seed": 42,
+      "Position": {
+        "X": -48.63044,
+        "Y": 40.837772,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 4,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        64,
+        8,
+        8,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "c56a94b7890c43e4afbb573a06160d90",
+      "Name": "REWARD visual",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -4.104589,
+        "Y": -25.588135,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "73aee3a488d24d8782a503802f212590",
+      "Name": "REWARD audio",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -4.0045776,
+        "Y": -18.95457,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    },
+    {
+      "Id": "0104d1659d254d77bc828e55364e8c14",
+      "Name": "REWARD reward system",
+      "Kind": "Reward",
+      "Seed": 42,
+      "Position": {
+        "X": -4.326816,
+        "Y": -0.68534946,
+        "Z": 0
+      },
+      "Inputs": 8,
+      "Hidden": 24,
+      "Outputs": 1,
+      "WeightScale": 0.2,
+      "Plasticity": 1,
+      "DegreeDistribution": [
+        {
+          "Degree": 4,
+          "Fraction": 1
+        }
+      ],
+      "Dimensions": 2,
+      "AxisSizes": [],
+      "Neighbors": 4,
+      "Shape": "Flat",
+      "CustomPositions": [],
+      "Imperfection": 0,
+      "LayerSizes": [
+        8,
+        16,
+        16,
+        4
+      ],
+      "Crosses": [],
+      "ResidualStep": 3,
+      "ResidualDensity": 0,
+      "FixedResidual": true,
+      "Panel": "Other",
+      "Width": 8,
+      "Height": 8,
+      "ResolutionDecay": 1,
+      "Channels": 8,
+      "MinFrequency": 80,
+      "MaxFrequency": 8000,
+      "SampleRate": 48000,
+      "Frequency": 1,
+      "Amplitude": 1,
+      "Phase": 0,
+      "Neurons": [],
+      "Edges": [],
+      "Modifiers": []
+    }
+  ],
+  "Links": [
+    {
+      "Id": "e68789614531455aaa8f2603245a064d",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "90ed572693d34764823d18f9288f36fc",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "a83ef9c242f44f2bad2aabe464ab22fa",
+        "Roles": "Input",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "975cb9cbb8684e7ea54841fa78c0e34c",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "90ed572693d34764823d18f9288f36fc",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "Input",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "1868884da426422590026aaf454738c6",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "417e1cd77bde4d22ac0f4dbb6bd67c68",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "b72f23c1a5654d819b9a6b6cd6c39fd3",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "f94608c18c7847729212d87df059a148",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "d9e8a5ab5643420b8c0139ac7d63e19d",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "6dc20997df21442599af310bfbf92a3d",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "90ed572693d34764823d18f9288f36fc",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "55f8bd1013a94d40b699d3cceb504c46",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "90ed572693d34764823d18f9288f36fc",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "25e4153225454a31bb030b35ead2931f",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "63398d51fe3046a69eebc7597be31cf3",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "90ed572693d34764823d18f9288f36fc",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "ec41dd8c72b84ff8809a06b02dec4e15",
+        "Roles": "Input",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "82097dba8f7c4618a6ae1cd1247a8884",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "a83ef9c242f44f2bad2aabe464ab22fa",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "0227579e7acb44b6a4b1c1fcda45da5d",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "ec41dd8c72b84ff8809a06b02dec4e15",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "793f761d89dc4be4a18cc9b6464c8d7d",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "a83ef9c242f44f2bad2aabe464ab22fa",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "25e4153225454a31bb030b35ead2931f",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "4360e708d083483fa3997c23d695c93d",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "ec41dd8c72b84ff8809a06b02dec4e15",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "25e4153225454a31bb030b35ead2931f",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "8e506b5253b64146aa15953dfdf6a045",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "25e4153225454a31bb030b35ead2931f",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "fb0dae87a8c34b8494e42acd6a59b707",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "859a79a70bc94de0be52e0bc259b4fb1",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "f98dd4d0b5b74f3eb9f8a660a3d1214c",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "a83ef9c242f44f2bad2aabe464ab22fa",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "859a79a70bc94de0be52e0bc259b4fb1",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "cd471369e3cf4d0db909435c9f5b50c4",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "ec41dd8c72b84ff8809a06b02dec4e15",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "859a79a70bc94de0be52e0bc259b4fb1",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "4ae2f524c0ee40679262899ab95f22b2",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "859a79a70bc94de0be52e0bc259b4fb1",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "0d54a8635fd84c6c901fe9be156d68f5",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "61a2a611a30145a8a3423d0a3efd8fe7",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "Input",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "8ad641b1bd1f4de997526be142f3733f",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "859a79a70bc94de0be52e0bc259b4fb1",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "Input",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "349a196a0c344a0ea0e1a96e4ae7be95",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "c56a94b7890c43e4afbb573a06160d90",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "be577feec8de4aadb89c684a62055488",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "fa1bf140e65e4a1c8b5fc24fd1c528af",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "73aee3a488d24d8782a503802f212590",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    },
+    {
+      "Id": "5e12a5e7a1e34a1d9e7a38c5410832b5",
+      "Name": "Link",
+      "Source": {
+        "ModuleId": "b33447f6ebad43099bedeef7805b18e0",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "Destination": {
+        "ModuleId": "0104d1659d254d77bc828e55364e8c14",
+        "Roles": "All",
+        "Percent": 100,
+        "Selection": "Uniform",
+        "DegreeExponent": 1
+      },
+      "CrossPercent": 100,
+      "Seed": 42,
+      "WeightScale": 0.2,
+      "Plasticity": 1
+    }
+  ],
+  "RewardGroups": [
+    {
+      "Name": "Group 1",
+      "ModuleIds": [
+        "b33447f6ebad43099bedeef7805b18e0",
+        "b72f23c1a5654d819b9a6b6cd6c39fd3"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Group 2",
+      "ModuleIds": [
+        "d9e8a5ab5643420b8c0139ac7d63e19d",
+        "25e4153225454a31bb030b35ead2931f"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Group 3",
+      "ModuleIds": [
+        "c56a94b7890c43e4afbb573a06160d90",
+        "a83ef9c242f44f2bad2aabe464ab22fa"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Group 4",
+      "ModuleIds": [
+        "73aee3a488d24d8782a503802f212590",
+        "ec41dd8c72b84ff8809a06b02dec4e15"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Group 5",
+      "ModuleIds": [
+        "1ad1dad3c9154e47a2d9f87cca7fffa5",
+        "859a79a70bc94de0be52e0bc259b4fb1"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    },
+    {
+      "Name": "Group 6",
+      "ModuleIds": [
+        "0104d1659d254d77bc828e55364e8c14",
+        "fa1bf140e65e4a1c8b5fc24fd1c528af"
+      ],
+      "RewardModuleId": "1ad1dad3c9154e47a2d9f87cca7fffa5",
+      "RewardNeuron": 0
+    }
+  ]
+}

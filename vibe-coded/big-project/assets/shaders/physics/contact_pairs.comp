@@ -1,0 +1,198 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Broad phase, one thread per dynamic triangle: finds the triangles of other bodies whose swept
+// bounds overlap this one's through the other body's BVH, and appends each pair for the narrow
+// phase (contact_detect.comp). With the phases split, one large triangle
+// overlapping thousands of small ones costs this thread a walk down the BVH, while the pair
+// tests themselves spread over the whole GPU.
+//
+// World-frame bounds (triangles, bodies, the fixed and soft BVHs) are float rounded outward, so
+// they are compared without doubles. A rigid body's BVH is in its own frame around its center
+// of mass.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+const uint MODE_CONTINUOUS = 1u;
+const uint STACK_SIZE = 64u;
+const uint BATCH = 8u;
+
+// This thread's triangle and its swept world bounds plus the margin.
+uint t1;
+vec3 queryLower;
+vec3 queryUpper;
+
+// Pairs waiting to be appended, so most appends share one atomic.
+uint batch[BATCH];
+uint batchCount = 0u;
+
+void flush()
+{
+    if (batchCount == 0u)
+        return;
+
+    uint capacity = uint(pairs.length());
+    uint first = atomicAdd(counters[COUNTER_PAIRS], batchCount);
+    for (uint i = 0u; i < batchCount && first + i < capacity; i++)
+        pairs[first + i] = uvec2(t1, batch[i]);
+
+    if (first + batchCount > capacity)
+        atomicAdd(counters[COUNTER_DROPPED_CONTACTS], first + batchCount - max(first, capacity));
+
+    batchCount = 0u;
+}
+
+void consider(uint t2)
+{
+    if (!overlaps(queryLower, queryUpper, triangleBounds[2u * t2].xyz, triangleBounds[2u * t2 + 1u].xyz))
+        return;
+
+    batch[batchCount++] = t2;
+    if (batchCount == BATCH)
+        flush();
+}
+
+// The rigid body's pose this pass's end positions were computed from.
+void rigidEndPose(uint r, out dvec3 position, out dvec4 orientation)
+{
+    if ((flags & MODE_CONTINUOUS) != 0u)
+    {
+        position = rigids[r].position.xyz;
+        orientation = rigids[r].orientation;
+    }
+    else
+    {
+        position = rigids[r].inertialPosition.xyz;
+        orientation = rigids[r].inertialOrientation;
+    }
+}
+
+// Bounds of this triangle's swept vertices in the frame of a rigid body's BVH. The body's
+// rotation during the step bends the path of a point in its frame, so the box is padded by the
+// rotation angle times the distance from the center.
+void rigidFrameBounds(uint body, out vec3 lower, out vec3 upper)
+{
+    uvec4 v = triangles[t1].vertices;
+    uint r = bodies[body].info.y - counts.x;
+    dvec3 startCenter = rigids[r].previousPosition.xyz;
+    mat3 startRotation = transpose(quatToMat3(vec4(rigids[r].previousOrientation)));
+    dvec3 endCenter;
+    dvec4 endOrientation;
+    rigidEndPose(r, endCenter, endOrientation);
+    mat3 endRotation = transpose(quatToMat3(vec4(endOrientation)));
+    float angle = float(length(quatDifference(endOrientation, rigids[r].previousOrientation)));
+
+    lower = vec3(3.0e38);
+    upper = vec3(-3.0e38);
+    float radius = 0.0;
+    for (int k = 0; k < 3; k++)
+    {
+        vec3 s = startRotation * vec3(vertexStart[v[k]].xyz - startCenter);
+        vec3 e = endRotation * vec3(vertexEnd[v[k]].xyz - endCenter);
+        lower = min(lower, min(s, e));
+        upper = max(upper, max(s, e));
+        radius = max(radius, max(length(s), length(e)));
+    }
+
+    float padding = float(collision.x) + angle * radius;
+    lower -= padding;
+    upper += padding;
+}
+
+void traverseBvh(uint body)
+{
+    vec3 lower = queryLower;
+    vec3 upper = queryUpper;
+    if (bodies[body].info.x == KIND_RIGID)
+        rigidFrameBounds(body, lower, upper);
+
+    uint firstTriangle = bodies[body].info.z;
+    uint stack[STACK_SIZE];
+    uint top = 0u;
+    stack[top++] = bodies[body].extra.x;
+
+    while (top > 0u)
+    {
+        uint index = stack[--top];
+        BvhNode node = bvhNodes[index];
+        if (!overlaps(lower, upper, node.boundsMin.xyz, node.boundsMax.xyz))
+            continue;
+
+        uint a = floatBitsToUint(node.boundsMin.w);
+        uint count = floatBitsToUint(node.boundsMax.w);
+        if (count == 0u)
+        {
+            if (top + 2u <= STACK_SIZE)
+            {
+                stack[top++] = a;
+                stack[top++] = index + 1u;
+            }
+            continue;
+        }
+
+        for (uint i = 0u; i < count; i++)
+            consider(firstTriangle + bvhPrimitives[a + i]);
+    }
+}
+
+void main()
+{
+    t1 = gl_GlobalInvocationID.x;
+    if (t1 >= rangeCount)
+        return;
+
+    float margin = float(collision.x);
+    queryLower = triangleBounds[2u * t1].xyz - margin;
+    queryUpper = triangleBounds[2u * t1 + 1u].xyz + margin;
+    uint p = triangles[t1].vertices.w;
+
+    if (collisionCounts.w >= 32u && bodyCandidateCounts[p] <= MAX_BODY_CANDIDATES)
+    {
+        for (uint i = 0u; i < bodyCandidateCounts[p]; i++)
+        {
+            uint q = bodyCandidates[p * MAX_BODY_CANDIDATES + i];
+            if (overlaps(queryLower, queryUpper, bodies[q].boundsMin.xyz, bodies[q].boundsMax.xyz))
+                traverseBvh(q);
+        }
+        flush();
+        return;
+    }
+
+    // Small scenes use the cheaper linear walk. Larger ones skip whole subtrees of bodies;
+    // escape links keep this traversal stackless alongside the per-body triangle BVH stack.
+    uint node = 0u;
+    uint end = collisionCounts.w >= 32u ? bodyBvhRefit[0].z : 0u;
+    while (node < end)
+    {
+        BvhNode box = bodyBvhNodes[node];
+        if (!overlaps(queryLower, queryUpper, box.boundsMin.xyz, box.boundsMax.xyz))
+        {
+            node = bodyBvhRefit[node].z;
+            continue;
+        }
+        uint count = floatBitsToUint(box.boundsMax.w);
+        uint first = floatBitsToUint(box.boundsMin.w);
+        for (uint i = 0u; i < count; i++)
+        {
+            uint q = bodyBvhPrimitives[first + i];
+            if (q != p && enumeratesAgainst(p, q) && overlaps(queryLower, queryUpper, bodies[q].boundsMin.xyz, bodies[q].boundsMax.xyz))
+                traverseBvh(q);
+        }
+        node++;
+    }
+
+    if (collisionCounts.w < 32u)
+    {
+        for (uint q = 0u; q < collisionCounts.w; q++)
+        {
+            if (q != p && enumeratesAgainst(p, q) && bodies[q].info.w > 0u && overlaps(queryLower, queryUpper, bodies[q].boundsMin.xyz, bodies[q].boundsMax.xyz))
+                traverseBvh(q);
+        }
+    }
+
+    flush();
+}

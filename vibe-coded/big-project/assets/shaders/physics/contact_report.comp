@@ -1,0 +1,66 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// After a substep, one thread per contact: lists every contact that pushed for the CPU, with
+// the impulse it applied, its point and how fast its sides were closing when the substep began
+// (PhysicsSystem.ContactReports). The final multipliers are the contact forces (AVBD λ); a
+// force F along a row acts on side A as −F times the row direction.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+// The contact point at the start of the substep, taken from a side that moves: a rigid body's
+// arm from its center of mass, or the weighted nodes of a soft body. Every contact has one.
+dvec3 contactPoint(Contact c)
+{
+    if (contactKindA(c) == KIND_RIGID)
+        return rigids[c.header.y - counts.x].previousPosition.xyz + dvec3(c.offsetA.xyz);
+    if (contactKindB(c) == KIND_RIGID)
+        return rigids[c.header.z - counts.x].previousPosition.xyz + dvec3(c.offsetB.xyz);
+
+    bool sideA = contactKindA(c) == KIND_NODE;
+    uvec4 sideNodes = sideA ? c.nodesA : c.nodesB;
+    vec4 weights = sideA ? c.weightsA : c.weightsB;
+    dvec3 point = dvec3(0.0);
+    for (int k = 0; k < 3; k++)
+    {
+        if (sideNodes[k] != NO_BLOCK)
+            point += double(weights[k]) * nodes[sideNodes[k]].previous.xyz;
+    }
+
+    return point;
+}
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    if (index >= contactTotal())
+        return;
+
+    Contact c = contacts[index];
+    if (c.lambda.z >= 0.0)
+        return;
+
+    uint slot = atomicAdd(reportCounts.x, 1u);
+    if (slot >= uint(reports.length()))
+    {
+        atomicAdd(reportCounts.y, 1u);
+        return;
+    }
+
+    float h = float(gravityAndStep.w);
+    vec3 t;
+    vec3 b;
+    contactBasis(c.normal.xyz, t, b);
+
+    ContactReport report;
+    report.point = dvec4(contactPoint(c), gravityAndStep.w);
+    report.bodies = uvec4(c.key.z, c.key.w, (c.header.x >> 8) & 0xFu, 0u);
+    report.normal = vec4(c.normal.xyz, -c.lambda.z * h);
+    report.friction = vec4(-(c.lambda.x * t + c.lambda.y * b) * h, -c.offsetA.w);
+    report.reserved = vec4(0.0);
+    reports[slot] = report;
+}

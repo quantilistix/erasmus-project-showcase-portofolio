@@ -1,0 +1,204 @@
+{
+  "Title": "The Share of the Living",
+  "Source": "/home/vlad/Programming/MYT/story/story.md",
+  "SourceSha256": "94754A49AB816857BB82413902F07A0274D7237F10AB88F17060FE5D6FA1E689",
+  "ScriptSha256": "053315B4EE952B3DE6C11F96DCC9D6E7617E657FA81C57B99A1E7490E9D5CBEE",
+  "Width": 960,
+  "Height": 540,
+  "Fps": 24,
+  "Frames": 19689,
+  "Duration": 820.375,
+  "Audio": "48000 Hz stereo AAC; original procedural score and effects; no voices",
+  "Renderer": "MYT Grid3D \u002B OfflineVoxelRenderer",
+  "Scenes": [
+    {
+      "Title": "The people on the meter",
+      "Location": "Constan\u021Ba \u2022 July 2029",
+      "Set": "harbor",
+      "Start": 0,
+      "End": 18.323076923076922
+    },
+    {
+      "Title": "Residency verification pending",
+      "Location": "Constan\u021Ba \u2022 July 2029",
+      "Set": "cooling",
+      "Start": 18.323076923076922,
+      "End": 46.41538461538461
+    },
+    {
+      "Title": "The other kind",
+      "Location": "Constan\u021Ba \u2022 Winter 2029",
+      "Set": "home",
+      "Start": 46.41538461538461,
+      "End": 67.5
+    },
+    {
+      "Title": "Make it see them",
+      "Location": "Bucharest \u2022 November 2033",
+      "Set": "grid",
+      "Start": 67.5,
+      "End": 103.3076923076923
+    },
+    {
+      "Title": "A hostage with a spreadsheet",
+      "Location": "The Black Sea \u2022 September 2038",
+      "Set": "ship",
+      "Start": 103.3076923076923,
+      "End": 133.3
+    },
+    {
+      "Title": "Concord",
+      "Location": "Bucharest \u2022 2038\u20132043",
+      "Set": "control",
+      "Start": 133.3,
+      "End": 160.16923076923078
+    },
+    {
+      "Title": "An hour outside the century",
+      "Location": "Bucharest \u2022 April 2043",
+      "Set": "hospital",
+      "Start": 160.16923076923078,
+      "End": 183.96153846153848
+    },
+    {
+      "Title": "The missing people",
+      "Location": "The lower Danube \u2022 June 2048",
+      "Set": "flood",
+      "Start": 183.96153846153848,
+      "End": 215.49230769230772
+    },
+    {
+      "Title": "Use my credential",
+      "Location": "The lower Danube \u2022 June 2048",
+      "Set": "gate",
+      "Start": 215.49230769230772,
+      "End": 250.50769230769234
+    },
+    {
+      "Title": "A country made of contracts",
+      "Location": "Alexandria \u2022 October 2056",
+      "Set": "conference",
+      "Start": 250.50769230769234,
+      "End": 291.8076923076923
+    },
+    {
+      "Title": "Someone here must know",
+      "Location": "Bucharest \u2022 2059\u20132062",
+      "Set": "workshop",
+      "Start": 291.8076923076923,
+      "End": 325.25384615384615
+    },
+    {
+      "Title": "The borrowed voice",
+      "Location": "Bucharest \u2022 February 2064",
+      "Set": "home",
+      "Start": 325.25384615384615,
+      "End": 350.96153846153845
+    },
+    {
+      "Title": "Tell me I\u0027m wrong",
+      "Location": "Constan\u021Ba \u2022 August 2067",
+      "Set": "control",
+      "Start": 350.96153846153845,
+      "End": 382.15384615384613
+    },
+    {
+      "Title": "The Commons Register",
+      "Location": "Constan\u021Ba \u2022 August 2067",
+      "Set": "workshop",
+      "Start": 382.15384615384613,
+      "End": 405.9
+    },
+    {
+      "Title": "The reserve",
+      "Location": "The lower Danube \u2022 May 2074",
+      "Set": "flood",
+      "Start": 405.9,
+      "End": 433.9307692307692
+    },
+    {
+      "Title": "Seventy-two hours",
+      "Location": "Tomas\u0027s workshop \u2022 May 2074",
+      "Set": "workshop",
+      "Start": 433.9307692307692,
+      "End": 469.3384615384615
+    },
+    {
+      "Title": "Forty-eight hours",
+      "Location": "Concord control center \u2022 May 2074",
+      "Set": "control",
+      "Start": 469.3384615384615,
+      "End": 510.96153846153845
+    },
+    {
+      "Title": "Twenty-four hours",
+      "Location": "The eastern gate station \u2022 May 2074",
+      "Set": "gate",
+      "Start": 510.96153846153845,
+      "End": 540.1461538461539
+    },
+    {
+      "Title": "Six hours",
+      "Location": "The eastern gate station \u2022 May 2074",
+      "Set": "gate",
+      "Start": 540.1461538461539,
+      "End": 570.5461538461539
+    },
+    {
+      "Title": "The last correction",
+      "Location": "Concord control center \u2022 May 2074",
+      "Set": "control",
+      "Start": 570.5461538461539,
+      "End": 599.7615384615385
+    },
+    {
+      "Title": "18:12 \u2014 The release",
+      "Location": "The lower Danube \u2022 May 2074",
+      "Set": "gate",
+      "Start": 599.7615384615385,
+      "End": 628.9384615384616
+    },
+    {
+      "Title": "The remaining release",
+      "Location": "The eastern gate station \u2022 May 2074",
+      "Set": "gate",
+      "Start": 628.9384615384616,
+      "End": 665.9000000000001
+    },
+    {
+      "Title": "Morning",
+      "Location": "The lower Danube \u2022 May 2074",
+      "Set": "workshop",
+      "Start": 665.9000000000001,
+      "End": 686.9153846153847
+    },
+    {
+      "Title": "You should examine it anyway",
+      "Location": "Bucharest \u2022 2075\u20132081",
+      "Set": "hearing",
+      "Start": 686.9153846153847,
+      "End": 716.8692307692309
+    },
+    {
+      "Title": "The other kind, at last",
+      "Location": "Bucharest \u2022 Winter 2081",
+      "Set": "home",
+      "Start": 716.8692307692309,
+      "End": 743.3615384615385
+    },
+    {
+      "Title": "What could be kept",
+      "Location": "The Danube delta \u2022 2096",
+      "Set": "settlement",
+      "Start": 743.3615384615385,
+      "End": 769.8461538461539
+    },
+    {
+      "Title": "Seven with me",
+      "Location": "Constan\u021Ba \u2022 December 31, 2100",
+      "Set": "harbor",
+      "Start": 769.8461538461539,
+      "End": 820.3461538461539
+    }
+  ]
+}

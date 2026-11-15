@@ -1,0 +1,4 @@
+CPU reference: batch=32; predict 4.326 ms/batch; 7397 samples/s
+CPU reference: train   10.099 ms/batch; 3169 samples/s
+Intel(R) Arc(tm) Graphics (MTL): batch=32; predict 1.854 ms/batch; 17260 samples/s
+Intel(R) Arc(tm) Graphics (MTL): train   1.448 ms/batch; 22100 samples/s

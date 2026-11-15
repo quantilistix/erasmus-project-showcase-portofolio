@@ -1,0 +1,1 @@
+This is a music tracker writen in Lua and Love2D. This tracker has an old-school design like Skale Tracker, Impulse Tracker and Fast Tracker. This tracker also has a list of instructions, but unlike any other tracker, this one's turing complete. The list of instructions are in help.txt

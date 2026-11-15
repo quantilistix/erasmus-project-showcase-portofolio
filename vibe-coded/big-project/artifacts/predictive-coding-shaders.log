@@ -1,0 +1,4 @@
+src/NeuralGraph/Shaders/continuous.comp
+src/NeuralGraph/Shaders/graph.comp
+src/NeuralGraph/Shaders/layered.comp
+src/NeuralGraph/Shaders/predictive.comp

@@ -1,0 +1,48 @@
+#version 450
+#extension GL_ARB_gpu_shader_fp64 : enable
+#extension GL_GOOGLE_include_directive : require
+
+// Dual step after each primal iteration, one thread per contact (AVBD Algorithm 1, lines
+// 26-31): the multipliers absorb the force each row applied, clamped to its bounds, and a row
+// whose force stayed inside its bounds stiffens in proportion to its remaining error.
+
+layout(local_size_x = 64) in;
+
+#include "solver_common.glsl"
+#include "contact_common.glsl"
+
+void main()
+{
+    uint index = gl_GlobalInvocationID.x;
+    if (index >= contactTotal())
+        return;
+
+    Contact c = contacts[index];
+    vec3 rows = contactConstraint(c);
+
+    float beta = float(avbd.y);
+    float maxStiffness = float(limits.x);
+    float maxForce = float(limits.y);
+    float kn = c.penalty.x;
+    float kt = c.penalty.y;
+
+    float normal = kn * rows.z + c.lambda.z;
+    float lambdaNormal = clamp(normal, -maxForce, 0.0);
+    if (normal < 0.0)
+        kn = min(maxStiffness, kn + beta * abs(rows.z));
+
+    vec2 friction = vec2(0.0);
+    float limit = -c.weightsA.w * lambdaNormal;
+    if (limit > 0.0)
+    {
+        friction = kt * rows.xy + c.lambda.xy;
+        float frictionLength = length(friction);
+        if (frictionLength > limit)
+            friction *= limit / frictionLength;
+        else
+            kt = min(maxStiffness, kt + beta * length(rows.xy));
+    }
+
+    contacts[index].lambda = vec4(friction, lambdaNormal, 0.0);
+    contacts[index].penalty = vec4(kn, kt, 0.0, 0.0);
+}

@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "brain-editor": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/scripts/brain-editor-mcp.sh",
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

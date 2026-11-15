@@ -1,0 +1,48 @@
+#version 450
+#extension GL_GOOGLE_include_directive : require
+#include "light_grid.glsl"
+layout(local_size_x=64) in;
+layout(std430,set=0,binding=4) buffer Activity { uint activity[]; };
+layout(std430,set=0,binding=5) buffer Work { uint work[]; };
+layout(push_constant) uniform Parameters { vec4 sky; uint iteration; uint blocks; uint sun; uint count; vec4 solarDirection; vec4 solarColor; vec4 focus; uvec4 schedule; };
+void main()
+{
+    uint total=count*8u;
+    uint id=gl_GlobalInvocationID.x;
+    if(id>=total) return;
+    if(schedule.x!=0u && schedule.z==1u && id>=max(1u,schedule.x/4u)) return;
+    if(schedule.x!=0u) id=(id+schedule.y)%total;
+    uint slot=id>>3, tile=id&7u;
+    if(slot>=count) return;
+    uint r=gridRecord(slot);
+    if(grid[r+11u]==0u) return;
+    if(schedule.x!=0u)
+    {
+        uint flags=activity[id];
+        if(flags==0u || work[schedule.w+id]!=0u) return;
+        if(schedule.z==0u)
+        {
+            if((flags&2u)==0u) return;
+            vec3 center=vec3(ivec3(grid[r],grid[r+1u],grid[r+2u]))*16.0+8.0;
+            if(distance(center,focus.xyz)>focus.w) return;
+        }
+        uint index=atomicAdd(work[3],1u);
+        if(index>=schedule.x) { atomicMin(work[3],schedule.x); return; }
+        work[4u+index]=id;
+        work[schedule.w+id]=1u;
+        // Deferred tiles stay pending. Selected tiles will wake themselves and
+        // neighbours if either diffusion step changes their packed values.
+        atomicExchange(activity[id],0u);
+        return;
+    }
+    uint inputFlags=(iteration&1u)*uint(activity.length()/2);
+    uint changed=activity[inputFlags+id];
+    for(int d=0;d<6;d++)
+    {
+        uint axisBit=1u<<uint(d/2);
+        bool acrossChunk=(tile&axisBit)==((d&1)==0 ? axisBit : 0u);
+        uint neighbor=acrossChunk ? grid[r+5u+uint(d)] : slot+1u;
+        if(neighbor!=0u) changed|=activity[inputFlags+(neighbor-1u)*8u+(tile^axisBit)];
+    }
+    if(changed!=0u) work[4u+atomicAdd(work[3],1u)]=id;
+}

@@ -1,0 +1,7 @@
+TRAIN: ideal rewards teach policy + reward translator
+Intel(R) Arc(tm) Graphics (MTL); 10,404 nonnegative rate neurons, 3,199,488 stored connections; 0.50x physics, 60 updates/s target.
+Checkpoint artifacts/maze; resumes automatically, autosaves every 30s and on exit. Old arcade training is separate.
+frame 6600 TRAIN health=85 ammo=8/16 hits=9 kills=3 ammoPickups=7 healthPickups=8 exits=1 P=0.000 pain=0.000 primitiveP=0.000 primitivePain=0.045 R=-0.000 loss=0.00155 rewardLoss=0.00005 mainUpdates=6600 rewardUpdates=6600; mean 15.77 ms/frame (~63.4 compute fps), recent p95 16.33 ms
+frame 7200 TRAIN health=70 ammo=8/27 hits=9 kills=3 ammoPickups=8 healthPickups=8 exits=1 P=0.000 pain=0.005 primitiveP=0.000 primitivePain=0.090 R=-0.001 loss=0.00099 rewardLoss=0.00003 mainUpdates=7200 rewardUpdates=7200; mean 15.80 ms/frame (~63.3 compute fps), recent p95 16.46 ms
+Saved main.ngb, reward.json and maze.json in artifacts/maze.
+1200 learning frames in 19.37s; mean 15.80 ms/frame (~63.3 compute fps), recent p95 16.46 ms
